@@ -12,3 +12,7 @@
 
 ## المكونات
 Header, Hero, FeatureCard, MetricCard, DashboardShell, Sidebar, CourseCard, CoursePlayer.
+
+## Preview branch
+
+This branch is the isolated Vercel preview build for KFO.
