@@ -1,0 +1,1 @@
+export function MetricCard({label,value,trend}){return <article className="kfo-panel kfo-metric"><span>{label}</span><strong>{value}</strong><small>{trend}</small></article>}
