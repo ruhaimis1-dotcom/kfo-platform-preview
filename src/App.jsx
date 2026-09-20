@@ -1,0 +1,7 @@
+import {Header,Hero,FeatureCard,Workflow,DashboardShell,MetricCard,CourseCard,CoursePlayer} from './components';
+
+export default function App({screen='home',onNavigate}){
+  if(screen==='company') return <><Header onNavigate={onNavigate}/><DashboardShell active="الرئيسية" onNavigate={onNavigate}><h1>لوحة تحكم الشركة</h1><div className="kfo-metrics"><MetricCard label="الموظفون النشطون" value="248" trend="↑ 12% هذا الشهر"/><MetricCard label="نسبة الإكمال" value="87%" trend="↑ 6% عن السابق"/><MetricCard label="درجة الجاهزية" value="92%" trend="مؤشر الفريق"/></div></DashboardShell></>;
+  if(screen==='player') return <><Header onNavigate={onNavigate}/><div className="kfo-container"><CoursePlayer onBack={()=>onNavigate('catalog')}/></div></>;
+  return <><Header onNavigate={onNavigate}/><Hero onNavigate={onNavigate}/><div className="kfo-container"><section className="kfo-features"><FeatureCard number="01" title="محتوى تشغيلي عملي" description="دورات مرتبطة ببيئة العمل الفعلية."/><FeatureCard number="02" title="تجربة تعلم مخصصة" description="مسارات واضحة لكل متدرب."/><FeatureCard number="03" title="قياس الأثر بوضوح" description="مؤشرات تساعد الإدارة على القرار."/></section><Workflow/></div></>;
+}
