@@ -1,0 +1,1 @@
+export function Workflow(){return <section className="kfo-workflow"><div><b>01</b><h3>حدد الاحتياج</h3><p>اعرف الفجوات والأولويات.</p></div><div><b>02</b><h3>أطلق المسار</h3><p>خصص رحلة مناسبة لكل دور.</p></div><div><b>03</b><h3>تابع التقدم</h3><p>راقب الإنجاز والالتزام.</p></div><div><b>04</b><h3>قِس الأثر</h3><p>حوّل النتائج إلى قرار.</p></div></section>
