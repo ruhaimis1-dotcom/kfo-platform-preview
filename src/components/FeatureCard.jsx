@@ -1,0 +1,1 @@
+export function FeatureCard({number,title,description}){return <article className="kfo-panel kfo-feature"><span className="kfo-icon">{number}</span><h3>{title}</h3><p>{description}</p></article>}
