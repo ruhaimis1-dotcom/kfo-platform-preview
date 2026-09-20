@@ -1,0 +1,1 @@
+export function CourseCard({number,title,description,onOpen}){return <article className="kfo-panel kfo-course"><span className="kfo-icon">{number}</span><h3>{title}</h3><p>{description}</p><button className="kfo-button kfo-button--primary" onClick={onOpen}>عرض المسار</button></article>}
