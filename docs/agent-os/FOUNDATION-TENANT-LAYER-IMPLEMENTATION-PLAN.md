@@ -5,9 +5,10 @@ Status: in progress on `agent-os/kfo-tenant-consolidation`. Scope is technical f
 ## Checkpoint 0 progress update (2026-09-23)
 
 - Added a framework-neutral request-context boundary in `packages/tenant-core/src/request-context.ts`.
+- Added a Supabase adapter in `packages/tenant-core/src/supabase-request-adapter.ts`: public host lookup uses the limited resolver RPC; membership is rechecked using both user and organization filters through the request-scoped user client.
 - It resolves public/subdomain/custom-domain host scope, rejects unverified/unknown hosts, denies organization-selector conflicts, and requires a server-verified identity plus currently active membership for tenant member context.
 - Added `docs/agent-os/AUTH-TENANT-REQUEST-ADAPTER.md` with the required Next.js/Supabase SSR integration and API isolation checks.
-- Tenant-core tests pass 13/13. This does not replace runtime API, database RLS/pgTAP, or Storage tests; no app shell or linked Supabase project exists in the current repository snapshot.
+- Tenant-core tests pass 17/17. This does not replace runtime API, database RLS/pgTAP, or Storage tests; no app shell or linked KFO Supabase project exists in the current repository snapshot. The only linked Supabase project contains Zawed auction migrations and must not be used for KFO.
 
 ## Work packages and exit evidence
 
@@ -66,6 +67,6 @@ Status: in progress on `agent-os/kfo-tenant-consolidation`. Scope is technical f
 
 ## Current status and commands
 
-Host/context helpers, request-context boundary, initial foundation migration, storage policy migration, and pgTAP fixture are authored. Unit tests: 13/13 pass. The database tests have not run because Supabase CLI, PostgreSQL client and Docker are unavailable in the current execution environment. The Next.js/Supabase SSR adapter and actual API/service/Storage integration test harness are still required before Foundation exit.
+Host/context helpers, request-context boundary, Supabase read adapter, initial foundation migration, storage policy migration, and pgTAP fixture are authored. Unit tests: 17/17 pass. No TypeScript compiler, Supabase CLI, PostgreSQL client or Docker is installed in the current execution environment. The Next.js/Supabase SSR Auth wiring and actual API/service/Storage integration test harness still require the KFO app shell and an isolated KFO development project before Foundation exit.
 
 Run unit tests from `packages/tenant-core` with `npm test`. Run database tests with `supabase test db` in a local Supabase/PostgreSQL environment. No live payment provider integration, `main` merge or production deployment in this checkpoint.

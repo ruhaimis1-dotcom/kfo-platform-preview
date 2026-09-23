@@ -25,17 +25,19 @@ I1 is accepted in `ADR-001-TECHNICAL-STACK.md`: Next.js App Router + React + Typ
 
 ## Current implementation evidence
 
-- Host normalization/tenant mapping and active membership context helpers in `packages/tenant-core`.
+- Host normalization/tenant mapping, active membership context, request-context boundary, and Supabase read adapter in `packages/tenant-core`.
+- Supabase adapter resolves verified hosts through the limited public RPC and rechecks user/organization membership through the request-scoped user client. Next.js trusted-host extraction and Auth `getUser()` integration remain for app-shell wiring.
 - Shared PostgreSQL foundation schema, existing role-code seed, permissions, host aliases, branding, audit, RLS, and explicit grants in `supabase/migrations/202609240001_tenant_foundation.sql`.
 - Private tenant bucket and Storage RLS in `supabase/migrations/202609240002_tenant_storage.sql`.
 - Two/three-tenant pgTAP fixture covering multi-membership, RBAC, host resolution, custom-domain verification, branch scope, and cross-tenant reads/writes in `supabase/tests/tenant_isolation.test.sql`.
-- Unit tests: **7 passed, 0 failed**. SQL/pgTAP tests are authored but not run because Supabase CLI, PostgreSQL client, and Docker are unavailable in this environment.
+- Unit tests: **17 passed, 0 failed**. SQL/pgTAP tests are authored but not run because Supabase CLI, PostgreSQL client, and Docker are unavailable in this environment.
+- The only linked Supabase project has Zawed auction migrations and no dev branches. It is not a KFO project and will not receive KFO migrations. No TypeScript compiler is available locally.
 - No visual identity, route, or product policy was changed. No real payment integration is included.
 
 ## Remaining Foundation work
 
-1. Integrate trusted hosting request metadata and Supabase Auth in the application request adapter.
-2. Run both migrations and pgTAP against local Supabase/PostgreSQL; resolve runtime SQL findings.
+1. Integrate trusted hosting request metadata and Supabase Auth `getUser()` in the Next.js application request adapter.
+2. Provision or identify an isolated KFO development Supabase project; run both migrations and pgTAP there and resolve runtime SQL findings.
 3. Add API/service tests for cross-tenant reads, writes, enumeration, exports, and signed object access using separate test identities.
 4. Complete course/content/licensing, learning, assessments, certificates, commerce, and reporting schemas only in their respective Task Graph phases.
 5. Complete security and Arabic RTL shell QA, then request Human Approval before merging to `main` or releasing production.
