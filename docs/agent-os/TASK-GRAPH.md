@@ -18,7 +18,7 @@ AC4 Library, operations, analytics and commerce: owned/company-created/licensed/
 AC5 Route, identity and visual preservation: approved routes/roles/journeys remain unchanged; checkpoint remains sole visual authority.
 AC6 Human Decision Gate inventory: unresolved product/commercial policies are named, scoped and deny-by-default where possible.
 AC7 Repository inventory: classify actual implementation artifacts vs reference/static files; do not infer implementation from preview.
-Exit criteria: each area has one coherent contract; disagreements are either resolved by existing approved sources or explicitly recorded as Human Decision Gates; no unresolved architecture contradiction blocks the Foundation/Tenant Layer. Status: READY FOR HUMAN REVIEW; do not start production implementation until this gate is accepted.
+Exit criteria: each area has one coherent contract; disagreements are either resolved by existing approved sources or explicitly recorded as Human Decision Gates; no unresolved architecture contradiction blocks the Foundation/Tenant Layer. Status: ACCEPTED by product owner 24 Sep 2026. Architecture Gate closed; implementation may proceed only through the checkpoint below and its gates.
 
 ## Design continuation
 Company experience architecture gates already approved: Training Dashboard; Employees & Teams; Company Courses, Content & Seats; Training Assignment; Reports & Certificates; Organization Tenant Architecture. These are architecture decisions only. Company visual design remains pending and must use KFO Approved Checkpoint identity.
@@ -26,15 +26,19 @@ D0 Orders & Invoices reconciliation with tenant architecture [NEXT DESIGN/PRODUC
 D1 Company Settings reconciliation with tenant architecture.
 D2-D6 company visual previews in the approved order from checkpoint: Training Dashboard; Employees & Teams; Courses & Seats; Training Assignment; Reports & Certificates; Orders & Invoices; Company Settings. Each visual page needs Human Approval; no implementation inferred from sidebar existence.
 
-## First Implementation Checkpoint (prepared, not started)
-I0 Inventory baseline: capture branch/commit, files, stack/runtime, existing preview assets and deployment config; identify app scaffold vs static preview. Produce source-to-domain/page/API/entity/test map.
-I1 Technical ADR: confirm backend/framework choice from repository/source inventory; preserve PostgreSQL data design and Laravel/MySQL option where source leaves choice open. Record only technical decisions that do not change product/policy.
+## First Implementation Checkpoint
+
+Checkpoint 0 prepared; repository inventory I0 complete for the complete visible GitHub tree. Findings and technical ADR boundary are recorded in `docs/agent-os/FOUNDATION-TENANT-IMPLEMENTATION-CHECKPOINT-0.md`. No application implementation has started.
+
+
+I0 Inventory baseline: COMPLETE for the visible repository tree. Only the static preview and assets plus Agent OS docs are present; no app scaffold, package manifest, backend, migrations, storage policies or test harness were found. See Checkpoint 0.
+I1 Technical ADR: OPEN. Repository inventory does not prove a framework/database choice. Reconcile approved source materials and deployment constraints, then record one concrete technical choice before coding.
 I2 Tenant Resolution + Context Foundation: host resolver and alias abstraction; stable organization context; identity/session separation; explicit tenant switching; fail-closed unknown hosts.
 I3 Persistence and authorization boundary: organization_id conventions, tenant-aware repositories/services/policies, database isolation mechanism, migration baseline, audit context.
 I4 Storage boundary: tenant-scoped object key strategy and server-authorized access; tenant placement abstraction without dedicated provisioning.
 I5 Foundation QA: two-tenant negative tests, multi-membership, role/scope tests, storage authorization, unknown host, context switching, audit; mobile/RTL smoke for shell only.
 I6 Checkpoint: implementation evidence, migration/architecture snapshot, tests and unresolved gates. Stop for Human Approval before any public release, merge to main or production publish.
-This checkpoint is a planning artifact until Architecture Gate is accepted.
+Architecture Gate is accepted. Checkpoint 0 is prepared; production implementation is still not started.
 
 ## Implementation DAG after checkpoint approval
 B2 Identity/auth/profile/use-type flow.
