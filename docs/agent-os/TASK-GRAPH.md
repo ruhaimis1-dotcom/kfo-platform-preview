@@ -23,10 +23,10 @@ Company architecture gates already approved: Training Dashboard; Employees & Tea
 Current branch: `agent-os/kfo-tenant-consolidation`, based on `agent-os/kfo-master-spec`; Draft PR #2 remains open. No merge to `main` or production deployment.
 
 - I1 Technical ADR: **COMPLETE**. ADR-001 selects Next.js App Router + React + TypeScript, Supabase Auth, shared PostgreSQL/RLS, private Supabase Storage. “Taa” is an **Unavailable Reference**, non-blocking under the accepted contracts.
-- I2 Tenant resolution/context: typed helpers implemented; real hosting/Auth request adapter and explicit context switching remain.
+- I2 Tenant resolution/context: framework-neutral server request-context boundary implemented, including verified-identity input contract, host/org mismatch rejection, active membership revalidation, and public-host company context selection. Unit tests pass 13/13. Next.js host extraction + Supabase SSR `auth.getUser()` / authenticated membership-query adapter and runtime context switching remain for app-shell integration.
 - I3 Persistence/RBAC: foundation schema, role/permission seed, RLS/grants and audit migration authored; database execution and API/service integration remain.
 - I4 Storage: private bucket and tenant-prefix Storage policies authored; runtime list/read/write/delete tests remain.
-- I5 QA: host/context unit tests pass **7/7**. pgTAP is authored but unexecuted; API/Storage negative tests remain.
+- I5 QA: host/context/request-context unit tests pass **13/13**. pgTAP is authored but unexecuted; API/Storage negative tests remain.
 - I6 checkpoint: capture actual database/API/storage results and unresolved gates before Human Approval.
 
 ## Foundation schema sequence
