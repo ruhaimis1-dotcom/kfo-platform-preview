@@ -231,14 +231,12 @@ returns table (
   portal_name text,
   primary_color text,
   secondary_color text,
-  logo_object_key text,
-  cover_object_key text,
   welcome_copy text
 )
 language sql stable security definer
 set search_path = ''
 as $$
-  select o.id, o.slug, o.display_name, b.portal_name, b.primary_color, b.secondary_color, b.logo_object_key, b.cover_object_key, b.welcome_copy
+  select o.id, o.slug, o.display_name, b.portal_name, b.primary_color, b.secondary_color, b.welcome_copy
   from public.organization_domains d
   join public.organizations o on o.id = d.organization_id
   left join public.tenant_branding b on b.organization_id = o.id
@@ -365,7 +363,7 @@ using ((select public.is_org_member(organization_id)));
 create policy branches_scoped_read on public.organization_branches for select to authenticated
 using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'members.read', id, null)));
 create policy branches_admin_read on public.organization_branches for select to authenticated
-using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'organization.read')));
+using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'branches.manage')));
 create policy branches_insert on public.organization_branches for insert to authenticated
 with check ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'branches.manage')));
 create policy branches_update on public.organization_branches for update to authenticated
@@ -377,7 +375,7 @@ using ((select public.is_org_member(organization_id)) and (select public.has_org
 create policy departments_scoped_read on public.organization_departments for select to authenticated
 using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'members.read', branch_id, id)));
 create policy departments_admin_read on public.organization_departments for select to authenticated
-using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'organization.read')));
+using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'departments.manage')));
 create policy departments_insert on public.organization_departments for insert to authenticated
 with check ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'departments.manage')));
 create policy departments_update on public.organization_departments for update to authenticated
