@@ -89,3 +89,51 @@ Company -> employee -> buy seats -> assign -> employee login -> learning/checkpo
 
 ## Human Decision Gates still unresolved in source
 Do not silently decide: final backend technology where source leaves PostgreSQL design vs Laravel/MySQL implementation open; content-manager role mapping; FI access to private company content; unified company lifecycle states; advanced path interpretation; operating policies such as revenue share, seat withdrawal after learning begins, refunds, passing/renewal defaults.
+
+
+## Organization Tenant Architecture — LOCKED 23 Sep 2026
+
+KFO corporate customers operate as Organization Tenants, not merely company accounts.
+
+### Tenant identity and routing
+- Each organization receives a unique tenant slug and corporate portal at {tenant}.kfo.sa.
+- The tenant is resolved from the host/subdomain and all organization-scoped operations inherit that context.
+- Architecture must allow future custom domains (for example academy.company.com) without redesigning the product.
+
+### Tenant data isolation
+- A subdomain does NOT imply a separate database by default.
+- Standard architecture is shared multi-tenant infrastructure with strict organization_id isolation across database, API/services and storage.
+- Cross-tenant access fails closed and is covered by API-level isolation tests.
+- Architecture must permit future Enterprise tenants to move to dedicated database/storage/infrastructure when commercially or contractually required.
+
+### Tenant branding / white label
+Organizations may configure controlled design tokens and portal content, including organization logo, portal/academy name, primary/secondary brand colours, cover/hero media, welcome copy and approved contact details.
+Customization is constrained by KFO layout/accessibility/system rules; organizations do not arbitrarily redesign product UI in MVP.
+KFO attribution / full white-label removal is a commercial packaging decision, not hard-coded into core architecture.
+
+### Two company experiences
+1. Company Admin Workspace: employees, teams, content, seats/licenses, assignments, reports/certificates, orders/invoices and settings.
+2. Company Employee Portal: branded learner experience for employees at the tenant domain. Baseline navigation: Home, My Courses, Company Library, Paths, My Certificates, My Requests.
+
+Employees must not be dropped into the administrative dashboard.
+
+### Tenant learning library
+A tenant library can contain:
+- Owned Content: content whose usage rights belong to the organization.
+- Company-created Content: courses authored/uploaded inside KFO.
+- Licensed/Purchased Content: KFO or partner content acquired by the organization.
+- Assigned Content: the learner-specific projection of content assigned to that employee.
+
+Owned/company-created content is private to the tenant by default and does not consume KFO course seats unless a separate platform/commercial limit applies.
+Publishing private company content into the KFO public/marketplace catalogue requires a separate review, rights and commercial approval workflow.
+
+### Identity and memberships
+A person has one KFO user identity and may hold multiple memberships/contexts, including personal learning and memberships in multiple organizations with different roles/scopes.
+Do not create separate user identities merely because the same person belongs to multiple tenants.
+Personal learning remains outside company reporting unless explicitly created/assigned within that company context.
+
+### Tenant platform layers
+Tenant Identity -> Tenant Branding -> Tenant Organization -> Tenant Learning Library -> Tenant Training Operations -> Tenant Commerce -> Tenant Analytics -> Tenant Security.
+
+### Enterprise-ready boundary
+The application must avoid assumptions that make tenant extraction impossible. Tenant-scoped persistence/storage/services must be identifiable so a future Enterprise tenant can be routed to dedicated infrastructure without rewriting product journeys.
