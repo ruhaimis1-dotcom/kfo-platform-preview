@@ -1,6 +1,6 @@
 # Company Architecture Consolidation Gate — KFO
 
-Status: **Ready for Human Review**  
+Status: **Accepted by product owner 24 Sep 2026**  
 Branch: `agent-os/kfo-tenant-consolidation` based on `agent-os/kfo-master-spec`  
 Scope: documentation/architecture reconciliation only. No production implementation, main merge, or production deployment.
 
@@ -37,7 +37,7 @@ Scope: documentation/architecture reconciliation only. No production implementat
 - Checkpoint visuals are the only approved visual source. Company previews remain unapproved visually.
 - `index.html` remains preview/reference only.
 
-## Present repository state (what has and has not been verified)
+## Present repository state and I0 inventory
 - Draft PR #1 is open, draft, based on `agent-os/kfo-master-spec` and targets `main`; it introduces Master Spec, Data/RBAC and Task Graph.
 - Master Spec already contains the Organization Tenant Architecture section.
 - Data/RBAC has general company isolation and identities/roles/entities but not the complete host/session/tenant-library/storage/branding/two-experience contract.
@@ -55,9 +55,9 @@ Scope: documentation/architecture reconciliation only. No production implementat
 These do not block the shared-tenant architecture contract. Unapproved policy capabilities default to deny/off.
 
 ## Recommended execution order
-1. Human reviews and accepts this Architecture Consolidation Gate.
-2. I0 full repository/source inventory and source-to-domain/page/API/entity/test map.
-3. I1 record technical ADR after repository evidence; no product-policy decision.
+1. Architecture gate accepted by product owner 24 Sep 2026.
+2. I0 visible repository inventory completed; evidence and source map are recorded in `docs/agent-os/FOUNDATION-TENANT-IMPLEMENTATION-CHECKPOINT-0.md`.
+3. I1 technical ADR remains open: inventory shows a static-only repository and does not prove a concrete application stack. Resolve from approved source materials/deployment constraints before code; this is technical, not product policy.
 4. I2 host resolution + identity/session/tenant context.
 5. I3 database tenant enforcement + RBAC + audit.
 6. I4 tenant storage isolation and future placement boundary.
@@ -67,4 +67,4 @@ These do not block the shared-tenant architecture contract. Unapproved policy ca
 10. Human approval before merge to `main` or production deployment.
 
 ## Checkpoint boundary
-Architecture contracts and this report are documentation artifacts. Foundation/Tenant Layer implementation has **not** started. The next implementation checkpoint is I0–I6 above, to begin only after Human acceptance of this gate. This PR does not merge into main and does not publish production.
+Architecture contracts, inventory and Checkpoint 0 are documentation artifacts. Foundation/Tenant Layer implementation has **not** started. The first code task is blocked only on recording the technical ADR; then begin I2–I6 on a feature branch. This PR does not merge into main and does not publish production.
