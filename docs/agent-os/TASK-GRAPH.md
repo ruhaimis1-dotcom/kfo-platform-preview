@@ -1,40 +1,59 @@
 # KFO Agent OS Task Graph
 
-## Locked inputs
-- Approved KFO visual identity and logo
-- Approved page architecture/journeys
-- Assessment UI contract
-- Result UI contract
-- This Master Spec and Data/RBAC Contract
+## Authority
+Approved Checkpoint 20 Sep 2026 is the current source of truth. Do not rediscover product, rename approved routes, change identity, or auto-publish.
 
-## Execution DAG
-A0 Repository audit [done]
-A1 Master Spec [done in this branch]
-A2 Data Model + RBAC Contract [done in this branch]
-A3 Architecture Gate [pending human approval]
-B1 Create production application shell [blocked by A3]
-B2 Implement design tokens/layout primitives [depends B1]
-B3 Authentication/session [depends B1]
-B4 Database schema + tenant policies [depends A2,B1]
-C1 Company workspace [depends B2,B3,B4]
-C2 Trainee workspace [depends B2,B3,B4]
-C3 KFO admin workspace [depends B2,B3,B4]
-D1 Course/path/enrollment engine [depends C1,C2]
-D2 Progress engine [depends D1]
-D3 Assessment/attempt engine [depends D1,B4]
-D4 Result engine [depends D3]
-D5 Certificate issuance [depends D2,D4]
-D6 Public certificate verification [depends D5]
-E1 Reporting queries/dashboard [depends D1,D2,D4,D5]
-F1 Automated functional tests [depends C/D/E]
-F2 Tenant isolation/security tests [depends B4,C/D/E]
-F3 Responsive/browser QA [depends B2,C/D/E]
-F4 Human approval gate [depends F1,F2,F3]
-F5 Release candidate [depends F4]
+## Completed gates
+A0 repository audit: static preview identified.
+A1 checkpoint reconciliation: approved 16 learner/public previews + architecture v1.1 + visual identity ingested.
+A2 Master Spec reconciled.
+A3 Data/RBAC contract reconciled.
 
-## Agent rules
-- Do not rewrite locked architecture or identity.
-- Do not use prototype numbers as production facts.
-- Do not implement authorization only in UI.
-- Do not merge implementation into main before quality gates.
-- Raise a Human Decision Gate only for product-policy changes.
+## Design continuation — exact current checkpoint
+D0 Company Training Dashboard visual review/preview [NEXT]
+D1 Employees & Teams
+D2 Courses & Seats
+D3 Training Assignment
+D4 Reports & Certificates
+D5 Orders & Invoices
+D6 Company Settings
+Design pages must follow approved KFO identity. Each internal page must be reviewed; sidebar links alone are not completion.
+
+## Implementation DAG
+B0 Source inventory/mapping: map every repo/source artifact to domain/page/API/entity/test and classify matching/partial/missing/uninspected.
+B1 Foundation app architecture and chosen stack [blocked by Human Decision Gate only if final backend choice materially differs from available source].
+B2 Identity/auth/profile/use-type flow.
+B3 Organizations/branches/departments/memberships/invitations.
+B4 RBAC + tenant isolation + audit.
+Gate G1: foundation exit tests.
+
+C1 Catalogue/content/versioning.
+Gate G2: published course display by availability.
+C2 Commerce/orders/payments/seats/gifts/entitlements.
+Gate G3: successful payment produces traceable correct entitlement.
+C3 Reliable learning/player/progress/checkpoints/final assessment.
+Gate G4: completion requires course rules.
+C4 Certificates/QR/public verification/expiry/revocation/correction.
+Gate G5: certificate bound to course version and verification state correct.
+C5 Company assignments/customization/basic paths/private content/reporting.
+Gate G6: full company seat-to-employee-result journey.
+C6 Partner basic portal/review/sales.
+Gate G7: partner course review/sale journey.
+
+## Cross-cutting QA
+Q1 real persistence
+Q2 server authorization
+Q3 tenant isolation via API
+Q4 loading/empty/error/forbidden/not-found/offline/unsaved/partial-failure states as applicable
+Q5 Arabic RTL + mobile
+Q6 audit sensitive actions
+Q7 browser journey tests
+Q8 security gate
+Q9 human approval
+Q10 release candidate
+
+## Deferred
+Advanced skills/gaps/recommendations/readiness; deep Hirely integration; mobile app; advanced partner marketplace; automated settlements.
+
+## Human Decision Gates
+Only stop for unresolved source conflicts or product policy: backend final technology if needed; content-manager role mapping; FI access to private company content; organization lifecycle states; operating policies (revenue share, seat withdrawal after learning starts, refunds, default passing/renewal rules). Do not invent them.
