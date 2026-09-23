@@ -7,8 +7,8 @@ create policy tenant_private_read on storage.objects
 for select to authenticated
 using (
   bucket_id = 'tenant-private' and
-  (select public.has_org_permission(
-    public.try_uuid((storage.foldername(name))[1]),
+  (select private.has_org_permission(
+    private.try_uuid((storage.foldername(name))[1]),
     'tenant.assets.read'
   ))
 );
@@ -17,8 +17,8 @@ create policy tenant_private_insert on storage.objects
 for insert to authenticated
 with check (
   bucket_id = 'tenant-private' and
-  (select public.has_org_permission(
-    public.try_uuid((storage.foldername(name))[1]),
+  (select private.has_org_permission(
+    private.try_uuid((storage.foldername(name))[1]),
     'tenant.assets.manage'
   ))
 );
@@ -27,15 +27,15 @@ create policy tenant_private_update on storage.objects
 for update to authenticated
 using (
   bucket_id = 'tenant-private' and
-  (select public.has_org_permission(
-    public.try_uuid((storage.foldername(name))[1]),
+  (select private.has_org_permission(
+    private.try_uuid((storage.foldername(name))[1]),
     'tenant.assets.manage'
   ))
 )
 with check (
   bucket_id = 'tenant-private' and
-  (select public.has_org_permission(
-    public.try_uuid((storage.foldername(name))[1]),
+  (select private.has_org_permission(
+    private.try_uuid((storage.foldername(name))[1]),
     'tenant.assets.manage'
   ))
 );
@@ -44,8 +44,8 @@ create policy tenant_private_delete on storage.objects
 for delete to authenticated
 using (
   bucket_id = 'tenant-private' and
-  (select public.has_org_permission(
-    public.try_uuid((storage.foldername(name))[1]),
+  (select private.has_org_permission(
+    private.try_uuid((storage.foldername(name))[1]),
     'tenant.assets.manage'
   ))
 );

@@ -1,64 +1,61 @@
 # Foundation / Tenant Layer — Implementation Plan
 
-Status: in progress on `agent-os/kfo-tenant-consolidation`. Scope is technical foundation only; product decisions, visual identity, routes and role names remain governed by approved contracts.
+Status: in progress on `agent-os/kfo-tenant-consolidation`.  
+Scope: technical foundation only; approved KFO routes/roles/visuals and unresolved product policies remain unchanged.
 
-## Work packages and exit evidence
+## Deliverables
 
-| ID | Work | Exit evidence |
+| Work package | Scope | Exit evidence |
 |---|---|---|
-| F0 | ADR-001 stack contract | Decision committed; no external payment integration |
-| F1 | Host resolution/context helpers | Unit tests; unknown/unverified host denied |
-| F2 | Supabase Auth request/session adapter | Verified identity; tenant selector rechecks active membership per request |
-| F3 | Database/RBAC | Migrations plus pgTAP two-tenant tests and API/service authorization tests |
-| F4 | Storage | Private bucket, scoped key, list/read/write/delete denial tests and authorized signed access |
-| F5 | Tenant placement seam | Server-only resolver defaults to shared placement; no per-tenant provisioning |
-| F6 | QA checkpoint | Security/RTL results, known gaps, Human Approval before main/release |
+| F0 Stack contract | ADR-001, runtime boundaries, no paid-provider integration | ADR committed; application dependency manifest and preview command documented when app shell begins |
+| F1 Host resolution | Normalize trusted host; distinguish public host, `{slug}.kfo.sa`, verified custom domain; reject malformed/reserved/nested hosts | Unit tests; unknown/unverified fails closed |
+| F2 Identity/context | One Supabase Auth user; explicit personal or organization context; memberships may span organizations; context switch revalidates active membership | Auth-context tests; no tenant claims as sole authorization |
+| F3 Database/RBAC | Organizations, domains, branches/departments, memberships, role assignments, permission catalog, tenant branding, audit | Migrations + RLS/policy tests, including two-tenant denial |
+| F4 Storage | Private tenant bucket; first key segment is organization UUID; Storage policies use the same permission predicates; signed URL only after server check | Cross-tenant object tests for list/read/write/delete |
+| F5 Integration boundary | Typed tenant resolver and context library; server-only adapters for Supabase | Unit tests; no UI/route/brand redesign |
+| F6 Checkpoint | QA/security evidence and known gaps | Human review before any main merge/production release |
 
-## Migration sequence
+## Schema/migration sequence
+1. `0001_tenant_foundation.sql`: tenant/org identity, verified host aliases, branches/departments, memberships, existing role codes, role/permission mappings, constrained tenant branding, audit events, host-resolution/create-organization functions, RLS and explicit grants.
+2. `0002_tenant_storage.sql`: private bucket, tenant object-key convention, private Storage RLS, safe UUID parser.
+3. Future domain migrations only when their implementation phase begins: course/content ownership and versioning; learning progress/assessment; certificates/verification read model; commerce/orders/seats/entitlements; reporting. They must include `organization_id`/learning context and tenant tests before exposure.
 
-1. `202609240001_tenant_foundation.sql`: organizations, verified domains, branches/departments, memberships, existing role codes, permission catalog/mappings, constrained branding, audit, host/domain/create helpers, RLS and explicit grants.
-2. `202609240002_tenant_storage.sql`: private bucket, tenant organization UUID object prefix, Storage RLS.
-3. Later Task Graph phases add course/content/version/licensing; learning/progress/assessment; certificates/verification read model; commerce/orders/payments/seats/entitlements; reporting. Each tenant-owned row must carry `organization_id` or an explicit partition reference and tests before exposure.
+## Auth and tenant-resolution flow
+1. Hosting adapter obtains the normalized request host from its trusted request metadata; do not prefer arbitrary `X-Forwarded-Host` unless the trusted proxy overwrites it.
+2. Public KFO host resolves to no company tenant. `{slug}.kfo.sa` maps by normalized slug. Custom hostname maps only when `organization_domains.status = verified` and organization is active.
+3. Unknown, nested, malformed, reserved or unverified hosts stop with a non-leaking not-found response.
+4. Supabase Auth verifies the session and returns the stable KFO user id.
+5. Tenant host selects portal context; on `/business/*`, requested organization is only a selector. Server loads active membership and scoped roles for that user and organization.
+6. Server performs permission check and queries with the user JWT so PostgreSQL RLS repeats authorization. Do not use the service key for ordinary user reads/writes.
+7. Context switch changes the selector only after membership validation and emits an audit event. Membership is rechecked per request to honor suspension/role changes.
+8. Employee navigation remains in the Company Employee Portal. Company administration requires the existing authorized company role. Approved route names remain unchanged.
 
-## Auth and tenant resolution flow
+## RBAC policy model
+- Preserve role codes SA, CO, BM, EM, IN, TC, CQ, PA, FI, SU.
+- Identity is `auth.users.id`; membership is a separate row per organization and may carry branch/department scope; role assignments are membership-scoped.
+- Permission lookup intersects active membership + role grant + row organization + optional branch/department scope. The schema uses an internal `tenant_access_enabled` fail-closed switch; it does not define product lifecycle states or suspension/reactivation policy.
+- Explicitly unresolved permissions remain denied. In particular, no FI private-content permission is seeded; content-manager mapping is not invented.
 
-1. Hosting adapter reads normalized host from trusted request metadata; do not trust arbitrary forwarded-host headers.
-2. Public KFO host selects no organization. `{company-slug}.kfo.sa` resolves one verified domain row. A future custom host resolves only when its ownership/domain status is verified.
-3. Unknown, malformed, reserved, nested, ambiguous, or unverified hosts fail closed with non-leaking not-found behavior.
-4. Supabase Auth verifies session and supplies stable KFO `user_id`.
-5. Host or explicit active-org choice selects context only. Server loads current membership, status, roles, branch and department scope; revalidate on each tenant request.
-6. Server applies the permission check, then queries with the user-scoped JWT so PostgreSQL RLS repeats authorization. Keep service role credentials server-only and outside normal user queries.
-7. Explicit context switch succeeds only after membership validation and is audited. Revoked/suspended membership stops access on the next authorization check.
-8. Employee Portal and Company Admin Workspace stay separate; existing approved routes do not change.
+## Tenant storage model
+- Private bucket, never public by default.
+- Object key format: `<organization_uuid>/<resource_type>/<resource_uuid>/<opaque_filename>`; no email/name in paths.
+- Storage metadata and content rows carry organization id and rights/licence/visibility metadata. RLS validates the first object-key segment against active membership and requested permission.
+- Browser never supplies an unrestricted bucket/path; use an authorized application action and short-lived signed URL where delivery requires it.
+- Use an adapter with `tenantPlacement(organizationId)` contract, defaulting to shared Supabase project/bucket. Dedicated enterprise placement is an adapter/configuration seam only; no provisioning in this phase.
 
-## Database/RBAC policies
+## Tenant isolation test matrix
+- Public KFO host, known slug, unknown slug, reserved slug, nested slug, suffix lookalike, malformed host, custom verified/unverified/unknown domain.
+- User with personal context and two memberships with different roles; switch between both, then revoked/suspended membership denied immediately.
+- Tenant A user cannot select/insert/update/delete/list/count/export Tenant B rows even when supplying B's UUID.
+- CO authorized access vs EM blocked from company settings; BM restricted to branch/department; FI has finance-only permissions and cannot read private content by default.
+- Tenant storage list/read/upload/update/delete: same-tenant allowed only by permission, cross-tenant denied, malformed key denied, guessed object key denied without authorization.
+- Tenant branding validation: reject arbitrary CSS/script and invalid color/media references; keep layout/accessibility tokens controlled.
+- Audit context records actor, organization, action, timestamp, scope and before/after for the covered sensitive actions.
+- Regression: personal learning stays out of company analytics; public certificate verification excludes email/phone/score.
 
-- RLS on every exposed tenant-owned table, with explicit least-privilege grants; RLS alone does not replace API checks.
-- Helpers check authenticated user, active membership, organization enabled for technical access, role permission, and optional branch/department scope. Missing scope never widens access.
-- Seed only source-supported baseline mappings. No FI private-content access; content manager mapping and organization lifecycle remain unresolved/deny-by-default.
-- Tenant provisioning is not exposed as arbitrary public self-service; it must be connected to the already approved company onboarding flow.
-- Verified custom domain changes must remain platform-controlled; tenant admins can request only, not self-verify or claim.
-
-## Storage isolation
-
-- Private bucket only. Key shape: `<organization_uuid>/<resource_type>/<resource_uuid>/<opaque_filename>`; never include email/person name.
-- Bucket RLS reads organization UUID from the first segment and calls the same membership/permission predicate as database access.
-- Client cannot choose an unrestricted key/path. Application action authorizes the resource before upload/download and issues short-lived signed access as needed.
-- Keep `tenantPlacement(organizationId)` and storage adapter server-side. Default is shared Supabase; dedicated enterprise placement is a future migration seam, not provisioning now.
-
-## Isolation test matrix
-
-- Hosts: public, known subdomain, unknown/reserved/nested/malformed/suffix-lookalike, verified/unverified custom domain.
-- Identities: personal context plus two different tenant memberships; switch to authorized org; reject nonmember, suspended and stale membership.
-- Database/API: Tenant A cannot read/write/delete/list/count/export Tenant B records by supplying UUIDs; test both denied and permitted paths.
-- RBAC: CO authorized company settings; EM denied admin; BM restricted to assigned branch/department; FI finance-only and denied private content by default.
-- Storage: same-tenant authorized access; cross-tenant list/read/upload/update/delete denied; malformed/guessed key denied; signed URLs short-lived and issued only after server checks.
-- Data leakage: personal learning excluded from company reporting; public certificate verification omits email/phone/score.
-- Audit: actor, organization, action, scope, timestamp and relevant before/after state on sensitive mutation.
-- Regression: approved routes, roles, KFO identity and Arabic RTL references remain unchanged.
-
-## Current status and commands
-
-Host/context helper, initial foundation migration, storage policy migration, and pgTAP fixture are authored. Unit tests: 7/7 pass. The database tests have not run because Supabase CLI, PostgreSQL client and Docker are unavailable in the current execution environment. The app request adapter and actual API/service/Storage integration test harness are still required before Foundation exit.
-
-Run unit tests from `packages/tenant-core` with `npm test`. Run database tests with `supabase test db` in a local Supabase/PostgreSQL environment. No live payment provider integration, `main` merge or production deployment in this checkpoint.
+## Test commands and release gates
+- Tenant core unit tests: `npm test --workspace @kfo/tenant-core` (or package-local `npm test`).
+- Database policy tests: `supabase test db` against local Supabase/PostgreSQL with pgTAP fixtures.
+- API integration tests: call the actual request/service layer with two identities and two tenants; never rely only on helper-function unit tests.
+- Security review checks RLS enabled on every exposed table, minimal grants, no service key in client, safe views/RPCs, and Storage policies.
+- Any failed cross-tenant negative test blocks checkpoint exit. No live payment integration, main merge, or production deployment in this checkpoint.

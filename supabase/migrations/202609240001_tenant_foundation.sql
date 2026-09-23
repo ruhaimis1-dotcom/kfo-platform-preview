@@ -2,6 +2,11 @@
 -- Shared PostgreSQL tenancy. All tenant-facing authorization is deny-by-default.
 create extension if not exists pgcrypto with schema extensions;
 
+-- Non-exposed helpers keep SECURITY DEFINER authorization functions outside the Data API.
+create schema if not exists private;
+revoke all on schema private from public;
+grant usage on schema private to authenticated;
+
 create table public.organizations (
   id uuid primary key default extensions.gen_random_uuid(),
   slug text not null unique check (slug ~ '^[a-z0-9]([a-z0-9-]{0,38}[a-z0-9])?$'),
@@ -170,12 +175,12 @@ create table public.audit_events (
 );
 create index audit_events_org_time_idx on public.audit_events(organization_id, occurred_at desc);
 
-create or replace function public.is_org_member(p_organization_id uuid)
+create or replace function private.is_org_member(p_organization_id uuid)
 returns boolean
 language sql stable security definer
 set search_path = ''
 as $$
-  select exists (
+  select coalesce((select auth.uid()) is not null, false) and exists (
     select 1 from public.organization_memberships m
     where m.organization_id = p_organization_id
       and m.user_id = (select auth.uid())
@@ -184,7 +189,7 @@ as $$
   );
 $$;
 
-create or replace function public.has_org_permission(
+create or replace function private.has_org_permission(
   p_organization_id uuid,
   p_permission text,
   p_branch_id uuid default null,
@@ -194,7 +199,7 @@ returns boolean
 language sql stable security definer
 set search_path = ''
 as $$
-  select exists (
+  select coalesce((select auth.uid()) is not null, false) and exists (
     select 1
     from public.organization_memberships m
     join public.membership_roles mr
@@ -212,7 +217,7 @@ as $$
   );
 $$;
 
-create or replace function public.try_uuid(p_value text)
+create or replace function private.try_uuid(p_value text)
 returns uuid language plpgsql immutable
 set search_path = ''
 as $$
@@ -233,7 +238,7 @@ returns table (
   secondary_color text,
   welcome_copy text
 )
-language sql stable security definer
+language sql stable security invoker
 set search_path = ''
 as $$
   select o.id, o.slug, o.display_name, b.portal_name, b.primary_color, b.secondary_color, b.welcome_copy
@@ -242,11 +247,10 @@ as $$
   left join public.tenant_branding b on b.organization_id = o.id
   where d.hostname = lower(trim(trailing '.' from p_hostname))
     and d.status = 'verified'
-    and o.tenant_access_enabled
   limit 1;
 $$;
 
-create or replace function public.request_custom_domain(p_organization_id uuid, p_hostname text)
+create or replace function private.request_custom_domain(p_organization_id uuid, p_hostname text)
 returns uuid
 language plpgsql security definer
 set search_path = ''
@@ -255,7 +259,8 @@ declare
   v_hostname text := lower(trim(trailing '.' from trim(p_hostname)));
   v_id uuid;
 begin
-  if not public.has_org_permission(p_organization_id, 'domains.manage') then
+  if (select auth.uid()) is null then raise exception 'authentication required' using errcode = '42501'; end if;
+  if not private.has_org_permission(p_organization_id, 'domains.manage') then
     raise exception 'organization domain permission required' using errcode = '42501';
   end if;
   if v_hostname !~ '^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$' or v_hostname ~ '\.\.' or v_hostname ~ '(^|\.)-' or v_hostname ~ '-(\.|$)' then
@@ -271,7 +276,7 @@ begin
 end;
 $$;
 
-create or replace function public.create_organization(p_display_name text, p_slug text)
+create or replace function private.create_organization(p_display_name text, p_slug text)
 returns uuid
 language plpgsql security definer
 set search_path = ''
@@ -303,7 +308,7 @@ begin
 end;
 $$;
 
-create or replace function public.audit_tenant_row()
+create or replace function private.audit_tenant_row()
 returns trigger language plpgsql security definer
 set search_path = ''
 as $$
@@ -328,15 +333,15 @@ end;
 $$;
 
 create trigger organizations_audit after insert or update or delete on public.organizations
-for each row execute function public.audit_tenant_row();
+for each row execute function private.audit_tenant_row();
 create trigger organization_domains_audit after insert or update or delete on public.organization_domains
-for each row execute function public.audit_tenant_row();
+for each row execute function private.audit_tenant_row();
 create trigger organization_memberships_audit after insert or update or delete on public.organization_memberships
-for each row execute function public.audit_tenant_row();
+for each row execute function private.audit_tenant_row();
 create trigger membership_roles_audit after insert or update or delete on public.membership_roles
-for each row execute function public.audit_tenant_row();
+for each row execute function private.audit_tenant_row();
 create trigger tenant_branding_audit after insert or update or delete on public.tenant_branding
-for each row execute function public.audit_tenant_row();
+for each row execute function private.audit_tenant_row();
 
 alter table public.organizations enable row level security;
 alter table public.organization_domains enable row level security;
@@ -351,69 +356,75 @@ alter table public.tenant_branding enable row level security;
 alter table public.audit_events enable row level security;
 
 create policy organizations_member_read on public.organizations for select to authenticated
-using ((select public.is_org_member(id)));
+using ((select private.is_org_member(id)));
+create policy organizations_public_portal_read on public.organizations for select to anon
+using (tenant_access_enabled);
 create policy organizations_settings_update on public.organizations for update to authenticated
-using ((select public.has_org_permission(id, 'organization.settings.manage')))
-with check ((select public.has_org_permission(id, 'organization.settings.manage')));
+using ((select private.has_org_permission(id, 'organization.settings.manage')))
+with check ((select private.has_org_permission(id, 'organization.settings.manage')));
 
 create policy organization_domains_member_read on public.organization_domains for select to authenticated
-using ((select public.is_org_member(organization_id)));
+using ((select private.is_org_member(organization_id)));
+create policy organization_domains_public_portal_read on public.organization_domains for select to anon
+using (status = 'verified' and exists (select 1 from public.organizations o where o.id = organization_id and o.tenant_access_enabled));
 -- Alias verification is platform-controlled. Company admins may request, but cannot verify/claim a domain.
 
 create policy branches_scoped_read on public.organization_branches for select to authenticated
-using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'members.read', id, null)));
+using ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'members.read', id, null)));
 create policy branches_admin_read on public.organization_branches for select to authenticated
-using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'branches.manage')));
+using ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'branches.manage')));
 create policy branches_insert on public.organization_branches for insert to authenticated
-with check ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'branches.manage')));
+with check ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'branches.manage')));
 create policy branches_update on public.organization_branches for update to authenticated
-using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'branches.manage')))
-with check ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'branches.manage')));
+using ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'branches.manage')))
+with check ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'branches.manage')));
 create policy branches_delete on public.organization_branches for delete to authenticated
-using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'branches.manage')));
+using ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'branches.manage')));
 
 create policy departments_scoped_read on public.organization_departments for select to authenticated
-using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'members.read', branch_id, id)));
+using ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'members.read', branch_id, id)));
 create policy departments_admin_read on public.organization_departments for select to authenticated
-using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'departments.manage')));
+using ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'departments.manage')));
 create policy departments_insert on public.organization_departments for insert to authenticated
-with check ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'departments.manage')));
+with check ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'departments.manage')));
 create policy departments_update on public.organization_departments for update to authenticated
-using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'departments.manage')))
-with check ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'departments.manage')));
+using ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'departments.manage')))
+with check ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'departments.manage')));
 create policy departments_delete on public.organization_departments for delete to authenticated
-using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'departments.manage')));
+using ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'departments.manage')));
 
 create policy memberships_read_self_or_scoped on public.organization_memberships for select to authenticated
-using (user_id = (select auth.uid()) or (select public.has_org_permission(organization_id, 'members.read', branch_id, department_id)));
+using (user_id = (select auth.uid()) or (select private.has_org_permission(organization_id, 'members.read', branch_id, department_id)));
 create policy memberships_insert_invitation on public.organization_memberships for insert to authenticated
-with check (status = 'invited' and (select public.has_org_permission(organization_id, 'members.manage', branch_id, department_id)));
+with check (status = 'invited' and (select private.has_org_permission(organization_id, 'members.manage', branch_id, department_id)));
 create policy memberships_update_manage on public.organization_memberships for update to authenticated
-using ((select public.has_org_permission(organization_id, 'members.manage', branch_id, department_id)))
-with check ((select public.has_org_permission(organization_id, 'members.manage', branch_id, department_id)));
+using ((select private.has_org_permission(organization_id, 'members.manage', branch_id, department_id)))
+with check ((select private.has_org_permission(organization_id, 'members.manage', branch_id, department_id)));
 
 create policy roles_authenticated_read on public.kfo_roles for select to authenticated using (true);
 create policy permissions_authenticated_read on public.kfo_permissions for select to authenticated using (true);
 create policy role_permissions_authenticated_read on public.kfo_role_permissions for select to authenticated using (true);
 
 create policy membership_roles_scoped_read on public.membership_roles for select to authenticated
-using ((select public.has_org_permission(organization_id, 'members.read', branch_id, department_id)));
+using ((select private.has_org_permission(organization_id, 'members.read', branch_id, department_id)));
 create policy membership_roles_insert_manage on public.membership_roles for insert to authenticated
-with check (role_code in ('BM', 'EM', 'FI') and (select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'members.manage', branch_id, department_id)) and exists (select 1 from public.organization_memberships m where m.organization_id = membership_roles.organization_id and m.id = membership_roles.membership_id));
+with check (role_code in ('BM', 'EM', 'FI') and (select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'members.manage', branch_id, department_id)) and exists (select 1 from public.organization_memberships m where m.organization_id = membership_roles.organization_id and m.id = membership_roles.membership_id));
 create policy membership_roles_update_manage on public.membership_roles for update to authenticated
-using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'members.manage', branch_id, department_id)) and role_code in ('BM', 'EM', 'FI'))
-with check (role_code in ('BM', 'EM', 'FI') and (select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'members.manage', branch_id, department_id)) and exists (select 1 from public.organization_memberships m where m.organization_id = membership_roles.organization_id and m.id = membership_roles.membership_id));
+using ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'members.manage', branch_id, department_id)) and role_code in ('BM', 'EM', 'FI'))
+with check (role_code in ('BM', 'EM', 'FI') and (select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'members.manage', branch_id, department_id)) and exists (select 1 from public.organization_memberships m where m.organization_id = membership_roles.organization_id and m.id = membership_roles.membership_id));
 create policy membership_roles_delete_manage on public.membership_roles for delete to authenticated
-using ((select public.is_org_member(organization_id)) and (select public.has_org_permission(organization_id, 'members.manage', branch_id, department_id)));
+using ((select private.is_org_member(organization_id)) and (select private.has_org_permission(organization_id, 'members.manage', branch_id, department_id)));
 
 create policy tenant_branding_member_read on public.tenant_branding for select to authenticated
-using ((select public.is_org_member(organization_id)));
+using ((select private.is_org_member(organization_id)));
+create policy tenant_branding_public_portal_read on public.tenant_branding for select to anon
+using (exists (select 1 from public.organizations o where o.id = organization_id and o.tenant_access_enabled) and exists (select 1 from public.organization_domains d where d.organization_id = organization_id and d.status = 'verified'));
 create policy tenant_branding_manage on public.tenant_branding for all to authenticated
-using ((select public.has_org_permission(organization_id, 'organization.branding.manage')))
-with check ((select public.has_org_permission(organization_id, 'organization.branding.manage')));
+using ((select private.has_org_permission(organization_id, 'organization.branding.manage')))
+with check ((select private.has_org_permission(organization_id, 'organization.branding.manage')));
 
 create policy audit_events_scoped_read on public.audit_events for select to authenticated
-using ((select public.has_org_permission(organization_id, 'audit.read')));
+using ((select private.has_org_permission(organization_id, 'audit.read')));
 
 -- Explicit grants: RLS policies do not replace table grants.
 revoke all on public.organizations, public.organization_domains, public.organization_branches,
@@ -421,6 +432,9 @@ revoke all on public.organizations, public.organization_domains, public.organiza
   public.kfo_permissions, public.kfo_role_permissions, public.membership_roles,
   public.tenant_branding, public.audit_events from anon, authenticated;
 
+grant select (id, slug, display_name) on public.organizations to anon;
+grant select (organization_id, hostname, status) on public.organization_domains to anon;
+grant select (organization_id, portal_name, primary_color, secondary_color, welcome_copy) on public.tenant_branding to anon;
 grant select on public.organizations, public.organization_domains, public.organization_branches,
   public.organization_departments, public.organization_memberships, public.kfo_roles,
   public.kfo_permissions, public.kfo_role_permissions, public.membership_roles,
@@ -434,16 +448,16 @@ grant insert, delete on public.membership_roles to authenticated;
 grant update (role_code, branch_id, department_id) on public.membership_roles to authenticated;
 grant insert, update, delete on public.tenant_branding to authenticated;
 grant usage, select on sequence public.audit_events_id_seq to authenticated;
-revoke all on function public.is_org_member(uuid) from public, anon;
-revoke all on function public.has_org_permission(uuid, text, uuid, uuid) from public, anon;
-revoke all on function public.try_uuid(text) from public, anon, authenticated;
+revoke all on function private.is_org_member(uuid) from public, anon;
+revoke all on function private.has_org_permission(uuid, text, uuid, uuid) from public, anon;
+revoke all on function private.try_uuid(text) from public, anon, authenticated;
 revoke all on function public.resolve_tenant_host(text) from public;
-revoke all on function public.create_organization(text, text) from public, anon;
-revoke all on function public.request_custom_domain(uuid, text) from public, anon;
-revoke all on function public.audit_tenant_row() from public, anon, authenticated;
-grant execute on function public.is_org_member(uuid) to authenticated;
-grant execute on function public.has_org_permission(uuid, text, uuid, uuid) to authenticated;
-grant execute on function public.try_uuid(text) to authenticated;
+revoke all on function private.create_organization(text, text) from public, anon;
+revoke all on function private.request_custom_domain(uuid, text) from public, anon;
+revoke all on function private.audit_tenant_row() from public, anon, authenticated;
+grant execute on function private.is_org_member(uuid) to authenticated;
+grant execute on function private.has_org_permission(uuid, text, uuid, uuid) to authenticated;
+grant execute on function private.try_uuid(text) to authenticated;
 grant execute on function public.resolve_tenant_host(text) to anon, authenticated;
 -- Organization provisioning remains behind the approved onboarding/product flow; do not expose direct self-service creation yet.
-grant execute on function public.request_custom_domain(uuid, text) to authenticated;
+grant execute on function private.request_custom_domain(uuid, text) to authenticated;

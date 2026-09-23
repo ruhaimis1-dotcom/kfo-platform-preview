@@ -33,16 +33,16 @@ insert into public.membership_roles (organization_id, membership_id, role_code, 
 set local role authenticated;
 select set_config('request.jwt.claim.sub', '10000000-0000-4000-8000-000000000001', true);
 
-select ok(public.is_org_member('20000000-0000-4000-8000-000000000001'), 'active member sees own tenant membership');
-select ok(not public.is_org_member('20000000-0000-4000-8000-000000000002'), 'tenant A identity is not member of tenant B');
-select ok(public.is_org_member('20000000-0000-4000-8000-000000000003'), 'one identity can have a second organization membership');
-select ok(public.has_org_permission('20000000-0000-4000-8000-000000000001', 'organization.settings.manage'), 'CO has authorized tenant permission');
-select ok(not public.has_org_permission('20000000-0000-4000-8000-000000000002', 'organization.settings.manage'), 'tenant B permission denied');
+select ok(private.is_org_member('20000000-0000-4000-8000-000000000001'), 'active member sees own tenant membership');
+select ok(not private.is_org_member('20000000-0000-4000-8000-000000000002'), 'tenant A identity is not member of tenant B');
+select ok(private.is_org_member('20000000-0000-4000-8000-000000000003'), 'one identity can have a second organization membership');
+select ok(private.has_org_permission('20000000-0000-4000-8000-000000000001', 'organization.settings.manage'), 'CO has authorized tenant permission');
+select ok(not private.has_org_permission('20000000-0000-4000-8000-000000000002', 'organization.settings.manage'), 'tenant B permission denied');
 select is((select count(*)::int from public.organizations), 2, 'RLS shows only the two organizations where this identity has memberships');
 select is((select count(*)::int from public.organization_memberships), 2, 'RLS hides unrelated membership while preserving both of this identity memberships');
 select is((select count(*)::int from public.resolve_tenant_host('tenant-a-test.kfo.sa')), 1, 'verified tenant host resolves');
 select is((select count(*)::int from public.resolve_tenant_host('tenant-b-test.kfo.sa')), 1, 'exact host returns portal branding metadata only');
-select isnt(public.request_custom_domain('20000000-0000-4000-8000-000000000001', 'academy.tenant-a.example'), null, 'company admin can request a custom domain');
+select isnt(private.request_custom_domain('20000000-0000-4000-8000-000000000001', 'academy.tenant-a.example'), null, 'company admin can request a custom domain');
 select is((select count(*)::int from public.resolve_tenant_host('academy.tenant-a.example')), 0, 'pending custom domain does not resolve before platform verification');
 select is((select count(*)::int from public.organization_domains where hostname = 'tenant-b-test.kfo.sa'), 0, 'tenant A cannot enumerate tenant B domain rows');
 select is((select count(*)::int from public.organization_branches where organization_id = '20000000-0000-4000-8000-000000000002'), 0, 'tenant A cannot enumerate tenant B branches');
@@ -52,13 +52,13 @@ select throws_ok($$insert into public.organization_branches (organization_id, na
 reset role;
 set local role authenticated;
 select set_config('request.jwt.claim.sub', '10000000-0000-4000-8000-000000000003', true);
-select ok(public.has_org_permission('20000000-0000-4000-8000-000000000001', 'assignments.manage', '30000000-0000-4000-8000-000000000001'), 'branch manager permission applies in assigned branch');
-select ok(not public.has_org_permission('20000000-0000-4000-8000-000000000001', 'assignments.manage', '30000000-0000-4000-8000-000000000002'), 'branch manager permission is denied outside assigned branch');
+select ok(private.has_org_permission('20000000-0000-4000-8000-000000000001', 'assignments.manage', '30000000-0000-4000-8000-000000000001'), 'branch manager permission applies in assigned branch');
+select ok(not private.has_org_permission('20000000-0000-4000-8000-000000000001', 'assignments.manage', '30000000-0000-4000-8000-000000000002'), 'branch manager permission is denied outside assigned branch');
 
 reset role;
 set local role authenticated;
 select set_config('request.jwt.claim.sub', '10000000-0000-4000-8000-000000000002', true);
-select ok(not public.has_org_permission('20000000-0000-4000-8000-000000000002', 'content.library.read'), 'FI is denied private content by default');
+select ok(not private.has_org_permission('20000000-0000-4000-8000-000000000002', 'content.library.read'), 'FI is denied private content by default');
 
 select * from finish();
 rollback;
