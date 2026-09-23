@@ -1,175 +1,91 @@
 # KFO Master Spec & Architecture Contract
 
-Status: Architecture baseline for Agent OS
-Source branch: main
-Rule: approved product architecture and visual identity are locked inputs. Changes to product scope, roles, journeys, or brand require a Human Decision Gate.
+Status: reconciled with KFO Approved Checkpoint — 20 Sep 2026.
+Authority order: current approved checkpoint > architecture/page-structure v1.1 > earlier source documents > preview repository.
+Rule: do not rediscover the product, change identity, rename approved routes, or publish automatically.
 
-## 1. Product purpose
-KFO is a corporate training tracking platform that connects organizational training needs, learner journeys, assessments, certificates, verification, and reporting.
+## Product
+KFO is a training, employee-development and certificate platform for individuals, companies and training partners. Domains include identity/access, organizations, catalogue/content, commerce, learning, assessment, certificates, company development, partners, reporting, notifications and integrations.
 
-## 2. Product surfaces
-### Public
-- Home
-- Training/course catalogue
-- About KFO
-- Contact/demo request
-- Login
-- Public certificate verification
+## Approved visual checkpoint
+Sixteen desktop previews are approved: public home/hero; catalogue; course details; purchase/enrolment completion; enrolment confirmation; learner dashboard; course/player; lesson; assessment; result; certificate; public verification; My Courses; My Certificates; My Requests; Account Settings.
+Preview data, prices, names, statistics and QR values are examples only.
 
-### Company workspace
-- Dashboard
-- Trainees/employees
-- Training paths / assignments
-- Progress tracking
-- Certificates
-- Reports
-- Settings
+Exact design stopping point: the four internal learner pages were approved. Company-page map was shown for the next phase, but company visual previews were not yet produced/approved.
 
-### Trainee workspace
-- Dashboard
-- My courses
-- Course/training experience
-- Assessment
-- Result
-- My certificates
-- My requests
-- Account settings
+## Locked identity
+- Existing KFO logo: no redesign.
+- Arabic: IBM Plex Sans Arabic. English/numbers: Inter. Ship actual font files at implementation.
+- Forest Ink #04180F; Deep Teal #123B32; Operational Green #205E1E; Signal Green #419B2A; Soft Lime #88D768; Mist #F4F6F8; Sage Tint #E7EEE9.
+- RTL first; WCAG AA; state meaning cannot rely on colour alone.
+- Public home uses a full-width hero. Content pages use short introductions. User dashboards do not use marketing heroes.
+- Home remains visible in navigation and logo links home.
 
-### KFO administration
-- Companies
-- Users
-- Training catalogue/content
-- Enrollments/assignments
-- Assessments
-- Certificates
-- Reports
-- Platform settings and permissions
+## Approved route architecture — do not rename
+Public/account: /, /catalog, /catalog/[course-slug], /paths, /paths/[path-slug], /partners, /partners/[partner-slug], /verify-certificate, /about, /contact, /login, /register, /forgot-password, /profile, /settings, /notifications, /orders, /orders/[id], /gifts.
+Learner entry: /learn/dashboard.
+Company entry: /business/dashboard.
+Partner entry: /partner/dashboard.
+Administration entry: /admin/dashboard.
+Detailed route maps remain governed by KFO-Architecture-and-Page-Structure-v1.1.
 
-## 3. Core domain model
-- Organization
-- User
-- OrganizationMembership
-- Role / Permission
-- Course
-- LearningPath
-- LearningPathCourse
-- Enrollment / Assignment
-- CourseProgress
-- Assessment
-- Question
-- AssessmentAttempt
-- Answer
-- Result
-- Certificate
-- CertificateVerification
-- TrainingRequest
-- AuditEvent
+## Roles
+SA platform admin; CO company admin; BM branch/department manager; EM employee; IN trainer; TC training center; CQ quality reviewer; PA partner admin; FI finance admin; SU individual user.
+Membership is independent of user identity and scopes organization/branch/department. A role never grants access outside its scope. Multi-organization membership with different permissions must be supported and tested.
 
-All tenant-owned records must be scoped by organization_id where applicable.
+## Multi-tenant invariant
+Isolation across companies applies in API, services, database and storage. Company reports exclude employees' personal learning. Private resources carry company scope. Access to assets is authorized.
 
-## 4. Roles baseline
-- KFO_ADMIN: platform-wide administration.
-- COMPANY_ADMIN: manages its organization, trainees, assignments and reports.
-- TRAINEE: accesses only assigned learning, own progress, assessments, results, certificates, requests and profile.
+## Commerce/access rules
+- No paid access before confirmed payment.
+- payment-verification pending is not failure and must not trigger duplicate payment.
+- Free learning has no payment fields.
+- Existing active entitlement starts/continues learning without repurchase.
+- Gifts and team seats use their appropriate flows; company purchasing requires authorized user.
+- Payment references are unique; amounts use integer minor units; post-payment enrolment failure must be traceable/recoverable.
+- My Requests covers personal purchases and gifts.
 
-Fine-grained permissions are implemented behind these roles; no cross-company access is allowed.
+## Learning rules
+- My Courses includes personal, free and company-assigned learning.
+- Learning progress is independent from entitlement/access lifetime; withdrawing membership/seat does not erase history.
+- Next does not automatically complete a lesson.
+- Save resume position and handle save failures.
+- Lesson order, assessment requirements, passing score, attempts and time are per-course/per-assessment settings.
+- Learning and certificates bind to a specific course version.
 
-## 5. Training lifecycle
-Draft course/path -> publish -> assign/enroll -> learner starts -> progress saved -> requirements completed -> assessment attempt (when required) -> result calculated -> pass/fail -> certificate eligibility -> certificate issued -> public verification.
+## Assessment/result rules
+Approved assessment UI: question, question map, timer where configured, saved answers.
+Manual grading does not expose a final result before review.
+Approved result UI: score and pass state, with certificate action only when requirements are satisfied.
 
-## 6. Assessment contract
-Approved assessment UI includes:
-- question
-- question map/navigation
-- timer when configured
-- saved answers
+## Certificates/verification
+- Issue only after requirements are satisfied.
+- Expired/revoked certificates remain in history and verification reflects actual state.
+- Public verification must not expose email, phone or score.
+- Issuer must be factual; no undocumented accreditation logos/claims.
+- Name changes affect future certificates; issued certificates require a separate correction request.
 
-Attempt state must be server-authoritative. Result issuance must not rely on client-side values.
+## Company design phase — next exact sequence
+1. Training dashboard
+2. Employees & teams
+3. Courses & seats
+4. Training assignment
+5. Reports & certificates
+6. Orders & invoices
+7. Company settings
 
-## 7. Result contract
-Approved result UI includes:
-- score
-- pass/fail state
-- certificate action only after eligibility requirements are satisfied
+Training dashboard: employee/assignment/seat indicators; Add Employee, Assign Course, Buy Seats actions; progress/deadline/status table; alerts and reports.
+Training assignment flow: course -> employees/department -> deadline -> seat review -> confirm.
 
-## 8. Certificate & verification contract
-- Certificates are issued only after eligibility.
-- Each certificate has a non-guessable public verification identifier.
-- Verification exposes only approved certificate facts, not private trainee/company data.
-- Revoked certificates must return a revoked state.
-- Issuance/revocation must be auditable.
+## Full implementation sequence
+Shared foundation -> catalogue/content -> commerce/seats -> reliable learning -> certificates -> company/reporting -> partners.
+Deferred: advanced skills/gaps/recommendations/readiness, deep Hirely integration, mobile app, advanced partner marketplace, automated settlements.
 
-## 9. Reporting baseline
-Company reports derive from real organization-scoped records:
-- active trainees
-- completion
-- issued certificates
-- learning/training progress
-- assessment outcomes
-- readiness/impact metrics only when their calculation is explicitly defined
+## Quality definition
+A page is not done because it renders. It must be role-visible correctly, backend-authorized, persist real data, and handle loading, empty, error, forbidden, not-found, offline/connection, unsaved-change and partial-failure states as applicable; support Arabic/mobile; audit sensitive actions.
 
-Prototype numbers are placeholders and are not production data.
+## MVP acceptance journey
+Company -> employee -> buy seats -> assign -> employee login -> learning/checkpoints -> final assessment -> certificate -> result/notification in company dashboard.
 
-## 10. Identity & UX lock
-Current approved baseline tokens carried from the preview:
-- Forest Ink: #04180F
-- Signal Green: #419B2A
-- Arabic typeface baseline: IBM Plex Sans Arabic
-- RTL-first Arabic experience
-- responsive layouts
-
-The approved KFO logo and approved page architecture are locked. Preview assets are references; they must not override approved architecture.
-
-## 11. Application architecture target
-The current repository is a static prototype. Production implementation must separate:
-- presentation/UI
-- authentication/session
-- authorization/RBAC
-- domain services
-- persistence/database
-- reporting queries
-- audit/security controls
-
-No production business rule may exist only in browser JavaScript.
-
-## 12. Data & authorization invariants
-- Organization isolation is mandatory.
-- Every privileged mutation is authorized server-side.
-- Assessment scores/results are server-calculated.
-- Certificate eligibility is server-validated.
-- Public verification uses a dedicated safe read model.
-- Sensitive operations generate audit events.
-
-## 13. MVP release gates
-1. Architecture gate
-2. Data model + RBAC gate
-3. Application shell
-4. Authentication
-5. Company workspace
-6. Trainee workspace
-7. Training/course engine
-8. Assessment + result engine
-9. Certificate issuance + public verification
-10. Reporting
-11. Automated QA
-12. Browser/responsive QA
-13. Security/tenant-isolation checks
-14. Human approval
-15. Release candidate
-
-## 14. Explicit non-source-of-truth items
-- Static preview metrics and sample names
-- Client-side mock login
-- Preview-only navigation behavior
-- Any page/content that conflicts with later approved architecture
-
-## 15. Human Decision Gates
-Escalate only when a decision changes product behavior or commercial policy, including:
-- new user role
-- changed training/certificate eligibility policy
-- changed tenant/data visibility
-- changed approved architecture
-- changed visual identity
-- new integration with material scope/security implications
-
-Implementation details that preserve this contract do not require repeated human approval.
+## Human Decision Gates still unresolved in source
+Do not silently decide: final backend technology where source leaves PostgreSQL design vs Laravel/MySQL implementation open; content-manager role mapping; FI access to private company content; unified company lifecycle states; advanced path interpretation; operating policies such as revenue share, seat withdrawal after learning begins, refunds, passing/renewal defaults.
