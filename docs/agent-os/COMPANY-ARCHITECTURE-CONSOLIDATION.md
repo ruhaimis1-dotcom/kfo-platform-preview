@@ -2,69 +2,64 @@
 
 Status: **Accepted by product owner 24 Sep 2026**  
 Branch: `agent-os/kfo-tenant-consolidation` based on `agent-os/kfo-master-spec`  
-Scope: documentation/architecture reconciliation only. No production implementation, main merge, or production deployment.
+Scope: final architecture reconciliation, followed by gated Foundation implementation. No main merge or production deployment.
 
 ## Authority used
-1. KFO Approved Checkpoint 2026-09-20 (START-HERE, KFO Architecture/Page Structure v1.1, approved identity, 16 visual previews).
-2. Existing architecture approvals supplied by the user for company pages and Organization Tenant Architecture locked 2026-09-23.
-3. Draft PR #1 and the three `docs/agent-os/` contracts.
-4. Repository preview is evidence of present artifacts only; `index.html` is not product implementation.
+1. KFO Approved Checkpoint 2026-09-20 — sole visual/identity authority.
+2. Existing approved company architecture decisions and Organization Tenant Architecture locked 23 Sep 2026.
+3. Draft PR #1 and Agent OS Master Spec, Data/RBAC Contract and Task Graph.
+4. Repository preview is evidence of existing files only; `index.html` is not final product implementation.
 
-## Gate reconciliation
+## Consolidated architecture contract
 
-| Area | Contract after reconciliation | Repository evidence before this gate | Gap / gate result |
-|---|---|---|---|
-| Domain model | Organization is tenant root; one user identity plus personal context and many scoped memberships; stable tenant identifier and host aliases | Existing entities mention organizations, memberships, branches/departments, but no explicit tenant identity/host alias or identity-vs-context rule | Contract added; schema implementation absent/unverified |
-| RBAC | Existing role codes retained; membership scope is org/branch/department; tenant resolution grants no rights; employee/admin surfaces separated | Roles and broad isolation invariant present; request-context and employee/admin surface boundary missing | Contract added; role exceptions remain human gates |
-| URL/Host resolution | `{tenant}.kfo.sa` resolves tenant context; approved product routes remain; future custom host alias maps to same org ID | Route map has `/business/*`; tenant subdomain/custom-domain mapping absent | Architecture contract added; hosting/DNS/onboarding not implemented |
-| Auth/session context | One identity, explicit personal/tenant active context, explicit audited switch, revalidation on each request | Identity distinct from membership; session/context behavior absent | Contract added; implementation absent |
-| Database tenancy | Shared multi-tenant DB default; authoritative org scope on every tenant-owned row/query; fail-closed boundary; dedicated placement seam | General API/services/DB/storage isolation only | Specific shared model and extraction seam added; DB policy/ORM/migrations unverified |
-| Storage isolation | Tenant-scoped keys; server checks object authorization; caller path never trusted | Asset authorization invariant only | Contract added; bucket/policy/object implementation absent |
-| Branding/theming | Logo, academy name, primary/secondary colors, cover, welcome and contact fields; constrained by KFO identity/accessibility | Basic customization token/content boundary absent in current contracts | Added; arbitrary CSS/script or layout changes forbidden |
-| Company Admin Workspace | Existing company route family; admin functions; employee cannot land here without proper role | Checkpoint route family and page architecture documented, no app shell established by contracts | Semantics preserved; actual admin workspace implementation absent |
-| Employee Portal | Branded portal at tenant host; Home, My Courses, Company Library, Paths, My Certificates, My Requests; no admin access for employees | Checkpoint learner flows exist; corporate employee portal/tenant library context absent | Added as distinct experience; visuals not approved and implementation absent |
-| Courses/content/licensing | Owned, company-created, licensed/purchased and assigned origins; private tenant-owned content; KFO seats only for licensed items absent a separate approved limit | private_content/seat entities listed; ownership/origin/licence and no-seat invariant absent | Added; role/publishing/commercial exceptions remain gates |
-| Reporting | Explicit learning context and tenant scope; company analytics omit personal/other-tenant activity | Excludes personal learning already stated | Stronger scope/context rule added; actual views/access control absent |
-| Commerce | Orders/invoices/purchases/seats assigned to active org; payment invariants preserved | generic commerce entities and invariants only | Added; Orders & Invoices UX/policies must be re-aligned; no transaction implementation verified |
-| Company Settings | Tenant profile/branding/settings under explicit roles; finance/private-content permissions remain gated | Route `/business/settings` and broad matrix exist; no explicit tenant boundary/branding handling | Added contract; final authority mapping remains human decision |
+| Area | Locked contract | Foundation representation/status |
+|---|---|---|
+| Domain model | Organization is stable tenant root; one identity, personal context, many scoped memberships | Organizations/memberships/branches/departments schema authored |
+| RBAC | Existing role codes unchanged; membership roles scoped to org/branch/department; host does not authorize | Permission catalog, source-supported seed, RLS predicates authored; unresolved rights denied |
+| URL/host | `{company-slug}.kfo.sa`; custom aliases map to same org id after verification | Host resolver helper and exact verified host lookup authored |
+| Auth/session | Stable KFO identity; active company context is a selector; every request rechecks membership and scope | Context helper authored; Supabase request adapter still required |
+| Database | Shared PostgreSQL by default, strict organization scope + API/service checks + RLS; future dedicated placement seam | Initial schema/RLS/grants authored; SQL runtime and API integration tests not yet run |
+| Storage | Private tenant assets keyed by stable org UUID, same authorization boundary, short-lived signed access | Private bucket and Storage RLS authored; runtime object tests remain |
+| Branding | Controlled logo/name/colors/cover/welcome/contact values within KFO system | Constrained fields authored; app validation/UI not yet built |
+| Admin workspace | Separate authorized company administration experience with existing routes | Architecture locked; implementation belongs to later phases |
+| Employee Portal | Distinct employee learning experience at tenant host; employee never receives admin access by host alone | Architecture locked; implementation belongs to later phases |
+| Library/content | Owned, company-created, licensed/purchased and assigned origins; private owned/company-created content; seats only when applicable under contract | Contract locked; detailed content/licensing schema belongs to C1/C5 |
+| Learning/results | Versioned courses, progress, assessments/results and explicit personal/company context | Contract locked; schemas belong to C1/C3 |
+| Certificates | Bound to course version and learning context; minimal public verification projection | Contract locked; schema belongs to C4 |
+| Reporting | Organization-scoped; excludes personal/other-tenant activity | Contract locked; schema/views belong to C5, protected by RLS |
+| Commerce | Tenant orders/invoices/seats/entitlements; confirmed payment before paid entitlement | Contract locked; schema belongs to C2; no real payment integration in Foundation |
 
 ## Approved / locked
-- KFO identity: logo, colors, fonts and visual rules per checkpoint.
-- Existing role codes and approved journeys/routes: no rename.
-- Company architecture approvals: Dashboard; Employees & Teams; Company Courses/Content/Seats; Training Assignment; Reports/Certificates; Organization Tenant Architecture.
-- Shared multi-tenant architecture with strict organization scoping; subdomain does not imply database-per-tenant.
-- Two company experiences, one KFO identity per person, tenant learning library, private-by-default owned/company-created content, personal analytics excluded.
-- Checkpoint visuals are the only approved visual source. Company previews remain unapproved visually.
+- KFO identity and visual rules per 20 Sep checkpoint.
+- Existing role codes, routes and approved journeys remain unchanged.
+- Company Training Dashboard, Employees & Teams, Company Courses/Content/Seats, Training Assignment, Reports/Certificates and Organization Tenant Architecture are architecture-approved.
+- Shared multi-tenant architecture; subdomain is not a database boundary.
+- One KFO identity with multiple memberships; separate Company Admin Workspace and Employee Portal.
+- Owned/company-created content private by default; personal learning excluded from company analytics.
 - `index.html` remains preview/reference only.
 
-## Present repository state and I0 inventory
-- Draft PR #1 is open, draft, based on `agent-os/kfo-master-spec` and targets `main`; it introduces Master Spec, Data/RBAC and Task Graph.
-- Master Spec already contains the Organization Tenant Architecture section.
-- Data/RBAC has general company isolation and identities/roles/entities but not the complete host/session/tenant-library/storage/branding/two-experience contract.
-- Task Graph still labels D0 company visual review as next and lacks a prior Architecture Consolidation Gate or prepared Foundation checkpoint.
-- PR repository files include static `index.html` and preview images. No production app structure, migrations, backend policies, storage rules, auth/session implementation or tenant tests were evidenced in the reviewed files. This is an inventory gap, not proof no implementation exists elsewhere in repository; I0 must verify full tree.
-- The visual checkpoint ZIP exists in the project Library and its START-HERE, architecture/page map, and identity were reviewed. It explicitly states that company pages have not received visual approval.
+## Unavailable reference
+“Taa” is recorded as **Unavailable Reference**. No source was supplied, no content is inferred, and the approved architecture contracts contain no technical dependency that makes it mandatory. It is not a blocker.
 
-## Human Decision Gates (product/commercial policy; do not infer)
-1. Content Manager authority and review/publish rights.
-2. FI access to private tenant content and exact Orders & Invoices permissions.
-3. Organization lifecycle states and suspension/reactivation behavior.
-4. Revenue share, withdrawal of seat after learning starts, refunds, default passing/renewal rules.
-5. Commercial packaging for full white-label/KFO attribution removal, custom-domain activation and platform limits on private content.
-6. Backend implementation choice only if inventory shows material mismatch with existing PostgreSQL design / Laravel-MySQL option.
-These do not block the shared-tenant architecture contract. Unapproved policy capabilities default to deny/off.
+## Human Decision Gates — unchanged
+- Content-manager permissions and review/publish authority.
+- FI access to private company content and expanded finance authority.
+- Organization lifecycle and suspension/reactivation rules.
+- Revenue share, seat withdrawal after learning starts, refunds, assessment defaults/renewals.
+- Commercial packaging for custom domains, attribution/white-label, and private-content/platform limits.
 
-## Recommended execution order
-1. Architecture gate accepted by product owner 24 Sep 2026.
-2. I0 visible repository inventory completed; evidence and source map are recorded in `docs/agent-os/FOUNDATION-TENANT-IMPLEMENTATION-CHECKPOINT-0.md`.
-3. I1 technical ADR remains open: inventory shows a static-only repository and does not prove a concrete application stack. Resolve from approved source materials/deployment constraints before code; this is technical, not product policy.
-4. I2 host resolution + identity/session/tenant context.
-5. I3 database tenant enforcement + RBAC + audit.
-6. I4 tenant storage isolation and future placement boundary.
-7. I5 branding validation and Employee/Admin workspace routing.
-8. I6 tenant library and scoped reporting/commerce foundations.
-9. Run Foundation/Tenant Layer QA and security gate; save implementation checkpoint.
-10. Human approval before merge to `main` or production deployment.
+These gates do not block technical foundation implementation. Affected capabilities remain deny-by-default; no policy is inferred by ADR-001 or the schema.
 
-## Checkpoint boundary
-Architecture contracts, inventory and Checkpoint 0 are documentation artifacts. Foundation/Tenant Layer implementation has **not** started. The first code task is blocked only on recording the technical ADR; then begin I2–I6 on a feature branch. This PR does not merge into main and does not publish production.
+## Checkpoint 0 and implementation status
+- I0 repository inventory is complete: static preview/reference and Agent OS docs; no pre-existing production app stack was found.
+- Checkpoint 0 accepted. I1 resolved by ADR-001: Next.js App Router/React/TypeScript, Supabase Auth, shared PostgreSQL/RLS, private Supabase Storage.
+- Initial host/context helpers, database/RBAC/audit migration, Storage policy migration, and pgTAP tests are authored on the feature branch.
+- Unit tests pass 7/7. pgTAP has not been run because this environment lacks Supabase CLI, PostgreSQL client and Docker. Actual API/service/Storage integration tests remain.
+- No real payment provider or production deployment is included. Visual preview assets and routes are unchanged.
+
+## Execution order
+1. Complete migration and pgTAP validation against local Supabase/PostgreSQL.
+2. Implement hosting/Auth request adapter and test real API/service isolation for two organizations and multi-membership users.
+3. Test private Storage list/read/write/delete and signed access across tenants.
+4. Continue content, learning, certificates, commerce and reporting in their Task Graph phases.
+5. Run security and RTL checkpoint; seek Human Approval before any merge to `main` or production release.

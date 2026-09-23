@@ -1,74 +1,45 @@
 # KFO Foundation/Tenant Layer — Implementation Checkpoint 0
 
-Status: **Prepared; implementation not started**  
+Status: **Checkpoint 0 accepted; Foundation/Tenant Layer implementation in progress**  
 Architecture Gate: accepted by product owner on 24 Sep 2026.  
 Repository: `ruhaimis1-dotcom/kfo-platform-preview`  
-Starting branch: `agent-os/kfo-tenant-consolidation` (descends from `agent-os/kfo-master-spec`)  
-Source state: consolidation PR #2 head before this checkpoint update.
+Branch: `agent-os/kfo-tenant-consolidation` (descends from `agent-os/kfo-master-spec`)  
+Source state: changes remain in Draft PR #2; no main merge or production deployment.
 
 ## I0 — Repository inventory
 
-Inventory was performed through the complete GitHub contents tree available on the selected branch, with nested `docs/agent-os` and `upload` folders inspected.
+The complete visible GitHub tree was inventoried, including `docs/agent-os/` and nested assets. Before this checkpoint, the repository contained a static Arabic RTL preview and reference images, but no application/backend implementation.
 
-| Artifact | Present | Classification |
-|---|---:|---|
-| `index.html` | Yes | Single-file Arabic RTL static visual preview; explicitly not the final product |
-| `home-preview.png`, `hero-industrial-v2.png`, `screens-preview.png` | Yes | Preview/reference images |
-| `logo-approved.png`, `upload/logo.png` | Yes | Logo assets; implementation must reconcile against approved checkpoint asset before reuse |
-| `docs/agent-os/KFO-MASTER-SPEC.md` | Yes | Product/architecture contract |
-| `docs/agent-os/DATA-RBAC-CONTRACT.md` | Yes | Tenant/data/RBAC contract |
-| `docs/agent-os/TASK-GRAPH.md` | Yes | Execution DAG and quality gates |
-| `docs/agent-os/COMPANY-ARCHITECTURE-CONSOLIDATION.md` | Yes | Accepted architecture gate and gap record |
-| `README.md`, `package.json`, `vercel.json`, `.github/workflows` | Not found at inspected paths | No documented setup/build/test workflow evidenced |
-| Application source tree/framework manifest | Not found in complete visible tree | No production app scaffold evidenced |
-| API/services, auth/session, database migrations/policies, storage rules, tenant tests | Not found in visible tree | Tenant layer is not implemented in this repository state |
-| Vercel | Preview deployment reported by Draft PR integration | Preview automation exists; no production release evidence or app build contract found |
+| Artifact | State |
+|---|---|
+| `index.html` and preview/logo images | Static visual reference only; not the product application |
+| Agent OS Master Spec, Data/RBAC, Task Graph | Existing architecture contracts; reconciled without renaming routes/roles |
+| Application framework/API/Auth/database/storage before this slice | Not present |
+| KFO Approved Checkpoint 2026-09-20 | Sole approved visual/identity reference; unchanged |
 
-### Preview behavior inspected
-The HTML declares Arabic RTL and references IBM Plex Sans Arabic and Inter via Google Fonts. It contains CSS variables and two responsive media-query blocks. Its only inline JavaScript switches between `.screen` elements using hashes. This is preview navigation, not authentication, persistence, API authorization, or tenant isolation.
+## I1 — Technical architecture decision
 
-### Source-to-domain mapping
+I1 is accepted in `ADR-001-TECHNICAL-STACK.md`: Next.js App Router + React + TypeScript, Supabase Auth, shared PostgreSQL with RLS, and private Supabase Storage. PostgreSQL matches the approved logical model and the repository's Vercel preview workflow; no existing production framework needed preservation. Laravel/MySQL and a separately deployed custom API were compared and not selected for this checkpoint.
 
-| Domain / surface | Current artifact | State |
-|---|---|---|
-| Approved public/learner visuals | `index.html` and image assets | Partial visual preview only |
-| Company Admin Workspace | No application route/component found | Missing implementation |
-| Employee Portal at tenant host | No host resolver or app route found | Missing implementation |
-| Identity, auth and session context | None found | Missing |
-| Organization, branches, departments, memberships | Contract only | Missing persistence/logic |
-| RBAC/API authorization | Contract only | Missing |
-| Database tenant policies/migrations | None found | Missing |
-| Tenant storage boundary | None found | Missing |
-| Tenant branding validation | Contract only | Missing |
-| Tenant Learning Library and licensing | Contract only | Missing |
-| Assignments and company commerce | Contract only | Missing |
-| Organization-scoped reporting | Contract only | Missing |
-| Automated functional/security/browser QA | No test harness or workflow found | Missing |
+“Taa” is recorded as an **Unavailable Reference**. No supplied source was reconstructed or treated as truth. No accepted contract establishes a technical dependency on it, so it does not block implementation.
 
-## I1 — Technical architecture decision record
+## Current implementation evidence
 
-### Evidence-backed decision
-The selected repository does not contain an application framework, dependency manifest, backend, database connection, migrations or test harness. Therefore repository inspection does **not** prove a stack choice.
+- Host normalization/tenant mapping and active membership context helpers in `packages/tenant-core`.
+- Shared PostgreSQL foundation schema, existing role-code seed, permissions, host aliases, branding, audit, RLS, and explicit grants in `supabase/migrations/202609240001_tenant_foundation.sql`.
+- Private tenant bucket and Storage RLS in `supabase/migrations/202609240002_tenant_storage.sql`.
+- Two/three-tenant pgTAP fixture covering multi-membership, RBAC, host resolution, custom-domain verification, branch scope, and cross-tenant reads/writes in `supabase/tests/tenant_isolation.test.sql`.
+- Unit tests: **7 passed, 0 failed**. SQL/pgTAP tests are authored but not run because Supabase CLI, PostgreSQL client, and Docker are unavailable in this environment.
+- No visual identity, route, or product policy was changed. No real payment integration is included.
 
-Preserve the approved design model: relational PostgreSQL data design and the existing documented implementation option of Laravel/MySQL remain in source architecture v1.1. Do not silently convert one into a final implementation choice. Before code implementation, record a technical ADR choosing the concrete framework/database from the approved source materials and deployment constraints. This is a technical gate, not a product-policy gate.
+## Remaining Foundation work
 
-### Non-negotiable foundation architecture
-- Shared multi-tenant relational persistence is the default, with an authoritative `organization_id` boundary on tenant-owned data.
-- Tenant host resolution, identity/session, membership/RBAC and active organization context are separate layers.
-- API/service and persistence authorization fail closed; UI hiding is not an authorization control.
-- Tenant files have server-authorized tenant-scoped keys/metadata.
-- A tenant placement abstraction preserves a future dedicated-infrastructure path without provisioning per-tenant systems in this checkpoint.
-- Preserve existing approved routes, role codes, journey semantics, KFO identity and checkpoint visuals.
+1. Integrate trusted hosting request metadata and Supabase Auth in the application request adapter.
+2. Run both migrations and pgTAP against local Supabase/PostgreSQL; resolve runtime SQL findings.
+3. Add API/service tests for cross-tenant reads, writes, enumeration, exports, and signed object access using separate test identities.
+4. Complete course/content/licensing, learning, assessments, certificates, commerce, and reporting schemas only in their respective Task Graph phases.
+5. Complete security and Arabic RTL shell QA, then request Human Approval before merging to `main` or releasing production.
 
-## I2–I6 — First implementation work packages (not started)
+## Gate status
 
-1. I1 technical ADR: select and document the concrete stack from source and operating constraints.
-2. I2 Tenant Resolution + Context: host resolver and aliases, stable organization identity, explicit context switch, fail-closed unknown host.
-3. I3 Persistence + authorization: migrations, organization scoping, tenant-aware query/service boundary, role/scope checks and audit.
-4. I4 Storage: tenant-scoped key metadata, authorization before read/write, no trusted caller paths.
-5. I5 Foundation QA: two-tenant isolation, multi-membership, role/scope, unknown host, context switching, storage access and audit.
-6. I6 Checkpoint: implementation diff, migration/architecture snapshot, QA evidence and unresolved decision list. Stop before public release.
-
-## Start/exit criteria
-
-Start implementation only after this checkpoint and ADR are visible in the working branch. Keep work in a feature branch and PR. Do not merge to `main` or deploy production without Human Approval. Exit only when all tenant-isolation tests pass at database/API/service/storage layers, and there is evidence for expected deny paths as well as authorized access. Do not implement unresolved product policies; keep those capabilities disabled or deny-by-default.
+Checkpoint 0 and the Company Architecture Consolidation Gate are accepted. The first implementation slice is in progress on the feature branch. No unresolved product decision blocks the current technical foundation work; unresolved capability-specific permissions and commercial policies remain deny-by-default. Foundation exit requires database and API/service/Storage isolation evidence, not only helper unit tests.
