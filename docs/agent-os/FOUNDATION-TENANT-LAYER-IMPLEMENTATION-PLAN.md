@@ -10,6 +10,14 @@ Status: in progress on `agent-os/kfo-tenant-consolidation`. Scope is technical f
 - Added `docs/agent-os/AUTH-TENANT-REQUEST-ADAPTER.md` with the required Next.js/Supabase SSR integration and API isolation checks.
 - Tenant-core tests pass 17/17. This does not replace runtime API or Storage tests. The dedicated KFO project is linked and holds the deployed foundation; the separate Zawed Supabase project was not used.
 
+## Application integration update (2026-09-24)
+
+- Added pinned root Next.js 16.2.7 / React 19 / Supabase SSR dependencies and npm lockfile; Node requirement is 22.6+.
+- Added cookie-aware request-scoped user client, clean anonymous host-resolution client, and API-only `proxy.ts` that refreshes cookies via `getClaims()` without making authorization decisions.
+- Added `GET /api/tenant/context`: reads the framework Host only, calls `auth.getUser()`, resolves the tenant via the limited public RPC and rechecks active membership through the user-scoped JWT/RLS. An optional `organization_id` query parameter is only a selector and is membership-validated. Response is private/no-store and contains context only, not roles/permissions.
+- Root App Router page preserves the existing `index.html` source unchanged through a byte-identical reference copy at `/kfo-preview.html`; this remains preview-only and is not the final product shell.
+- Verification: `npm test` 17/17, `npx tsc --noEmit` passed, `next build` passed. Local route smoke used a deliberately nonfunctional placeholder Supabase URL and failed closed with 503; this is not evidence of real-project Auth/tenant integration.
+
 ## Work packages and exit evidence
 
 | ID | Work | Exit evidence |
@@ -69,6 +77,6 @@ Status: in progress on `agent-os/kfo-tenant-consolidation`. Scope is technical f
 
 ## Current status and commands
 
-Host/context helpers, request-context boundary, Supabase read adapter, four foundation migrations, and pgTAP fixture are authored and deployed to the KFO Supabase project. Unit tests: 17/17 pass. Hosted tenant isolation/RBAC/host/Storage pgTAP: 23/23 pass. Storage DB-level tests cover tenant A list isolation, denied B-prefix upload/update, and allowed own-prefix upload/update. Fixture/temporary test setup rolled back; no test data persists and pgTAP is not persistently installed. Direct SQL deletion is blocked by Supabase's storage protection trigger; deletion and list/read/write/signed-access need the Storage API runtime harness. Security advisors: 0 findings. Multiple permissive policy and unindexed-FK findings were resolved; unused-index INFO notices remain on this empty schema. No TypeScript compiler, Supabase CLI, PostgreSQL client or Docker is installed in this execution environment. The Next.js/Supabase SSR Auth wiring and API/service/Storage runtime integration test harness still require an application shell. Storage API list/read/write/delete and signed access are not yet runtime-verified.
+Host/context helpers, request-context boundary, Supabase adapter, four migrations, and pgTAP fixture are deployed to the KFO project. Tenant-core tests: 17/17. Hosted tenant isolation/RBAC/host/Storage pgTAP: 23/23. Storage database-level listing and upload/update assertions pass. Fixture rolled back; no test data persists and pgTAP is not permanently installed. Supabase's Storage deletion protection trigger requires Storage API deletion testing. Security advisors: 0 findings; multiple-policy and unindexed-FK warnings resolved, with unused-index INFO notices on the empty schema. Root Next app integration passes typecheck/build but was built with placeholders; real Auth/membership API tests and runtime Storage API tests remain. The shared environment blocks Next's standard standalone listener (`uv_interface_addresses`); a programmatic HTTP smoke confirmed root preview response, while the tenant endpoint failed closed with 503 against the deliberately invalid placeholder project. No live payment integration, `main` merge or production deployment.
 
-Run unit tests from `packages/tenant-core` with `npm test`. Re-run `supabase test db` in local/CI once the project shell exists; hosted policy assertions have already passed transactionally. No live payment provider integration, `main` merge or production deployment in this checkpoint.
+Run unit tests with `npm test`, typecheck with `npx tsc --noEmit`, and build with `npm run build`. Re-run `supabase test db` in local/CI once local Supabase tooling is available; hosted policy assertions have already passed transactionally. No live payment provider integration, `main` merge or production deployment in this checkpoint.
