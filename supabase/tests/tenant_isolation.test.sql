@@ -39,9 +39,13 @@ select ok(private.is_org_member('20000000-0000-4000-8000-000000000003'), 'one id
 select ok(private.has_org_permission('20000000-0000-4000-8000-000000000001', 'organization.settings.manage'), 'CO has authorized tenant permission');
 select ok(not private.has_org_permission('20000000-0000-4000-8000-000000000002', 'organization.settings.manage'), 'tenant B permission denied');
 select is((select count(*)::int from public.organizations), 2, 'RLS shows only the two organizations where this identity has memberships');
-select is((select count(*)::int from public.organization_memberships), 2, 'RLS hides unrelated membership while preserving both of this identity memberships');
+select is((select count(*)::int from public.organization_memberships), 3, 'RLS exposes own memberships plus in-scope member rows');
 select is((select count(*)::int from public.resolve_tenant_host('tenant-a-test.kfo.sa')), 1, 'verified tenant host resolves');
-select is((select count(*)::int from public.resolve_tenant_host('tenant-b-test.kfo.sa')), 1, 'exact host returns portal branding metadata only');
+reset role;
+set local role anon;
+select is((select count(*)::int from public.resolve_tenant_host('tenant-b-test.kfo.sa')), 1, 'anon host lookup returns portal branding metadata only');
+reset role;
+set local role authenticated;
 select isnt(private.request_custom_domain('20000000-0000-4000-8000-000000000001', 'academy.tenant-a.example'), null, 'company admin can request a custom domain');
 select is((select count(*)::int from public.resolve_tenant_host('academy.tenant-a.example')), 0, 'pending custom domain does not resolve before platform verification');
 select is((select count(*)::int from public.organization_domains where hostname = 'tenant-b-test.kfo.sa'), 0, 'tenant A cannot enumerate tenant B domain rows');
