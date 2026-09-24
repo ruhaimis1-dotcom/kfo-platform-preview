@@ -1,5 +1,5 @@
 begin;
-select plan(18);
+select plan(17);
 
 -- Isolated two-tenant fixture. Supabase local provides auth/storage schemas and pgTAP.
 insert into auth.users (id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at)
