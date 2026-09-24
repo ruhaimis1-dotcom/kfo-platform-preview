@@ -30,17 +30,17 @@ I1 is accepted in `ADR-001-TECHNICAL-STACK.md`: Next.js App Router + React + Typ
 - Shared PostgreSQL foundation schema, existing role-code seed, permissions, host aliases, branding, audit, RLS, and explicit grants in `supabase/migrations/202609240001_tenant_foundation.sql`.
 - Private tenant bucket and Storage RLS in `supabase/migrations/202609240002_tenant_storage.sql`.
 - Two/three-tenant pgTAP fixture covering multi-membership, RBAC, host resolution, custom-domain verification, branch scope, and cross-tenant reads/writes in `supabase/tests/tenant_isolation.test.sql`.
-- Unit tests: **17 passed, 0 failed**. SQL/pgTAP tests are authored but not run because Supabase CLI, PostgreSQL client, and Docker are unavailable in this environment.
-- The only linked Supabase project has Zawed auction migrations and no dev branches. It is not a KFO project and will not receive KFO migrations. No TypeScript compiler is available locally.
+- Unit tests: **17 passed, 0 failed**. Both migrations were applied to dedicated KFO project `ktkdcfxeaicbykdurlfg` (EU Central, PostgreSQL 17); migration history records `20260924080920` and `20260924080939`. All 11 public tables have RLS enabled; `tenant-private` bucket is private with organization-prefix policies. Security advisors returned no findings. Performance advisors report 9 unindexed foreign keys and 3 duplicate permissive SELECT policy warnings.
+- The pgTAP fixture is authored (assertion plan corrected to 17) but could not run because hosted project has no `pgtap` extension; no pass is claimed for database isolation. API/service and Storage runtime negative tests remain. This execution environment still has no local repository checkout, Supabase CLI, PostgreSQL client, Docker, or TypeScript compiler.
 - No visual identity, route, or product policy was changed. No real payment integration is included.
 
 ## Remaining Foundation work
 
 1. Integrate trusted hosting request metadata and Supabase Auth `getUser()` in the Next.js application request adapter.
-2. Provision or identify an isolated KFO development Supabase project; run both migrations and pgTAP there and resolve runtime SQL findings.
+2. Run the isolation suite in an isolated local/branch database with pgTAP available, then resolve test and performance-advisor findings.
 3. Add API/service tests for cross-tenant reads, writes, enumeration, exports, and signed object access using separate test identities.
 4. Complete course/content/licensing, learning, assessments, certificates, commerce, and reporting schemas only in their respective Task Graph phases.
-5. Complete security and Arabic RTL shell QA, then request Human Approval before merging to `main` or releasing production.
+5. Complete trusted-host/Auth app-shell wiring and security/Arabic RTL QA, then request Human Approval before merging to `main` or releasing production.
 
 ## Gate status
 
