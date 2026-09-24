@@ -55,14 +55,14 @@ select is((select count(*)::int from public.resolve_tenant_host('academy.tenant-
 select is((select count(*)::int from public.organization_domains where hostname = 'tenant-b-test.kfo.sa'), 0, 'tenant A cannot enumerate tenant B domain rows');
 select is((select count(*)::int from public.organization_branches where organization_id = '20000000-0000-4000-8000-000000000002'), 0, 'tenant A cannot enumerate tenant B branches');
 select is((select count(*)::int from public.organization_departments where organization_id = '20000000-0000-4000-8000-000000000002'), 0, 'tenant A cannot enumerate tenant B departments');
-select throws_ok($insert into public.organization_branches (organization_id, name) values ('20000000-0000-4000-8000-000000000002', 'forbidden')$, '42501', null, 'cross-tenant branch insert is denied');
+select throws_ok($$insert into public.organization_branches (organization_id, name) values ('20000000-0000-4000-8000-000000000002', 'forbidden')$$, '42501', null, 'cross-tenant branch insert is denied');
 select is((select count(*)::int from storage.objects where bucket_id = 'tenant-private'), 1, 'Storage listing shows only tenant A objects');
-select throws_ok($insert into storage.objects (bucket_id, name) values ('tenant-private', '20000000-0000-4000-8000-000000000002/courses/forbidden/upload.pdf')$, '42501', null, 'tenant A cannot upload under tenant B prefix');
+select throws_ok($$insert into storage.objects (bucket_id, name) values ('tenant-private', '20000000-0000-4000-8000-000000000002/courses/forbidden/upload.pdf')$$, '42501', null, 'tenant A cannot upload under tenant B prefix');
 select is((with updated as (update storage.objects set name = '20000000-0000-4000-8000-000000000001/courses/forbidden.pdf' where id = '50000000-0000-4000-8000-000000000002' returning id) select count(*)::int from updated), 0, 'tenant A cannot update tenant B object');
 select is((with deleted as (delete from storage.objects where id = '50000000-0000-4000-8000-000000000002' returning id) select count(*)::int from deleted), 0, 'tenant A cannot delete tenant B object');
-select lives_ok($insert into storage.objects (bucket_id, name) values ('tenant-private', '20000000-0000-4000-8000-000000000001/courses/course-a/authorized.pdf')$, 'tenant A can upload under its own prefix');
-select lives_ok($update storage.objects set name = '20000000-0000-4000-8000-000000000001/courses/course-a/renamed.pdf' where id = '50000000-0000-4000-8000-000000000001'$, 'tenant A can update its own object');
-select lives_ok($delete from storage.objects where name = '20000000-0000-4000-8000-000000000001/courses/course-a/renamed.pdf'$, 'tenant A can delete its own object');
+select lives_ok($$insert into storage.objects (bucket_id, name) values ('tenant-private', '20000000-0000-4000-8000-000000000001/courses/course-a/authorized.pdf')$$, 'tenant A can upload under its own prefix');
+select lives_ok($$update storage.objects set name = '20000000-0000-4000-8000-000000000001/courses/course-a/renamed.pdf' where id = '50000000-0000-4000-8000-000000000001'$$, 'tenant A can update its own object');
+select lives_ok($$delete from storage.objects where name = '20000000-0000-4000-8000-000000000001/courses/course-a/renamed.pdf'$$, 'tenant A can delete its own object');
 
 reset role;
 set local role authenticated;
