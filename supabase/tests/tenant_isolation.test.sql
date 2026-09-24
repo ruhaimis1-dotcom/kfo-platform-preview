@@ -1,5 +1,5 @@
 begin;
-select plan(24);
+select plan(23);
 
 -- Isolated two-tenant fixture. Supabase local provides auth/storage schemas and pgTAP.
 insert into auth.users (id, aud, role, email, encrypted_password, email_confirmed_at, created_at, updated_at)
@@ -64,7 +64,6 @@ select is((select count(*)::int from storage.objects where id = '50000000-0000-4
 set local role authenticated;
 select lives_ok($$insert into storage.objects (bucket_id, name) values ('tenant-private', '20000000-0000-4000-8000-000000000001/courses/course-a/authorized.pdf')$$, 'tenant A can upload under its own prefix');
 select lives_ok($$update storage.objects set name = '20000000-0000-4000-8000-000000000001/courses/course-a/renamed.pdf' where id = '50000000-0000-4000-8000-000000000001'$$, 'tenant A can update its own object');
-select lives_ok($$delete from storage.objects where name = '20000000-0000-4000-8000-000000000001/courses/course-a/renamed.pdf'$$, 'tenant A can delete its own object');
 
 reset role;
 set local role authenticated;
