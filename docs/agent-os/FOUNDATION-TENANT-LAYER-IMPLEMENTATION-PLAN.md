@@ -2,13 +2,13 @@
 
 Status: in progress on `agent-os/kfo-tenant-consolidation`. Scope is technical foundation only; product decisions, visual identity, routes and role names remain governed by approved contracts.
 
-## Checkpoint 0 progress update (2026-09-23)
+## Checkpoint 0 progress update (2026-09-24)
 
 - Added a framework-neutral request-context boundary in `packages/tenant-core/src/request-context.ts`.
 - Added a Supabase adapter in `packages/tenant-core/src/supabase-request-adapter.ts`: public host lookup uses the limited resolver RPC; membership is rechecked using both user and organization filters through the request-scoped user client.
 - It resolves public/subdomain/custom-domain host scope, rejects unverified/unknown hosts, denies organization-selector conflicts, and requires a server-verified identity plus currently active membership for tenant member context.
 - Added `docs/agent-os/AUTH-TENANT-REQUEST-ADAPTER.md` with the required Next.js/Supabase SSR integration and API isolation checks.
-- Tenant-core tests pass 17/17. This does not replace runtime API, database RLS/pgTAP, or Storage tests; no app shell or linked KFO Supabase project exists in the current repository snapshot. The only linked Supabase project contains Zawed auction migrations and must not be used for KFO.
+- Tenant-core tests pass 17/17. This does not replace runtime API or Storage tests. The dedicated KFO project is linked and holds the deployed foundation; the separate Zawed Supabase project was not used.
 
 ## Work packages and exit evidence
 
@@ -24,8 +24,10 @@ Status: in progress on `agent-os/kfo-tenant-consolidation`. Scope is technical f
 
 ## Migration sequence
 
-1. `202609240001_tenant_foundation.sql`: organizations, verified domains, branches/departments, memberships, existing role codes, permission catalog/mappings, constrained branding, audit, host/domain/create helpers, RLS and explicit grants.
-2. `202609240002_tenant_storage.sql`: private bucket, tenant organization UUID object prefix, Storage RLS.
+1. `20260924080920_kfo_tenant_foundation.sql`: organizations, verified domains, branches/departments, memberships, existing role codes, permission catalog/mappings, constrained branding, audit, host/domain/create helpers, RLS and explicit grants.
+2. `20260924080939_kfo_tenant_storage.sql`: private bucket, tenant organization UUID object prefix, Storage RLS.
+3. `20260924081958_tenant_host_resolver_grant.sql`: minimal anon column grant for public resolver policies.
+4. `20260924082130_tenant_rls_performance.sql`: consolidated read policies and indexes. Names/version numbers match remote migration history.
 3. Later Task Graph phases add course/content/version/licensing; learning/progress/assessment; certificates/verification read model; commerce/orders/payments/seats/entitlements; reporting. Each tenant-owned row must carry `organization_id` or an explicit partition reference and tests before exposure.
 
 ## Auth and tenant resolution flow
@@ -67,6 +69,6 @@ Status: in progress on `agent-os/kfo-tenant-consolidation`. Scope is technical f
 
 ## Current status and commands
 
-Host/context helpers, request-context boundary, Supabase read adapter, initial foundation migration, storage policy migration, and pgTAP fixture are authored. Unit tests: 17/17 pass. No TypeScript compiler, Supabase CLI, PostgreSQL client or Docker is installed in the current execution environment. The Next.js/Supabase SSR Auth wiring and actual API/service/Storage integration test harness still require the KFO app shell and an isolated KFO development project before Foundation exit.
+Host/context helpers, request-context boundary, Supabase read adapter, four foundation migrations, and pgTAP fixture are authored and deployed to the KFO Supabase project. Unit tests: 17/17 pass. Hosted tenant isolation/RBAC/host pgTAP: 18/18 pass; fixture and temporary extension were rolled back and no test data persists. Security advisors: 0 findings. Multiple permissive policy and unindexed-FK findings were resolved; unused-index INFO notices remain on this empty schema. No TypeScript compiler, Supabase CLI, PostgreSQL client or Docker is installed in this execution environment. The Next.js/Supabase SSR Auth wiring and API/service/Storage runtime integration test harness still require an application shell.
 
-Run unit tests from `packages/tenant-core` with `npm test`. Run database tests with `supabase test db` in a local Supabase/PostgreSQL environment. No live payment provider integration, `main` merge or production deployment in this checkpoint.
+Run unit tests from `packages/tenant-core` with `npm test`. Re-run `supabase test db` in local/CI once the project shell exists; hosted policy assertions have already passed transactionally. No live payment provider integration, `main` merge or production deployment in this checkpoint.
