@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'كفو',
-  description: 'معاينة مرجعية لكفو — ليست التطبيق النهائي.',
+  description: 'كفو — تعلّم عملي يرفع جاهزيتك.',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {

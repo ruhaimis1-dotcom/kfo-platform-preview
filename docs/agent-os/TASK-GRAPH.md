@@ -18,6 +18,13 @@ Company architecture gates already approved: Training Dashboard; Employees & Tea
 - D1 Company Settings tenant architecture reconciliation.
 - D2–D8 company visual previews in approved sequence. Each needs Human Approval; do not infer approval from navigation/sidebar.
 
+## Design-to-implementation continuation
+- UI0 Public home implementation started from the visually approved home screen in KFO Approved Checkpoint 2026-09-20. This is an implementation preview, not a design re-approval or a completed production page.
+- UI0 uses the approved palette and local IBM Plex Sans Arabic / Inter font files. The existing root `index.html` remains unchanged as a visual reference, not the app.
+- UI0 visual review is limited by missing original hero photography and usable approved logo files in the repository/checkpoint archive. No substitute brand artwork has been invented; the hero marks this asset gap visibly.
+- UI0 routes are linked to the already approved route names. Other screens and real interactions/data remain unimplemented and must be delivered in subsequent route checkpoints.
+- Before production readiness: restore approved logo and hero assets from a trusted source; wire the approved route map and backend; implement loading/empty/error/forbidden/offline states; browser QA desktop/mobile/RTL and accessibility; complete human review.
+
 ## Foundation/Tenant Layer Checkpoint 0
 Current branch: `agent-os/kfo-tenant-consolidation`, based on `agent-os/kfo-master-spec`; Draft PR #2 remains open. No merge to `main` or production deployment.
 - I1 Technical ADR: **COMPLETE**. ADR-001 selects Next.js App Router + React + TypeScript, Supabase Auth, shared PostgreSQL/RLS, private Supabase Storage. “Taa” is an **Unavailable Reference**, non-blocking under the accepted contracts.
