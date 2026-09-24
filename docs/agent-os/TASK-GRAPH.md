@@ -19,14 +19,12 @@ Company architecture gates already approved: Training Dashboard; Employees & Tea
 - D2–D8 company visual previews in approved sequence. Each needs Human Approval; do not infer approval from navigation/sidebar.
 
 ## Foundation/Tenant Layer Checkpoint 0
-
 Current branch: `agent-os/kfo-tenant-consolidation`, based on `agent-os/kfo-master-spec`; Draft PR #2 remains open. No merge to `main` or production deployment.
-
 - I1 Technical ADR: **COMPLETE**. ADR-001 selects Next.js App Router + React + TypeScript, Supabase Auth, shared PostgreSQL/RLS, private Supabase Storage. “Taa” is an **Unavailable Reference**, non-blocking under the accepted contracts.
 - I2 Tenant resolution/context: framework-neutral request-context boundary and Supabase read adapter implemented. Public host uses the limited host RPC; membership lookup is filtered by user + organization through the request-scoped user JWT. Host/org mismatch fails closed. Unit tests pass 17/17. Next.js trusted-host extraction + Supabase SSR `auth.getUser()` wiring and real runtime context switching remain for app-shell integration.
 - I3 Persistence/RBAC: four migrations are applied to dedicated KFO project `ktkdcfxeaicbykdurlfg` (EU Central, PostgreSQL 17). All 11 public tables have RLS enabled; 10 approved role codes and 18 permission codes are seeded. API/service integration remains.
-- I4 Storage: private `tenant-private` bucket and organization UUID prefix policies are applied. Database policy suite passes; runtime cross-tenant list/read/write/delete and signed-access tests remain.
-- I5 QA: host/context/request-context/Supabase adapter unit tests pass **17/17**; hosted pgTAP isolation/RBAC/host suite passes **18/18** using a transaction-scoped fixture. All fixture organizations, memberships, and test users were confirmed rolled back. Security advisors report no findings. Multiple-policy and unindexed-FK warnings were resolved; only unused-index notices remain on the empty schema.
+- I4 Storage: private `tenant-private` bucket and organization UUID prefix policies are applied. Hosted database-level Storage RLS checks pass as part of the 23/23 pgTAP suite: tenant A listing isolation, denial of upload/update under tenant B prefix, and allowed own-tenant upload/update. Runtime Storage API list/read/write/delete, signed-access, and deletion checks remain.
+- I5 QA: host/context/request-context/Supabase adapter unit tests pass **17/17**; hosted pgTAP isolation/RBAC/host/Storage suite passes **23/23** using a transaction-scoped fixture. All fixture organizations, memberships and test users were confirmed rolled back; pgTAP is not persistently installed. Security advisors report no findings. Multiple-policy and unindexed-FK warnings were resolved; only unused-index notices remain on the empty schema.
 - I6 checkpoint: capture actual database/API/storage results and unresolved gates before Human Approval.
 
 ## Foundation schema sequence
@@ -34,7 +32,7 @@ Current branch: `agent-os/kfo-tenant-consolidation`, based on `agent-os/kfo-mast
 2. `20260924080939_kfo_tenant_storage.sql`: private bucket and tenant-prefixed object access policies.
 3. `20260924081958_tenant_host_resolver_grant.sql`: limited anon grant required by public host-resolution RLS policies.
 4. `20260924082130_tenant_rls_performance.sql`: consolidates duplicate SELECT policies and adds foreign-key indexes. All four versions match the KFO project migration history.
-3. Later graph phases add scoped course/version/library/licensing, progress/assessment, certificate/public verification read model, order/payment/seat/entitlement and reporting schemas. Do not add speculative product policy in Foundation.
+5. Later graph phases add scoped course/version/library/licensing, progress/assessment, certificate/public verification read model, order/payment/seat/entitlement and reporting schemas. Do not add speculative product policy in Foundation.
 
 ## Implementation DAG
 - B2 Identity/Auth/profile/use-type; preserve single identity and explicit personal/company context.
