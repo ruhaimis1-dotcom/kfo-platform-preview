@@ -14,8 +14,8 @@ KFO Approved Checkpoint 2026-09-20 is the visual/product source of truth. KFO Ma
 
 ## Design continuation
 Company architecture gates already approved: Training Dashboard; Employees & Teams; Company Courses, Content & Seats; Training Assignment; Reports & Certificates; Organization Tenant Architecture. Visual design remains governed only by the approved checkpoint.
-- D0 Orders & Invoices tenant architecture reconciliation.
-- D1 Company Settings tenant architecture reconciliation.
+- D0 Orders & Invoices tenant architecture reconciliation: **COMPLETE**; see `ORDERS-SETTINGS-TENANT-RECONCILIATION.md`. Personal order journeys remain separate from company transaction context; organization records require `organization_id`, membership/permission checks, and RLS.
+- D1 Company Settings tenant architecture reconciliation: **COMPLETE**; controlled branding, private tenant media, audited changes, and unresolved domain/lifecycle decisions remain within existing gates. No visual design or product policy was approved by the reconciliation.
 - D2–D8 company visual previews in approved sequence. Each needs Human Approval; do not infer approval from navigation/sidebar.
 
 ## Design-to-implementation continuation
