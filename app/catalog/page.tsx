@@ -6,9 +6,9 @@ export const metadata: Metadata = {
 };
 
 const catalogCourses = [
-  { title: 'مهارات التواصل الفعّال', category: 'التواصل', duration: '4 ساعات', level: 'مبتدئ', price: '149 ر.س', image: '/images/checkpoint/course-communication-preview.jpg' },
-  { title: 'تحليل البيانات', category: 'التقنية', duration: '8 ساعات', level: 'متوسط', price: '249 ر.س', image: '/images/checkpoint/course-data-preview.jpg' },
-  { title: 'أساسيات إدارة المشاريع', category: 'الأعمال', duration: '6 ساعات', level: 'مبتدئ', price: '199 ر.س', image: '/images/checkpoint/course-projects-preview.jpg' },
+  { title: 'مهارات التواصل الفعّال', category: 'التواصل', duration: '4 ساعات', level: 'مبتدئ', price: '149 ر.س', image: '/images/checkpoint/course-communication-v2.jpg' },
+  { title: 'تحليل البيانات', category: 'التقنية', duration: '8 ساعات', level: 'متوسط', price: '249 ر.س', image: '/images/checkpoint/course-data-v2.jpg' },
+  { title: 'أساسيات إدارة المشاريع', category: 'الأعمال', duration: '6 ساعات', level: 'مبتدئ', price: '199 ر.س', image: '/images/checkpoint/course-projects-v2.jpg' },
   { title: 'تجربة العميل', category: 'التواصل', duration: 'ساعتان', level: 'مبتدئ', price: '99 ر.س', image: '/images/checkpoint/course-customer-preview.jpg' },
   { title: 'أساسيات التسويق الرقمي', category: 'التقنية', duration: '3 ساعات', level: 'مبتدئ', price: 'مجاني', image: '/images/checkpoint/course-marketing-preview.jpg' },
   { title: 'قيادة فرق العمل', category: 'القيادة', duration: '5 ساعات', level: 'متوسط', price: '179 ر.س', image: '/images/checkpoint/course-leadership-preview.jpg' },

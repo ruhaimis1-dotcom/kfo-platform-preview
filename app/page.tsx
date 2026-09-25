@@ -1,7 +1,7 @@
 const courses = [
-  { category: 'مهارات التواصل', title: 'مهارات التواصل الفعّال', duration: '4 ساعات', level: 'مبتدئ', image: '/images/checkpoint/course-communication-preview.jpg' },
-  { category: 'تحليل البيانات', title: 'تحليل البيانات واتخاذ القرار', duration: '8 ساعات', level: 'متوسط', image: '/images/checkpoint/course-data-preview.jpg' },
-  { category: 'إدارة المشاريع', title: 'أساسيات إدارة المشاريع', duration: '6 ساعات', level: 'مبتدئ', image: '/images/checkpoint/course-projects-preview.jpg' },
+  { category: 'مهارات التواصل', title: 'مهارات التواصل الفعّال', duration: '4 ساعات', level: 'مبتدئ', image: '/images/checkpoint/course-communication-v2.jpg' },
+  { category: 'تحليل البيانات', title: 'تحليل البيانات واتخاذ القرار', duration: '8 ساعات', level: 'متوسط', image: '/images/checkpoint/course-data-v2.jpg' },
+  { category: 'إدارة المشاريع', title: 'أساسيات إدارة المشاريع', duration: '6 ساعات', level: 'مبتدئ', image: '/images/checkpoint/course-projects-v2.jpg' },
 ];
 
 const paths = [
