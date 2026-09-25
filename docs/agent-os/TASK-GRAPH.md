@@ -21,9 +21,11 @@ Company architecture gates already approved: Training Dashboard; Employees & Tea
 
 ## Design-to-implementation continuation
 - UI0 Public home implementation started from the visually approved home screen in KFO Approved Checkpoint 2026-09-20. This is an implementation preview, not a design re-approval or a completed production page.
-- UI0 uses the approved palette, IBM Plex Sans Arabic / Inter fonts, and the approved public-home composition. The hero, course, and company photos/logo in the branch Preview are temporary crops from the approved full-page composite; original standalone photo/vector assets are still needed for final asset quality.
+- UI0 uses the approved palette, IBM Plex Sans Arabic / Inter fonts, and the approved public-home composition. On 25 Sep, low-resolution photo crops were replaced by larger crops from approved hero/catalog/course checkpoint renders. Original reusable photo/vector assets are still needed for final asset quality.
 - The public-home visual revision is available in Preview for owner review. It is not a final visual sign-off. The existing root `index.html` remains unchanged as a visual reference, not the app.
-- Owner screen recording confirmed `/business/dashboard`, `/paths`, and `/partners` currently return 404 because their route pages are not implemented. Preserve the approved route names and implement destinations in Task Graph order; `/business/dashboard` remains blocked until its replacement visual receives Human Approval.
+- UI1 Public catalogue: `/catalog` and its approved communication course route `/catalog/communication-skills` implemented from their approved checkpoint visuals. Search and category query filtering work on the six illustrative catalogue entries. No live catalogue, checkout, enrollment, or entitlement is connected; other course cards do not point to an unrelated detail page.
+- Owner screen recording confirmed `/business/dashboard`, `/paths`, and `/partners` returned 404 because their route pages were not implemented. `/catalog` is now implemented; `/business/dashboard` remains blocked until its replacement visual is approved. `/paths`, `/partners`, auth, and informational pages remain pending their design gates and route sequence.
+- The homepage still contains links to those unimplemented route targets; route coverage is therefore partial and those links may return 404 until their approved page slices ship. Preserve route names; do not fill gaps with unapproved UI.
 - Before production readiness: restore approved logo and hero assets from a trusted source; wire the approved route map and backend; implement loading/empty/error/forbidden/offline states; browser QA desktop/mobile/RTL and accessibility; complete human review.
 
 ## Foundation/Tenant Layer Checkpoint 0
