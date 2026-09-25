@@ -1,25 +1,29 @@
-# Design Preview Checkpoint 2 — Company Training Dashboard
+# Design Checkpoint 2 — Company Training Dashboard
 
 Date: 2026-09-25  
 Branch: `agent-os/kfo-tenant-consolidation`  
-Status: **ready for Human visual approval; implementation not started**
+Status: **Architecture and page breakdown approved; proposed visual output rejected by product owner.**
 
-## Preview
+## Accepted scope
 
-`previews/COMPANY-TRAINING-DASHBOARD-D2.svg` is a static design proposal for the first company screen in the approved sequence. It is not an application route and it contains no live data or interactions.
+The Company Training Dashboard page architecture and its place in the approved Company Admin Workspace page sequence are accepted. The required page areas remain the already-approved employee, assignment and seat indicators; Add Employee, Assign Course and Buy Seats actions; progress/deadline/status table; alerts and reports.
 
-## Design basis
+This is architecture/page structure approval only. It is not approval of a visual design, branding treatment, or application implementation.
 
-- Company Training Dashboard architecture is already approved: employee, assignment and seat indicators; Add Employee, Assign Course and Buy Seats actions; progress/deadline/status table; alerts and reports.
-- Visual language follows the sole approved KFO checkpoint: forest/green palette, Arabic RTL, restrained surfaces, concise dashboard layout and existing IBM Plex Sans Arabic / Inter typography.
-- Navigation labels reflect the already approved Company Admin Workspace areas. This proposal does not define or rename routes.
-- All names and numbers shown are illustrative placeholders, not business data, targets, policy, or catalogue content.
+## Rejected visual proposal
 
-## Not introduced
+The static proposal previously stored at `previews/COMPANY-TRAINING-DASHBOARD-D2.svg` was rejected by the product owner on 2026-09-25 because it does not match the visual identity in KFO Approved Checkpoint 2026-09-20. The rejected SVG has been removed from the active branch to prevent it being mistaken for an approved reference.
 
-No new roles, permissions, commercial rules, seat behavior, course policy, company lifecycle, branding freedom, or external integrations are proposed. Orders & Invoices and Company Settings remain scoped by the accepted tenant reconciliation. No employee view is placed in the administration workspace.
+## Binding visual authority
 
-## Review gate
+KFO Approved Checkpoint 2026-09-20 remains the sole approved visual source. No replacement visual is approved by this checkpoint. The next design proposal must be checked against the approved KFO portal screens and identity guide before it is submitted for review. It must preserve the actual logo treatment, palette, typography, spacing, component style, and RTL composition; do not invent new branding or use the rejected SVG as a design base.
 
-Human visual approval is required before implementing this screen in the application. Requested review: approve the proposed visual direction, or identify specific changes. After approval, the screen can move to route implementation and then API/RBAC, RTL/mobile, accessibility, and tenant-isolation checks. D3 and later company screens remain gated in their approved sequence.
+The available checkpoint contains approved public and learner screens; it does not contain an approved company-admin dashboard visual. A company-admin screen therefore remains a new visual proposal and must receive Human visual approval before application implementation.
 
+## Review / implementation gate
+
+- D2 architecture: **APPROVED**.
+- D2 visual proposal: **REJECTED**.
+- D2 application route: **NOT STARTED**.
+- A replacement design requires comparison with the approved visual checkpoint and Human Approval.
+- D3–D8 remain in their approved sequence and are individually gated.
