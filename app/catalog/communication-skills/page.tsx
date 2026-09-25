@@ -24,7 +24,7 @@ export default function CommunicationCoursePage() {
           <a className="button button-secondary" href="/catalog">أهدِ الدورة</a><a className="button button-secondary" href="/business/dashboard">شراء مقاعد لفريقك</a><p>بيانات الدورة والسعر توضيحية للمعاينة.</p>
         </aside>
         <div className="course-detail-content">
-          <div className="course-video-preview"><img src="/images/checkpoint/business-team-preview.jpg" alt="مدربة تشرح مهارات التواصل في بيئة تدريبية" /><span className="play-preview" aria-hidden="true">▶</span></div>
+          <div className="course-video-preview"><img src="/images/checkpoint/business-team-preview.jpg" alt="مدربة تشرح مهارات التواصل في بيئة تدريبية" /></div>
           <section className="course-info-box"><h2>ماذا ستتعلم؟</h2><div className="learning-outcomes"><span>الإنصات الفعّال</span><span>إدارة الحوار</span><span>تقديم الأفكار بوضوح</span><span>تحسين التواصل المهني</span></div></section>
           <section className="course-info-box"><h2>لمن هذه الدورة؟</h2><p>للموظفين وقادة الفرق وكل من يرغب في تطوير تواصله المهني.</p></section>
           <section className="course-info-box"><h2>محتوى الدورة</h2><div className="lesson-list">{lessons.map(([unit, lesson, duration], i) => <div className="lesson-row" key={lesson}><span>{unit}</span><span>{i + 1}.&nbsp; {lesson}</span><small>{duration}</small></div>)}</div></section>
