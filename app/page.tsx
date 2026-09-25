@@ -1,7 +1,7 @@
 const courses = [
-  { category: 'مهارات التواصل', title: 'مهارات التواصل الفعّال', duration: '4 ساعات', level: 'مبتدئ', mark: 'تواصل' },
-  { category: 'تحليل البيانات', title: 'تحليل البيانات واتخاذ القرار', duration: '8 ساعات', level: 'متوسط', mark: 'بيانات' },
-  { category: 'إدارة المشاريع', title: 'أساسيات إدارة المشاريع', duration: '6 ساعات', level: 'مبتدئ', mark: 'مشاريع' },
+  { category: 'مهارات التواصل', title: 'مهارات التواصل الفعّال', duration: '4 ساعات', level: 'مبتدئ', image: '/images/checkpoint/course-communication-preview.jpg' },
+  { category: 'تحليل البيانات', title: 'تحليل البيانات واتخاذ القرار', duration: '8 ساعات', level: 'متوسط', image: '/images/checkpoint/course-data-preview.jpg' },
+  { category: 'إدارة المشاريع', title: 'أساسيات إدارة المشاريع', duration: '6 ساعات', level: 'مبتدئ', image: '/images/checkpoint/course-projects-preview.jpg' },
 ];
 
 const paths = [
@@ -14,8 +14,10 @@ function Arrow() {
   return <span aria-hidden="true" className="arrow">←</span>;
 }
 
-function Brand() {
-  return <a className="brand" href="/" aria-label="كفو — الرئيسية"><span>كفو<small>KFO</small></span></a>;
+function Brand({ approvedMark = false }: { approvedMark?: boolean }) {
+  return <a className={approvedMark ? 'brand approved-brand' : 'brand'} href="/" aria-label="كفو — الرئيسية">
+    {approvedMark ? <img src="/images/checkpoint/kfo-logo-preview.png" alt="كفو KFO" /> : <span>كفو<small>KFO</small></span>}
+  </a>;
 }
 
 export default function HomePage() {
@@ -23,7 +25,7 @@ export default function HomePage() {
     <>
       <header className="topbar">
         <div className="topbar-inner">
-          <Brand />
+          <Brand approvedMark />
           <nav className="main-nav" aria-label="التنقل الرئيسي">
             <a href="/catalog">الدورات</a><a href="/paths">المسارات</a><a href="/business/dashboard">كفو للأعمال</a><a href="/partners">شركاء التدريب</a>
           </nav>
@@ -33,11 +35,6 @@ export default function HomePage() {
 
       <main>
         <section className="hero" aria-labelledby="hero-title">
-          <div className="hero-art" role="img" aria-label="مساحة مخصصة للصورة المعتمدة لبيئة التعلم والعمل">
-            <div className="hero-art-label"><span className="pulse" /> تعلّم عملي يرفع جاهزيتك</div>
-            <div className="learning-card"><span className="learning-card-icon">✓</span><div><b>مسار تعلّم متكامل</b><small>من المعرفة إلى التطبيق</small></div><span className="progress"><i /></span></div>
-            <div className="art-note">بانتظار ملف صورة الـHero الأصلي من الـCheckpoint</div>
-          </div>
           <div className="hero-copy">
             <p className="eyebrow">معرفة تنمو معك</p>
             <h1 id="hero-title">طوّر مهاراتك<br /><em>وارفع جاهزيتك.</em></h1>
@@ -45,14 +42,17 @@ export default function HomePage() {
             <div className="hero-actions"><a className="button button-accent" href="/catalog">استكشف الدورات <Arrow /></a><a className="button button-outline-light" href="/business/dashboard">كفو للأعمال</a></div>
             <div className="hero-points"><span>تعلّم عملي</span><b>•</b><span>مسارات منظمة</span><b>•</b><span>تقدّم تتابعه</span></div>
           </div>
+          <div className="hero-art">
+            <img src="/images/checkpoint/home-hero-preview.jpg" alt="متعلمون يتبادلون المعرفة في بيئة عمل سعودية" />
+          </div>
         </section>
 
         <section className="why section-wrap" aria-labelledby="why-title">
           <div className="section-heading"><p className="eyebrow eyebrow-green">تعلم يصنع فرقًا</p><h2 id="why-title">لماذا كفو؟</h2><p>تجربة تعلم مصممة لتمكينك من بناء مهارات حقيقية لمستقبل أفضل.</p></div>
           <div className="why-grid">
-            <article><span className="line-icon">⌁</span><h3>تابع تقدمك</h3><p>راقب رحلتك التعليمية وحقق أهدافك من خلال تقارير واضحة ومحددة.</p></article>
-            <article><span className="line-icon">◇</span><h3>مسارات منظمة</h3><p>تعلم ضمن مسارات مصممة بعناية لتتناسب مع احتياجاتك المهنية.</p></article>
             <article><span className="line-icon">▱</span><h3>تعلم عملي</h3><p>دورات تطبيقية من خبراء القطاع تركز على المهارات القابلة للتطبيق.</p></article>
+            <article><span className="line-icon">◇</span><h3>مسارات منظمة</h3><p>تعلم ضمن مسارات مصممة بعناية لتتناسب مع احتياجاتك المهنية.</p></article>
+            <article><span className="line-icon">⌁</span><h3>تابع تقدمك</h3><p>راقب رحلتك التعليمية وحقق أهدافك من خلال تقارير واضحة ومحددة.</p></article>
           </div>
         </section>
 
@@ -60,7 +60,7 @@ export default function HomePage() {
           <div className="section-wrap">
             <div className="section-title-row"><div><p className="eyebrow eyebrow-green">طوّر مهاراتك</p><h2 id="catalog-title">اكتشف الدورات</h2><p>مجموعة متنوعة من الدورات لتطوير مهاراتك في مختلف المجالات.</p></div><div className="filters" aria-label="تصفية الدورات"><button className="filter active">الكل</button><button className="filter">الأعمال</button><button className="filter">التقنية</button><button className="filter">القيادة</button></div></div>
             <div className="course-grid">{courses.map(course => <article className="course-card" key={course.title}>
-              <div className={`course-art course-${course.mark}`}><span>{course.mark}</span><strong>تعلّم<br />وطبّق</strong></div>
+              <div className="course-art"><img src={course.image} alt="" /></div>
               <div className="course-body"><p className="course-category">{course.category}</p><h3>{course.title}</h3><div className="course-meta"><span>{course.level}</span><span>◷ {course.duration}</span></div><a href="/catalog" className="text-link">عرض التفاصيل <Arrow /></a></div>
             </article>)}</div>
             <div className="center-action"><a className="button button-secondary" href="/catalog">عرض جميع الدورات <Arrow /></a></div>
@@ -78,11 +78,11 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="business-promo section-wrap"><div className="business-visual"><div className="team-visual"><span>إدارة مقاعد التدريب</span><div className="visual-bars"><i /><i /><i /><i /><i /></div><div className="team-dots"><b>ع</b><b>م</b><b>ر</b></div></div></div><div className="business-copy"><p className="eyebrow eyebrow-green">كفو للأعمال</p><h2>طوّر فريقك<br />وتابع أثر التدريب.</h2><p>حلول تدريبية متكاملة لتمكين فرق العمل وبناء قدرات المنظمات، مع أدوات متابعة وقياس للأثر.</p><div className="business-features"><span>إدارة المقاعد</span><span>تعيين الدورات</span><span>متابعة النتائج</span></div><a className="button button-primary" href="/business/dashboard">اكتشف حلول الأعمال <Arrow /></a></div></section>
+        <section className="business-promo section-wrap"><div className="business-copy"><p className="eyebrow eyebrow-green">كفو للأعمال</p><h2>طوّر فريقك<br />وتابع أثر التدريب.</h2><p>حلول تدريبية متكاملة لتمكين فرق العمل وبناء قدرات المنظمات، مع أدوات متابعة وقياس للأثر.</p><div className="business-features"><span>إدارة المقاعد</span><span>تعيين الدورات</span><span>متابعة النتائج</span></div><a className="button button-primary" href="/business/dashboard">اكتشف حلول الأعمال <Arrow /></a></div><div className="business-visual"><img src="/images/checkpoint/business-team-preview.jpg" alt="فريق عمل يناقش تطوير جاهزية الموظفين" /></div></section>
 
         <section className="partners-section"><div className="section-wrap partner-row"><div><p className="eyebrow eyebrow-green">شركاء يصنعون المعرفة</p><h2>شارك بخبرتك</h2><p>نرحب بالمدربين والمراكز التدريبية للمساهمة في بناء مستقبل أكثر جاهزية.</p></div><a className="button button-primary" href="/partners">انضم كشريك تدريب <Arrow /></a><div className="partner-types"><span><b>♙</b> مدرب مستقل</span><span><b>▥</b> مركز تدريب</span></div></div></section>
 
-        <section className="verify-section section-wrap"><div><p className="eyebrow eyebrow-green">شهادات موثوقة</p><h2>تحقق من شهادة كفو</h2><p>تحقق من صحة الشهادات الصادرة من منصة كفو.</p></div><form className="verify-form" action="/verify-certificate"><label className="sr-only" htmlFor="certificate-code">رمز الشهادة</label><input id="certificate-code" name="code" placeholder="أدخل رمز الشهادة" /><button className="button button-primary" type="submit">تحقق من شهادة <Arrow /></button></form><div className="certificate-mini"><Brand /><span>شهادة إتمام تدريبية</span><div /></div></section>
+        <section className="verify-section section-wrap"><div><p className="eyebrow eyebrow-green">شهادات موثوقة</p><h2>تحقق من شهادة كفو</h2><p>تحقق من صحة الشهادات الصادرة من منصة كفو.</p></div><form className="verify-form" action="/verify-certificate"><label className="sr-only" htmlFor="certificate-code">رمز الشهادة</label><input id="certificate-code" name="code" placeholder="أدخل رمز الشهادة" /><button className="button button-primary" type="submit">تحقق من شهادة <Arrow /></button></form><div className="certificate-mini"><Brand approvedMark /><span>شهادة إتمام تدريبية</span><div /></div></section>
 
         <section className="final-cta"><div className="section-wrap"><p className="eyebrow">ابدأ اليوم</p><h2>خطوتك القادمة تبدأ بالتعلم</h2><p>ابدأ بناء مهاراتك لمستقبل أكثر جاهزية.</p><a className="button button-accent" href="/register">إنشاء حساب <Arrow /></a></div></section>
       </main>
