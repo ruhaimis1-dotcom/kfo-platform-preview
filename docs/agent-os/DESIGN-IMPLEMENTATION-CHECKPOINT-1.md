@@ -28,7 +28,13 @@ The page follows the public home approved in `KFO-Approved-Checkpoint-2026-09-20
 - `npm test`: 17/17 tenant-core tests passed.
 - `npx tsc --noEmit`: passed.
 - `npm run build`: passed; `/` is statically rendered and `/api/tenant/context` remains dynamic.
+- Vercel Preview recovery (2026-09-25): initial deployment returned `404 NOT_FOUND`. Inspection found the Vercel project Framework Preset set to `Other` although this repository is a Next.js application. The project preset was corrected to `Next.js`, then the feature branch was redeployed as **Preview** with the old build cache disabled.
+- Verified in browser after redeployment: the deployment-specific Preview URL and the branch Preview alias both return the KFO root page (title `كفو`) instead of the Vercel 404. This confirms availability of `/` only; it is not approval of the page's visual fidelity or of D2's rejected visual proposal.
 - Production or `main` deployment: not performed.
+
+## Visual approval boundary
+
+The 2026-09-25 owner decision approves the D2 Company Training Dashboard architecture and page breakdown only. The proposed D2 visual is rejected for mismatch with the approved KFO identity. Do not treat the working Preview URL as visual approval. D2 route implementation remains gated until a replacement visual is reviewed and approved against `KFO Approved Checkpoint 2026-09-20`.
 
 ## Next
 
