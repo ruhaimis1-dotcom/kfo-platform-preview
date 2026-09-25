@@ -12,14 +12,15 @@ The page follows the public home approved in `KFO-Approved-Checkpoint-2026-09-20
 
 - Replaced the root reference iframe with a responsive RTL public-home implementation matching the approved information hierarchy: navigation, hero, value propositions, course discovery, paths, learning steps, company CTA, partners, certificate verification, CTA and footer.
 - Added the approved palette as CSS tokens and installed pinned local font packages for IBM Plex Sans Arabic and Inter.
+- Revised the hero composition to match the approved full-page checkpoint reference: KFO wordmark/navigation, people imagery on the left, headline and actions on the right, with the same dark forest and signal green treatment. Course and company imagery now use crops from the approved composite preview.
 - Kept `index.html` unchanged and available through the copied `/kfo-preview.html` reference asset.
 - Used approved route names in navigation and CTA links; no new product routes were introduced.
 - No database, API, payment, or production changes were made.
 
 ## Explicit gaps
 
-- Original approved hero photography and usable approved logo artwork are not present as reusable source assets in the repository or the checkpoint ZIP. Existing repository PNG files are invalid image streams. This implementation therefore displays a clearly marked neutral hero illustration area and a text-only KFO wordmark; neither is a final substitute for the approved artwork.
-- Course cards and the business diagram are static presentation examples, not live catalogue or tenant data.
+- Original standalone hero/course/team photography and vector logo artwork are not present as reusable assets. The current preview extracts small raster crops from the approved full-page composite, which improves fidelity for review but is temporary and not a production-quality asset source. Replace them with the trusted originals when available.
+- Course cards and the company preview image are presentation examples, not live catalogue or tenant data.
 - The linked destinations are architectural route targets; those pages and interactions are not part of UI0 and may not yet be implemented.
 - This checkpoint does not establish that real Supabase Auth, API persistence, or tenant context is working in Preview.
 
@@ -30,12 +31,13 @@ The page follows the public home approved in `KFO-Approved-Checkpoint-2026-09-20
 - `npm run build`: passed; `/` is statically rendered and `/api/tenant/context` remains dynamic.
 - Vercel Preview recovery (2026-09-25): initial deployment returned `404 NOT_FOUND`. Inspection found the Vercel project Framework Preset set to `Other` although this repository is a Next.js application. The project preset was corrected to `Next.js`, then the feature branch was redeployed as **Preview** with the old build cache disabled.
 - Verified in browser after redeployment: the deployment-specific Preview URL and the branch Preview alias both return the KFO root page (title `كفو`) instead of the Vercel 404. This confirms availability of `/` only; it is not approval of the page's visual fidelity or of D2's rejected visual proposal.
+- Public-home visual revision on 2026-09-25 now renders on the branch Preview. Desktop browser QA confirms the approved hero image/text direction and all seven preview images load. `npm test` (17/17), `npx tsc --noEmit`, `npm run build`, and `git diff --check` pass for this revision.
 - Owner's screen recording on 2026-09-25 confirms the root page loads, but clicking visible destinations such as `/business/dashboard`, `/paths`, and `/partners` returns 404 because those route pages are not implemented yet. This is an application route-coverage gap, separate from the repaired Vercel root-page deployment. `/business/dashboard` remains blocked by the D2 visual approval gate; other route destinations remain in their Task Graph sequence.
 - Production or `main` deployment: not performed.
 
 ## Visual approval boundary
 
-The 2026-09-25 owner decision approves the D2 Company Training Dashboard architecture and page breakdown only. The proposed D2 visual is rejected for mismatch with the approved KFO identity. Do not treat the working Preview URL as visual approval. D2 route implementation remains gated until a replacement visual is reviewed and approved against `KFO Approved Checkpoint 2026-09-20`.
+The public-home visual is being aligned with its existing approved checkpoint, but this implementation revision still requires owner visual review and is not a final visual sign-off. The 2026-09-25 owner decision approves the D2 Company Training Dashboard architecture and page breakdown only. The proposed D2 visual is rejected for mismatch with the approved KFO identity. D2 route implementation remains gated until a replacement visual is reviewed and approved against `KFO Approved Checkpoint 2026-09-20`.
 
 ## Next
 

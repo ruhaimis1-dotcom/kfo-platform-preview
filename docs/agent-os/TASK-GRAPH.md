@@ -21,9 +21,9 @@ Company architecture gates already approved: Training Dashboard; Employees & Tea
 
 ## Design-to-implementation continuation
 - UI0 Public home implementation started from the visually approved home screen in KFO Approved Checkpoint 2026-09-20. This is an implementation preview, not a design re-approval or a completed production page.
-- UI0 uses the approved palette and local IBM Plex Sans Arabic / Inter font files. The existing root `index.html` remains unchanged as a visual reference, not the app.
-- UI0 visual review is limited by missing original hero photography and usable approved logo files in the repository/checkpoint archive. No substitute brand artwork has been invented; the hero marks this asset gap visibly.
-- UI0 routes are linked to the already approved route names. Other screens and real interactions/data remain unimplemented and must be delivered in subsequent route checkpoints.
+- UI0 uses the approved palette, IBM Plex Sans Arabic / Inter fonts, and the approved public-home composition. The hero, course, and company photos/logo in the branch Preview are temporary crops from the approved full-page composite; original standalone photo/vector assets are still needed for final asset quality.
+- The public-home visual revision is available in Preview for owner review. It is not a final visual sign-off. The existing root `index.html` remains unchanged as a visual reference, not the app.
+- Owner screen recording confirmed `/business/dashboard`, `/paths`, and `/partners` currently return 404 because their route pages are not implemented. Preserve the approved route names and implement destinations in Task Graph order; `/business/dashboard` remains blocked until its replacement visual receives Human Approval.
 - Before production readiness: restore approved logo and hero assets from a trusted source; wire the approved route map and backend; implement loading/empty/error/forbidden/offline states; browser QA desktop/mobile/RTL and accessibility; complete human review.
 
 ## Foundation/Tenant Layer Checkpoint 0
@@ -33,7 +33,7 @@ Current branch: `agent-os/kfo-tenant-consolidation`, based on `agent-os/kfo-mast
 - I3 Persistence/RBAC: four migrations are applied to dedicated KFO project `ktkdcfxeaicbykdurlfg` (EU Central, PostgreSQL 17). All 11 public tables have RLS enabled; 10 approved role codes and 18 permission codes are seeded. API/service integration remains.
 - I4 Storage: private `tenant-private` bucket and organization UUID prefix policies are applied. Hosted database-level Storage RLS checks pass as part of the 23/23 pgTAP suite: tenant A listing isolation, denial of upload/update under tenant B prefix, and allowed own-tenant upload/update. Runtime Storage API list/read/write/delete, signed-access, and deletion checks remain.
 - I5 QA: host/context/request-context/Supabase adapter unit tests pass **17/17**; hosted pgTAP isolation/RBAC/host/Storage suite passes **23/23** using a transaction-scoped fixture. All fixture organizations, memberships and test users were confirmed rolled back; pgTAP is not persistently installed. Security advisors report no findings. Multiple-policy and unindexed-FK warnings were resolved; only unused-index notices remain on the empty schema.
-- I6 checkpoint: Next.js App Router shell builds; root serves a same-content iframe copy of the existing `index.html` preview, which remains non-product visual reference. `GET /api/tenant/context` is wired and no-store. Auth, API/service and Storage API isolation against real authenticated fixtures remain before Foundation exit/Human Approval.
+- I6 checkpoint: Next.js App Router root now renders the public-home implementation; existing `index.html` remains reference only. `GET /api/tenant/context` is wired and no-store. Auth, API/service and Storage API isolation against real authenticated fixtures remain before Foundation exit/Human Approval.
 
 ## Foundation schema sequence
 1. `20260924080920_kfo_tenant_foundation.sql`: organizations, verified hosts/custom-domain requests, branches/departments, identity memberships, existing role codes, permissions, controlled branding, audit, helper functions, RLS and explicit grants.
