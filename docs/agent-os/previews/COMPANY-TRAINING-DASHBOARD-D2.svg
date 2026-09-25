@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1000" viewBox="0 0 1440 1000" role="img" aria-labelledby="title desc">
+  <title id="title">معاينة لوحة التدريب للشركة — كفو</title>
+  <desc id="desc">تصور تصميمي أولي لمساحة إدارة الشركة، باستخدام هوية كفو المعتمدة، ويتضمن مؤشرات الموظفين والتكليفات والمقاعد والتنبيهات.</desc>
+  <defs>
+    <style>
+      .ar{font-family:"IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;direction:rtl;unicode-bidi:plaintext}
+      .en{font-family:Inter,Arial,sans-serif}
+    </style>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="3" stdDeviation="8" flood-color="#04180F" flood-opacity=".06"/></filter>
+  </defs>
+  <rect width="1440" height="1000" fill="#F4F6F8"/>
+  <!-- Right navigation -->
+  <rect x="1120" y="0" width="320" height="1000" fill="#FFFFFF"/>
+  <path d="M1120 0V1000" stroke="#D9E2DD"/>
+  <text x="1380" y="58" text-anchor="end" class="ar" font-size="26" font-weight="700" fill="#04180F">كفو</text>
+  <text x="1380" y="84" text-anchor="end" class="ar" font-size="12" fill="#60706A">مساحة الشركة</text>
+  <rect x="1148" y="110" width="244" height="1" fill="#E7EEE9"/>
+  <text x="1380" y="151" text-anchor="end" class="ar" font-size="11" font-weight="600" fill="#87958E">إدارة التدريب</text>
+  <rect x="1140" y="170" width="260" height="48" rx="8" fill="#E7EEE9"/>
+  <rect x="1380" y="183" width="4" height="22" rx="2" fill="#419B2A"/>
+  <text x="1365" y="201" text-anchor="end" class="ar" font-size="14" font-weight="600" fill="#04180F">لوحة التدريب</text>
+  <text x="1365" y="259" text-anchor="end" class="ar" font-size="14" fill="#34443B">الموظفون والفرق</text>
+  <text x="1365" y="311" text-anchor="end" class="ar" font-size="14" fill="#34443B">الدورات والمحتوى</text>
+  <text x="1365" y="363" text-anchor="end" class="ar" font-size="14" fill="#34443B">إسناد التدريب</text>
+  <text x="1365" y="415" text-anchor="end" class="ar" font-size="14" fill="#34443B">التقارير والشهادات</text>
+  <rect x="1148" y="445" width="244" height="1" fill="#E7EEE9"/>
+  <text x="1365" y="486" text-anchor="end" class="ar" font-size="14" fill="#34443B">الطلبات والفواتير</text>
+  <text x="1365" y="538" text-anchor="end" class="ar" font-size="14" fill="#34443B">إعدادات الشركة</text>
+  <rect x="1148" y="900" width="244" height="1" fill="#E7EEE9"/>
+  <circle cx="1366" cy="942" r="18" fill="#E7EEE9"/>
+  <text x="1366" y="947" text-anchor="middle" class="ar" font-size="12" font-weight="700" fill="#205E1E">ش</text>
+  <text x="1336" y="939" text-anchor="end" class="ar" font-size="13" font-weight="600" fill="#04180F">مسؤول الشركة</text>
+  <text x="1336" y="959" text-anchor="end" class="ar" font-size="11" fill="#60706A">إدارة المساحة</text>
+  <!-- Top bar -->
+  <rect x="0" y="0" width="1120" height="76" fill="#FFFFFF"/>
+  <path d="M0 76H1120" stroke="#D9E2DD"/>
+  <text x="1070" y="47" text-anchor="end" class="ar" font-size="13" fill="#60706A">بوابة الشركة</text>
+  <rect x="60" y="20" width="38" height="38" rx="8" fill="#F4F6F8"/>
+  <path d="M72 39h14M79 32v14" stroke="#205E1E" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="44" cy="39" r="17" fill="#E7EEE9"/>
+  <text x="44" y="44" text-anchor="middle" class="ar" font-size="14" fill="#205E1E">؟</text>
+  <!-- Main content -->
+  <text x="1060" y="132" text-anchor="end" class="ar" font-size="12" fill="#60706A">مساحة الشركة　/　لوحة التدريب</text>
+  <text x="1060" y="184" text-anchor="end" class="ar" font-size="29" font-weight="700" fill="#04180F">لوحة التدريب</text>
+  <text x="1060" y="214" text-anchor="end" class="ar" font-size="14" fill="#60706A">نظرة عامة على التدريب والتقدم في شركتك</text>
+  <rect x="60" y="158" width="184" height="48" rx="7" fill="#04180F"/>
+  <text x="152" y="188" text-anchor="middle" class="ar" font-size="14" font-weight="600" fill="#FFFFFF">＋　إسناد دورة</text>
+  <rect x="258" y="158" width="158" height="48" rx="7" fill="#FFFFFF" stroke="#B7C9BE"/>
+  <text x="337" y="188" text-anchor="middle" class="ar" font-size="14" font-weight="600" fill="#04180F">＋　إضافة موظف</text>
+  <!-- KPI cards -->
+  <g filter="url(#shadow)">
+    <rect x="824" y="250" width="236" height="142" rx="10" fill="#FFFFFF"/>
+    <rect x="570" y="250" width="236" height="142" rx="10" fill="#FFFFFF"/>
+    <rect x="316" y="250" width="236" height="142" rx="10" fill="#FFFFFF"/>
+    <rect x="62" y="250" width="236" height="142" rx="10" fill="#FFFFFF"/>
+  </g>
+  <text x="1035" y="286" text-anchor="end" class="ar" font-size="13" fill="#60706A">الموظفون النشطون</text>
+  <text x="1035" y="344" text-anchor="end" class="en" font-size="34" font-weight="700" fill="#04180F">128</text>
+  <text x="1035" y="371" text-anchor="end" class="ar" font-size="11" fill="#60706A">ضمن فرق الشركة</text>
+  <circle cx="858" cy="282" r="17" fill="#E7EEE9"/><text x="858" y="288" text-anchor="middle" class="ar" font-size="17" fill="#205E1E">م</text>
+  <text x="781" y="286" text-anchor="end" class="ar" font-size="13" fill="#60706A">الدورات المعيّنة</text>
+  <text x="781" y="344" text-anchor="end" class="en" font-size="34" font-weight="700" fill="#04180F">84</text>
+  <text x="781" y="371" text-anchor="end" class="ar" font-size="11" fill="#60706A">على مستوى الشركة</text>
+  <circle cx="604" cy="282" r="17" fill="#E7EEE9"/><text x="604" y="288" text-anchor="middle" class="ar" font-size="17" fill="#205E1E">د</text>
+  <text x="527" y="286" text-anchor="end" class="ar" font-size="13" fill="#60706A">المقاعد المتاحة</text>
+  <text x="527" y="344" text-anchor="end" class="en" font-size="34" font-weight="700" fill="#04180F">26</text>
+  <text x="527" y="371" text-anchor="end" class="ar" font-size="11" fill="#60706A">للمحتوى المرخّص</text>
+  <circle cx="350" cy="282" r="17" fill="#E7EEE9"/><text x="350" y="288" text-anchor="middle" class="ar" font-size="17" fill="#205E1E">ق</text>
+  <text x="273" y="286" text-anchor="end" class="ar" font-size="13" fill="#60706A">تحتاج متابعة</text>
+  <text x="273" y="344" text-anchor="end" class="en" font-size="34" font-weight="700" fill="#04180F">12</text>
+  <text x="273" y="371" text-anchor="end" class="ar" font-size="11" fill="#60706A">تكليفات قريبة الموعد</text>
+  <circle cx="96" cy="282" r="17" fill="#F8F0E4"/><text x="96" y="288" text-anchor="middle" class="ar" font-size="17" fill="#94651B">!</text>
+  <!-- Chart -->
+  <rect x="570" y="414" width="490" height="262" rx="10" fill="#FFFFFF" filter="url(#shadow)"/>
+  <text x="1032" y="454" text-anchor="end" class="ar" font-size="17" font-weight="700" fill="#04180F">تقدم التدريب</text>
+  <text x="1032" y="480" text-anchor="end" class="ar" font-size="11" fill="#60706A">نظرة على حالة التكليفات</text>
+  <rect x="604" y="435" width="104" height="30" rx="5" fill="#F4F6F8"/>
+  <text x="656" y="455" text-anchor="middle" class="ar" font-size="11" fill="#34443B">آخر ٦ أشهر⌄</text>
+  <path d="M620 524H1028M620 564H1028M620 604H1028M620 644H1028" stroke="#E7EEE9"/>
+  <path d="M620 524V644M722 524V644M824 524V644M926 524V644M1028 524V644" stroke="#F0F3F1"/>
+  <path d="M620 622 C666 610 680 589 722 592 S783 578 824 583 S885 554 926 560 S985 531 1028 538" fill="none" stroke="#419B2A" stroke-width="3" stroke-linecap="round"/>
+  <path d="M620 635 C666 631 680 622 722 626 S783 614 824 617 S885 600 926 607 S985 589 1028 594" fill="none" stroke="#88D768" stroke-width="3" stroke-linecap="round"/>
+  <text x="620" y="662" class="en" font-size="10" fill="#60706A">Apr</text><text x="722" y="662" class="en" font-size="10" fill="#60706A">May</text><text x="824" y="662" class="en" font-size="10" fill="#60706A">Jun</text><text x="926" y="662" class="en" font-size="10" fill="#60706A">Jul</text><text x="1028" y="662" text-anchor="end" class="en" font-size="10" fill="#60706A">Aug</text>
+  <circle cx="950" cy="480" r="4" fill="#419B2A"/><text x="939" y="484" text-anchor="end" class="ar" font-size="10" fill="#60706A">مكتمل</text>
+  <circle cx="872" cy="480" r="4" fill="#88D768"/><text x="861" y="484" text-anchor="end" class="ar" font-size="10" fill="#60706A">قيد التقدم</text>
+  <!-- Alerts -->
+  <rect x="62" y="414" width="490" height="262" rx="10" fill="#FFFFFF" filter="url(#shadow)"/>
+  <text x="524" y="454" text-anchor="end" class="ar" font-size="17" font-weight="700" fill="#04180F">يحتاج إلى انتباهك</text>
+  <text x="524" y="480" text-anchor="end" class="ar" font-size="11" fill="#60706A">متابعة التكليفات والمقاعد</text>
+  <rect x="86" y="507" width="442" height="58" rx="7" fill="#FBF7EF"/>
+  <circle cx="500" cy="536" r="13" fill="#F3E6CF"/><text x="500" y="541" text-anchor="middle" class="ar" font-size="12" fill="#94651B">!</text>
+  <text x="478" y="532" text-anchor="end" class="ar" font-size="12" font-weight="600" fill="#34443B">تكليفات اقترب موعدها</text>
+  <text x="478" y="551" text-anchor="end" class="ar" font-size="10" fill="#60706A">راجع الموظفين ذوي التقدم المتأخر</text>
+  <path d="M112 536h22m-6-6 6 6-6 6" stroke="#205E1E" stroke-width="1.5" fill="none"/>
+  <rect x="86" y="578" width="442" height="58" rx="7" fill="#F4F6F8"/>
+  <circle cx="500" cy="607" r="13" fill="#E7EEE9"/><text x="500" y="612" text-anchor="middle" class="ar" font-size="12" fill="#205E1E">م</text>
+  <text x="478" y="603" text-anchor="end" class="ar" font-size="12" font-weight="600" fill="#34443B">راجع رصيد المقاعد</text>
+  <text x="478" y="622" text-anchor="end" class="ar" font-size="10" fill="#60706A">تتوفر مقاعد للمحتوى المرخّص</text>
+  <path d="M112 607h22m-6-6 6 6-6 6" stroke="#205E1E" stroke-width="1.5" fill="none"/>
+  <text x="524" y="658" text-anchor="end" class="ar" font-size="11" font-weight="600" fill="#205E1E">عرض التقارير　←</text>
+  <!-- Assignment table -->
+  <rect x="62" y="698" width="998" height="248" rx="10" fill="#FFFFFF" filter="url(#shadow)"/>
+  <text x="1032" y="738" text-anchor="end" class="ar" font-size="17" font-weight="700" fill="#04180F">آخر التكليفات</text>
+  <text x="1032" y="762" text-anchor="end" class="ar" font-size="11" fill="#60706A">متابعة حالة التدريب والموعد النهائي</text>
+  <text x="90" y="740" class="ar" font-size="11" font-weight="600" fill="#205E1E">عرض الكل ←</text>
+  <rect x="82" y="785" width="958" height="37" rx="4" fill="#F4F6F8"/>
+  <text x="1010" y="809" text-anchor="end" class="ar" font-size="10" font-weight="600" fill="#60706A">الدورة</text>
+  <text x="728" y="809" text-anchor="end" class="ar" font-size="10" font-weight="600" fill="#60706A">الموظفون</text>
+  <text x="506" y="809" text-anchor="end" class="ar" font-size="10" font-weight="600" fill="#60706A">الموعد النهائي</text>
+  <text x="308" y="809" text-anchor="end" class="ar" font-size="10" font-weight="600" fill="#60706A">التقدم</text>
+  <text x="136" y="809" text-anchor="end" class="ar" font-size="10" font-weight="600" fill="#60706A">الحالة</text>
+  <path d="M82 863H1040M82 904H1040" stroke="#E7EEE9"/>
+  <text x="1010" y="849" text-anchor="end" class="ar" font-size="11" font-weight="600" fill="#34443B">أساسيات السلامة المهنية</text>
+  <text x="728" y="849" text-anchor="end" class="ar" font-size="11" fill="#34443B">24 موظفًا</text>
+  <text x="506" y="849" text-anchor="end" class="ar" font-size="11" fill="#34443B">٣٠ سبتمبر ٢٠٢٦</text>
+  <rect x="230" y="839" width="70" height="6" rx="3" fill="#E7EEE9"/><rect x="230" y="839" width="43" height="6" rx="3" fill="#419B2A"/>
+  <text x="218" y="849" text-anchor="end" class="en" font-size="10" fill="#60706A">61%</text>
+  <rect x="87" y="833" width="65" height="23" rx="11" fill="#E7EEE9"/><text x="119" y="849" text-anchor="middle" class="ar" font-size="9" fill="#205E1E">قيد التقدم</text>
+  <text x="1010" y="890" text-anchor="end" class="ar" font-size="11" font-weight="600" fill="#34443B">مقدمة في إدارة المشاريع</text>
+  <text x="728" y="890" text-anchor="end" class="ar" font-size="11" fill="#34443B">١٨ موظفًا</text>
+  <text x="506" y="890" text-anchor="end" class="ar" font-size="11" fill="#34443B">١٥ أكتوبر ٢٠٢٦</text>
+  <rect x="230" y="880" width="70" height="6" rx="3" fill="#E7EEE9"/><rect x="230" y="880" width="28" height="6" rx="3" fill="#419B2A"/>
+  <text x="218" y="890" text-anchor="end" class="en" font-size="10" fill="#60706A">40%</text>
+  <rect x="87" y="874" width="65" height="23" rx="11" fill="#E7EEE9"/><text x="119" y="890" text-anchor="middle" class="ar" font-size="9" fill="#205E1E">قيد التقدم</text>
+  <text x="1040" y="980" text-anchor="end" class="ar" font-size="10" fill="#87958E">معاينة تصميمية أولية — البيانات والأرقام افتراضية للمراجعة فقط</text>
+</svg>
