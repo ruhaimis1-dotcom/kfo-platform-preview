@@ -140,6 +140,7 @@ button, input { font: inherit; }
 .footer .brand small { color: var(--lime); }
 .footer-bottom { min-height: 48px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #ffffff20; color: #b6c9bd; font-size: 11px; }
 .sr-only { width: 1px; height: 1px; position: absolute; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; clip-path: inset(50%); }
+.course-meta, .catalog-course-meta, .catalog-course-bottom > b, .course-purchase dl dd, .lesson-row small, .certificate-result dl dd, .certificate-search input { font-family: Inter, 'IBM Plex Sans Arabic', sans-serif; }
 
 /* Approved public catalogue checkpoint */
 .catalog-current { color: var(--green) !important; font-weight: 700; }

@@ -43,7 +43,7 @@ export default function HomePage() {
             <div className="hero-points"><span>تعلّم عملي</span><b>•</b><span>مسارات منظمة</span><b>•</b><span>تقدّم تتابعه</span></div>
           </div>
           <div className="hero-art">
-            <img src="/images/checkpoint/home-hero-preview.jpg" alt="متعلمون يتبادلون المعرفة في بيئة عمل سعودية" />
+            <img src="/images/checkpoint/home-hero-training-preview.jpg" alt="مدربة تقود جلسة تعلم عملية مع أحد المشاركين" />
           </div>
         </section>
 
