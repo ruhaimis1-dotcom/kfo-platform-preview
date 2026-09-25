@@ -23,7 +23,7 @@ function Brand({ approvedMark = false }: { approvedMark?: boolean }) {
 export default function HomePage() {
   return (
     <>
-      <header className="topbar">
+      <header className="topbar topbar-over-hero">
         <div className="topbar-inner">
           <Brand approvedMark />
           <nav className="main-nav" aria-label="التنقل الرئيسي">
