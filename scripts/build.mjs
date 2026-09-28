@@ -17,6 +17,8 @@ await cp(join(root, 'business', 'employees.css'), join(out, 'assets', 'employees
 await cp(join(root, 'business', 'employees.js'), join(out, 'assets', 'employees.js'));
 await cp(join(root, 'business', 'flow.css'), join(out, 'assets', 'flow.css'));
 await cp(join(root, 'business', 'flow.js'), join(out, 'assets', 'flow.js'));
+await cp(join(root, 'business', 'insights.css'), join(out, 'assets', 'insights.css'));
+await cp(join(root, 'business', 'insights.js'), join(out, 'assets', 'insights.js'));
 await mkdir(join(out, 'assets', 'fonts'), { recursive: true });
 const fontFaces = [];
 for (const [family, weights, subsets] of [
@@ -46,6 +48,8 @@ await cp(join(root, 'business', 'dashboard.html'), join(out, 'business', 'dashbo
 await cp(join(root, 'business', 'employees.html'), join(out, 'business', 'employees.html'));
 await cp(join(root, 'business', 'courses.html'), join(out, 'business', 'courses.html'));
 await cp(join(root, 'business', 'assignments.html'), join(out, 'business', 'assignments.html'));
+await cp(join(root, 'business', 'reports.html'), join(out, 'business', 'reports.html'));
+await cp(join(root, 'business', 'orders.html'), join(out, 'business', 'orders.html'));
 await cp(join(root, 'review'), join(out, 'review'), { recursive: true });
 await cp(join(root, 'review', 'index.html'), join(out, 'review.html'));
 await build({
