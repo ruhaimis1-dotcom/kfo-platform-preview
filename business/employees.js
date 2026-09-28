@@ -17,7 +17,9 @@ function renderPeople(){
   const q = search.value.trim().toLocaleLowerCase('ar');
   const matches = people.filter(person => (team.value === 'all' || person.team === team.value) && (status.value === 'all' || person.state === status.value) && (!q || (person.name+' '+person.email).toLocaleLowerCase('ar').includes(q)));
   rows.innerHTML = matches.map(person => `<tr><td><span class="person"><span class="initials" aria-hidden="true">${safe(person.initial)}</span><span><strong>${safe(person.name)}</strong><small>${safe(person.email)}</small></span></span></td><td data-label="الفريق">${safe(person.team)}</td><td data-label="الفرع">${safe(person.branch)}</td><td data-label="العضوية"><span class="status ${person.state === 'active' ? 'done' : 'due'}">${person.state === 'active' ? 'نشط' : 'دعوة معلقة'}</span></td><td data-label="تدريب الشركة">${safe(person.course)}</td></tr>`).join('');
-  count.textContent = matches.length ? `${matches.length.toLocaleString('ar-SA')} سجلات معروضة` : 'لا توجد نتائج';
+  const filtered = Boolean(q) || team.value !== 'all' || status.value !== 'all';
+  const numberWords = ['صفر','واحد','اثنان','ثلاثة','أربعة','خمسة'];
+  count.textContent = !filtered ? 'أمثلة من الموظفين' : matches.length ? `نتائج البحث: ${numberWords[matches.length] ?? matches.length}` : 'لا توجد نتائج';
   empty.hidden = matches.length > 0;
 }
 [search,team,status].forEach(control => control.addEventListener('input',renderPeople));
