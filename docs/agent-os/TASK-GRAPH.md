@@ -10,7 +10,7 @@ A2 Master Spec reconciled.
 A3 Data/RBAC contract reconciled.
 
 ## Design continuation — exact current checkpoint
-D0 Company Training Dashboard visual review/preview [NEXT]
+D0 Company Training Dashboard visual preview [PREPARED — AWAITING HUMAN DESIGN REVIEW]
 D1 Employees & Teams
 D2 Courses & Seats
 D3 Training Assignment

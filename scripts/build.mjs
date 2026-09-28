@@ -11,6 +11,8 @@ for (const name of ['index.html', 'hero-industrial-v2.png', 'home-preview.png', 
 }
 await cp(join(root, 'upload'), join(out, 'upload'), { recursive: true });
 await cp(join(root, 'auth', 'auth.css'), join(out, 'assets', 'auth.css'));
+await cp(join(root, 'business', 'business.css'), join(out, 'assets', 'business.css'));
+await cp(join(root, 'business', 'business.js'), join(out, 'assets', 'business.js'));
 await mkdir(join(out, 'assets', 'fonts'), { recursive: true });
 const fontFaces = [];
 for (const [family, weights, subsets] of [
@@ -35,6 +37,8 @@ await writeFile(join(out, 'assets', 'fonts.css'), fontFaces.join('\n\n'));
 for (const name of ['login', 'forgot-password', 'reset-password']) {
   await cp(join(root, 'auth', `${name}.html`), join(out, `${name}.html`));
 }
+await mkdir(join(out, 'business'), { recursive: true });
+await cp(join(root, 'business', 'dashboard.html'), join(out, 'business', 'dashboard.html'));
 await build({
   entryPoints: [join(root, 'auth', 'auth.js')],
   bundle: true,
