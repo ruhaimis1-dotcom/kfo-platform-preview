@@ -1,6 +1,6 @@
 # D0 Company Training Dashboard — design review
 
-Status: prepared for Saud's visual review; no design approval yet.
+Status: DESIGN APPROVED by Saud on 28 Sep 2026 after desktop review and three mobile recordings. This is design approval only; implementation and merge remain separate gates.
 
 Route: `/business/dashboard` on an isolated preview branch. The static screen shows the approved KFO visual identity, company workspace navigation, training indicators, three primary actions, progress distribution, alerts and a deadline/status table. The example organization, people, dates and numbers are fictional and labelled as such on the page.
 
@@ -13,4 +13,4 @@ The actions show a preview notice. Other company navigation items say “قري�
 - On narrow screens, alerts precede metrics, and assignment rows become readable cards rather than requiring horizontal table scrolling.
 - Navigation and metric icons use one inline SVG set. The KFO logo, approved colours, IBM Plex Sans Arabic / Inter and their bundled weights remain intact.
 
-Review gate: desktop and mobile visual review, then user approval or revisions. D1 Employees & Teams follows D0 approval. Implementation follows the separate B/C gates in `TASK-GRAPH.md`.
+Review gate: passed on 28 Sep 2026. The mobile review covered the four D0 scenario states, the company menu, and the page experience preview; the hero crop and temporary notice were refined before approval. D1 Employees & Teams follows. Implementation follows the separate B/C gates in `TASK-GRAPH.md`.
