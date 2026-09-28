@@ -65,6 +65,17 @@ if (document.querySelector('[data-page=assignments]')) {
   let returnFocus;
   const queryCourse = new URLSearchParams(location.search).get('course');
   if (Object.hasOwn(courses, queryCourse)) select.value = queryCourse;
+  const today = new Date();
+  const localDate = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  deadline.min = localDate(today);
+  if (deadline.value <= deadline.min) {
+    const next = new Date(today);
+    next.setDate(next.getDate() + 17);
+    deadline.value = localDate(next);
+  }
+  const arabicDate = value => value
+    ? new Intl.DateTimeFormat('ar-SA-u-ca-gregory', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${value}T12:00:00Z`))
+    : 'لم يُحدَّد موعد';
 
   function updateReview() {
     const isTeam = scope.find(radio => radio.checked)?.value === 'team';
@@ -75,16 +86,17 @@ if (document.querySelector('[data-page=assignments]')) {
     const count = isTeam ? teamSizes[teamSelect.value] : selected.length;
     const needsSeat = chosen.seats !== null;
     const sufficient = !needsSeat || count <= chosen.seats;
-    const valid = count > 0 && Boolean(deadline.value) && sufficient;
+    const validDate = Boolean(deadline.value) && deadline.value >= deadline.min;
+    const valid = count > 0 && validDate && sufficient;
     document.querySelector('#review-course').textContent = chosen.name;
-    document.querySelector('#review-people').textContent = isTeam ? `${teamSelect.selectedOptions[0].textContent}` : selected.length ? `${selected.length.toLocaleString('ar-SA')} موظفين` : 'لم يُحدَّد موظف';
-    document.querySelector('#review-date').textContent = deadline.value || 'لم يُحدَّد موعد';
+    document.querySelector('#review-people').textContent = isTeam ? teamSelect.selectedOptions[0].textContent : selected.length === 1 ? 'موظف واحد' : selected.length === 2 ? 'موظفان' : selected.length ? `${selected.length.toLocaleString('ar-SA')} موظفين` : 'لم يُحدَّد موظف';
+    document.querySelector('#review-date').textContent = arabicDate(deadline.value);
     document.querySelector('#review-needed').textContent = needsSeat ? count.toLocaleString('ar-SA') : 'لا يلزم مقعد';
     document.querySelector('#review-available').textContent = needsSeat ? chosen.seats.toLocaleString('ar-SA') : 'محتوى الشركة';
     const note = document.querySelector('#review-note');
     note.classList.toggle('warning', !valid);
     note.textContent = !count ? 'اختر موظفًا واحدًا على الأقل للمراجعة.'
-      : !deadline.value ? 'حدد موعدًا نهائيًا للتكليف.'
+      : !validDate ? 'حدد موعدًا نهائيًا من اليوم أو بعده.'
       : !sufficient ? 'الرصيد لهذه الدورة لا يكفي للمستفيدين المختارين. قلّل العدد أو راجع شراء مقاعد إضافية.'
       : needsSeat ? 'الرصيد كافٍ في هذه المعاينة. يُتحقق من الاستحقاق والمقاعد الفعلية عند التنفيذ.'
       : 'هذا محتوى خاص بالشركة؛ لا يستهلك مقاعد دورات كفو.';
@@ -95,7 +107,7 @@ if (document.querySelector('[data-page=assignments]')) {
     updateReview();
     if (action.disabled) return;
     returnFocus = document.activeElement;
-    document.querySelector('#confirm-copy').textContent = `تظهر هنا مراجعة ${document.querySelector('#review-course').textContent} لـ${document.querySelector('#review-people').textContent} حتى ${deadline.value}. لا تُنشئ هذه المعاينة تكليفًا ولا تخصم رصيدًا أو ترسل إشعارًا.`;
+    document.querySelector('#confirm-copy').textContent = `تظهر هنا مراجعة ${document.querySelector('#review-course').textContent} لـ${document.querySelector('#review-people').textContent} حتى ${arabicDate(deadline.value)}. لا تُنشئ هذه المعاينة تكليفًا ولا تخصم رصيدًا أو ترسل إشعارًا.`;
     dialog.hidden = false;
     document.body.style.overflow = 'hidden';
     close.focus();
