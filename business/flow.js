@@ -107,7 +107,7 @@ if (document.querySelector('[data-page=assignments]')) {
     updateReview();
     if (action.disabled) return;
     returnFocus = document.activeElement;
-    document.querySelector('#confirm-copy').textContent = `تظهر هنا مراجعة ${document.querySelector('#review-course').textContent} لـ${document.querySelector('#review-people').textContent} حتى ${arabicDate(deadline.value)}. لا تُنشئ هذه المعاينة تكليفًا ولا تخصم رصيدًا أو ترسل إشعارًا.`;
+    document.querySelector('#confirm-copy').textContent = `دورة: ${document.querySelector('#review-course').textContent}؛ المستفيدون: ${document.querySelector('#review-people').textContent}؛ الموعد النهائي: ${arabicDate(deadline.value)}. لا تُنشئ هذه المعاينة تكليفًا ولا تخصم رصيدًا أو ترسل إشعارًا.`;
     dialog.hidden = false;
     document.body.style.overflow = 'hidden';
     close.focus();
