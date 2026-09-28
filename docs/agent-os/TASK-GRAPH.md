@@ -16,7 +16,7 @@ D2 Courses & Seats [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
 D3 Training Assignment [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
 D4 Reports & Certificates [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
 D5 Orders & Invoices [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
-D6 Company Settings [PREPARED — AWAITING HUMAN DESIGN REVIEW]
+D6 Company Settings [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
 Design pages must follow approved KFO identity. Each internal page must be reviewed; sidebar links alone are not completion.
 
 ## Implementation DAG

@@ -1,6 +1,6 @@
 # D6 Company Settings — design review
 
-Status: prepared for human visual review on an isolated draft branch. Route: `/business/settings` with direct hash links to each settings section.
+Status: design approved by Saud on 28 Sep 2026. Phone browser QA and any resulting fixes remain open; implementation, merge and release are separate gates. Route: `/business/settings` with direct hash links to each settings section.
 
 The final primary company workspace section inherits the approved KFO shell, logo, bundled font weights, palette, RTL, button treatment and inline SVG navigation. All six preceding sections link to it. It is a design preview with no persistence, uploads, invitations, notifications, invoices or permission changes.
 
