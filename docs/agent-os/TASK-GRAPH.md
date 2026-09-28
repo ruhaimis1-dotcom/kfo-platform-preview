@@ -12,10 +12,10 @@ A3 Data/RBAC contract reconciled.
 ## Design continuation — exact current checkpoint
 D0 Company Training Dashboard visual preview [DESIGN APPROVED — SAUD, 28 SEP 2026]
 D1 Employees & Teams [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
-D2 Courses & Seats [NEXT DESIGN SLICE]
-D3 Training Assignment
-D4 Reports & Certificates
-D5 Orders & Invoices
+D2 Courses & Seats [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
+D3 Training Assignment [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
+D4 Reports & Certificates [NEXT DESIGN SLICE]
+D5 Orders & Invoices [NEXT DESIGN SLICE]
 D6 Company Settings
 Design pages must follow approved KFO identity. Each internal page must be reviewed; sidebar links alone are not completion.
 

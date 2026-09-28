@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>تكليف التدريب — كفو</title><link rel="stylesheet" href="/assets/fonts.css"><link rel="stylesheet" href="/assets/business.css"><link rel="stylesheet" href="/assets/flow.css"></head>
+<body>
+  <svg class="svg-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="i-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2H3ZM17 5a3 3 0 0 1 0 6M17 14a5 5 0 0 1 4 5v1h-3"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5v-12ZM4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h8M8 11h7"/></symbol>
+    <symbol id="i-assignment" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5h6M9 10h6M9 14h4m2-1 1.5 1.5L19 12"/></symbol>
+    <symbol id="i-report" viewBox="0 0 24 24"><path d="M4 20V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v15H4ZM8 16v-4m4 4V8m4 8v-6"/></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M5 3h14v18l-3-2-4 2-4-2-3 2V3ZM8 8h8M8 12h8M8 16h5"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  </defs></svg>
+  <div class="preview-note" role="note">معاينة تصميم D3 <span aria-hidden="true">•</span> الدورات والأرصدة والأسماء توضيحية؛ لا تُشترى مقاعد ولا تُنشأ تكليفات.</div>
+  <div class="workspace">
+    <aside class="sidebar" id="sidebar" aria-label="قائمة مساحة الشركة">
+      <div class="brand"><a href="/review#home" aria-label="كفو — الرئيسية"><img src="/upload/logo-white.png" alt="كفو"></a><span>مساحة الشركة</span></div>
+      <div class="tenant"><span class="tenant-avatar" aria-hidden="true">ش</span><div><strong>شركة نموذجية</strong><small>أكاديمية الشركة</small></div></div>
+      <nav aria-label="أقسام الشركة">
+        <span class="nav-label">إدارة التدريب</span>
+        <a class="nav-item" href="/business/dashboard"><svg class="icon" aria-hidden="true"><use href="#i-dashboard"/></svg><span>لوحة التدريب</span></a>
+        <a class="nav-item" href="/business/employees"><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg><span>الموظفون والفرق</span></a>
+        <a class="nav-item" href="/business/courses"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>الدورات والمقاعد</span></a>
+        <a class="nav-item current" href="/business/assignments" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-assignment"/></svg><span>تكليف التدريب</span></a>
+        <span class="nav-label second-label">المتابعة والحساب</span>
+        <span class="nav-item upcoming"><svg class="icon" aria-hidden="true"><use href="#i-report"/></svg><span>التقارير والشهادات</span><small>قريبًا</small></span>
+        <span class="nav-item upcoming"><svg class="icon" aria-hidden="true"><use href="#i-receipt"/></svg><span>الطلبات والفواتير</span><small>قريبًا</small></span>
+        <span class="nav-item upcoming"><svg class="icon" aria-hidden="true"><use href="#i-settings"/></svg><span>إعدادات الشركة</span><small>قريبًا</small></span>
+      </nav>
+      <div class="sidebar-bottom"><span class="help-mark" aria-hidden="true">؟</span><div><strong>تحتاج مساعدة؟</strong><small>فريق كفو هنا لدعمك</small></div></div>
+    </aside>
+    <div class="main-wrap">
+      <header class="topbar"><div class="topbar-start"><button class="menu-button" type="button" aria-label="فتح القائمة" aria-controls="sidebar" aria-expanded="false">☰</button><span class="breadcrumb">مساحة الشركة <span aria-hidden="true">/</span> <strong>تكليف التدريب</strong></span></div><span class="flow-account">مسؤول الشركة</span></header>
+      <main class="flow-main" data-page="assignments">
+        <div class="page-heading"><div><span class="eyebrow">خطوة من رحلة الشركة</span><h1>تكليف التدريب</h1><p>اختر الدورة والمستفيدين والموعد، ثم راجع المقاعد قبل التأكيد.</p></div><a class="flow-back" href="/business/courses">العودة للدورات والمقاعد <span aria-hidden="true">←</span></a></div>
+        <div class="flow-steps" aria-label="مراحل التكليف"><span><b>١</b> الدورة</span><span><b>٢</b> المستفيدون والموعد</span><span><b>٣</b> مراجعة المقاعد</span></div>
+        <div class="flow-assignment-layout"><form class="flow-panel flow-form" id="assignment-form"><div class="flow-panel-head"><div><span class="section-kicker">تفاصيل التكليف</span><h2>أنشئ تكليفًا توضيحيًا</h2><p>الاختيارات هنا للمراجعة البصرية فقط، ولن تُحفظ.</p></div></div>
+          <div class="flow-field-group"><label for="assign-course">الدورة</label><select id="assign-course" required><option value="customer">أساسيات تجربة العميل — ١٢ مقعدًا</option><option value="safety">السلامة في بيئة العمل — ٨ مقاعد</option><option value="communication">مهارات التواصل المهني — ٤ مقاعد</option><option value="onboarding">دليل الانضمام للشركة — دون مقاعد</option><option value="policy">سياسات العمل الداخلية — دون مقاعد</option></select><small>الرصيد مرتبط بالدورة نفسها، ولا يُجمع مع أرصدة الدورات الأخرى.</small></div>
+          <fieldset class="flow-field-group"><legend>المستفيدون</legend><div class="flow-choice-row"><label><input type="radio" name="scope" value="people" checked> موظفون محددون</label><label><input type="radio" name="scope" value="team"> فريق كامل</label></div><div class="flow-people" id="assign-people"><label><input type="checkbox" value="نورة العتيبي" checked> نورة العتيبي <small>خدمة العملاء</small></label><label><input type="checkbox" value="أحمد القحطاني" checked> أحمد القحطاني <small>العمليات</small></label><label><input type="checkbox" value="ريم الحربي"> ريم الحربي <small>المبيعات</small></label><label><input type="checkbox" value="خالد الدوسري"> خالد الدوسري <small>العمليات</small></label></div><div id="assign-team" hidden><label for="team-choice">الفريق</label><select id="team-choice"><option value="operations">العمليات — ٣٤ موظفًا</option><option value="sales">المبيعات — ٢٨ موظفًا</option><option value="support">خدمة العملاء — ٢٢ موظفًا</option></select><small>العدد التوضيحي للفريق كاملًا؛ يجب التحقق من العضويات والتكليفات المكررة عند التنفيذ.</small></div></fieldset>
+          <div class="flow-field-group"><label for="assign-deadline">الموعد النهائي</label><input id="assign-deadline" type="date" value="2026-10-15" required><small>بعد التأكيد الفعلي سيظهر الموعد للموظفين في بوابة التعلم.</small></div>
+        </form><aside class="flow-panel flow-review" aria-labelledby="review-title"><span class="section-kicker">قبل التأكيد</span><h2 id="review-title">مراجعة التكليف</h2><div class="flow-review-list"><div><span>الدورة</span><strong id="review-course">—</strong></div><div><span>المستفيدون</span><strong id="review-people">—</strong></div><div><span>الموعد النهائي</span><strong id="review-date">—</strong></div><div><span>المقاعد المطلوبة</span><strong id="review-needed">—</strong></div><div><span>الرصيد المتاح</span><strong id="review-available">—</strong></div></div><p class="flow-review-note" id="review-note" role="status"></p><button type="button" class="flow-button primary review-action" id="review-button">معاينة التأكيد</button><p class="flow-footnote">لا تُنشئ هذه المعاينة تكليفًا ولا تخصم مقاعد أو ترسل إشعارات.</p></aside></div>
+        <div class="flow-backdrop" id="flow-confirm" hidden><div class="flow-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title"><span class="section-kicker">معاينة فقط</span><h2 id="confirm-title">ملخص التكليف</h2><p id="confirm-copy"></p><div class="flow-dialog-actions"><button type="button" class="flow-button primary" id="confirm-close">إغلاق المعاينة</button></div></div></div>
+      </main>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="/assets/flow.js" defer></script>
+</body></html>
