@@ -22,7 +22,7 @@ Design pages must follow approved KFO identity. Each internal page must be revie
 ## Implementation DAG
 B0 Source inventory/mapping [SOURCE INSPECTION COMPLETE — 28 SEP 2026]: `B0-SOURCE-INVENTORY.md` maps current previews, approved checkpoint and archived frontend/backend to domains/pages/API/entities/tests. Runtime and cross-tenant behavior remain unverified.
 B1 Foundation app architecture and chosen stack [blocked by Human Decision Gate only if final backend choice materially differs from available source].
-B1 preflight [28 SEP 2026]: `B1-TEST-AND-ENVIRONMENT-GATE.md`; auth/build/route checks pass. KFO Supabase tenant schema inspected and public resolver/RLS scope corrected with transactional smoke pass. Authenticated membership/API isolation tests and a trusted organization bootstrap remain pending.
+B1 preflight [28 SEP 2026]: `B1-TEST-AND-ENVIRONMENT-GATE.md`; auth/build/route checks pass. KFO Supabase tenant schema inspected; public resolver/RLS scope corrected. Transactional anonymous and authenticated membership/branch read-isolation tests pass. Existing trusted database organization bootstrap also passes. Application entrypoints for bootstrap/invitation/settings and HTTP API isolation tests remain pending.
 B2 Identity/auth/profile/use-type flow.
 B3 Organizations/branches/departments/memberships/invitations.
 B4 RBAC + tenant isolation + audit.
