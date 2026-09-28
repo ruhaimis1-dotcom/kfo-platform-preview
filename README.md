@@ -12,6 +12,8 @@ npm run build
 
 Serve `dist/` with a static server. Vercel uses `vercel.json` to publish the build output with clean URLs, so `/login`, `/forgot-password`, and `/reset-password` resolve to their respective HTML files.
 
+`/business/dashboard` is the D0 company dashboard **visual preview**. Its organization, people, counts and dates are fictional. The action buttons only display a preview notice; no company data is read or changed. Design approval, membership-aware routing, server authorization and real persistence remain separate gates.
+
 ## Authentication configuration
 
 The client uses the KFO Supabase project URL and its **publishable** key. The key is intentionally public; never add a secret or service-role key to browser code. Authorization for private data must be enforced with RLS and the planned membership/RBAC foundation.
