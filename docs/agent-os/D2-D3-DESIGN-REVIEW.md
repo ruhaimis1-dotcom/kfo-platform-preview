@@ -1,6 +1,6 @@
 # D2 Courses & Seats / D3 Training Assignment — design review
 
-Status: prepared for Saud's visual review on an isolated draft branch. Routes: `/business/courses` and `/business/assignments`.
+Status: DESIGN APPROVED by Saud on 28 Sep 2026 after desktop review. Routes: `/business/courses` and `/business/assignments` on an isolated draft branch. This is visual approval only; phone QA, implementation, merge and release remain separate gates.
 
 Both previews inherit the approved company shell, KFO logo, colours, RTL, IBM Plex Sans Arabic/Inter weights, card frames, and SVG icon language from D0/D1. All names, course content, counts, seats and dates are illustrative.
 
@@ -20,4 +20,4 @@ Both previews inherit the approved company shell, KFO logo, colours, RTL, IBM Pl
 
 ## Remaining gates
 
-Review desktop and phone layouts, filters, course cards, insufficient-seat state, team versus individual selection and confirmation wording. Design approval does not authorize implementation merge or release. Commerce, authorization, tenant isolation, audit and persistence remain in the B/C quality gates.
+The desktop layouts, insufficient-seat state and preview confirmation were checked before design approval. Phone QA of filters, cards and selection is open. Approval permits the next design slice D4/D5, but does not authorize implementation merge or release. Commerce, authorization, tenant isolation, audit and persistence remain in the B/C quality gates.
