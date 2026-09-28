@@ -61,7 +61,8 @@ function showScenario(value) {
     if (button.disabled) button.title = isNew ? 'أضف موظفاً أولاً' : 'اشترِ مقاعد أولاً';
     else button.removeAttribute('title');
   });
-  actionBar.prepend(actionButtons[primary]);
+  const remaining = ['تكليف دورة', 'إضافة موظف', 'شراء مقاعد'].filter(name => name !== primary);
+  actionBar.replaceChildren(actionButtons[primary], ...remaining.map(name => actionButtons[name]));
 }
 scenario.addEventListener('change', () => showScenario(scenario.value));
 retry.addEventListener('click', () => { scenario.value = 'active'; showScenario('active'); });
