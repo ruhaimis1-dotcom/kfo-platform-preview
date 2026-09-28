@@ -39,6 +39,8 @@ for (const name of ['login', 'forgot-password', 'reset-password']) {
 }
 await mkdir(join(out, 'business'), { recursive: true });
 await cp(join(root, 'business', 'dashboard.html'), join(out, 'business', 'dashboard.html'));
+await cp(join(root, 'review'), join(out, 'review'), { recursive: true });
+await cp(join(root, 'review', 'index.html'), join(out, 'review.html'));
 await build({
   entryPoints: [join(root, 'auth', 'auth.js')],
   bundle: true,
