@@ -39,3 +39,22 @@
 .d1-close{width:40px;height:40px;border-radius:9px}
 @media(max-width:760px){.d1-stat{border-radius:12px;padding:15px}.d1-toolbar{gap:9px;margin:20px 0 14px}.d1-tabs{padding:3px}.d1-tabs button{min-height:42px;padding:8px 10px;font-size:12px}.d1-primary{min-height:48px;padding:8px 11px;font-size:12px;gap:6px}.d1-plus{width:20px;height:20px;font-size:15px}.d1-panel{border-radius:13px}.d1-panel-head{padding:18px 16px}.d1-panel-head h2{font-size:18px}.d1-filters{padding:14px 16px 17px;gap:9px}.d1-table tbody tr{border-color:#d8e5db;border-radius:11px;box-shadow:0 3px 10px #123b3208;background:#fff}.d1-table tbody tr:nth-child(even){background:#fff}}
 @media(prefers-reduced-motion:reduce){.d1-primary,.d1-tabs button,.d1-filters input,.d1-filters select,.d1-dialog input,.d1-dialog select{transition:none}}
+
+/* D1 icon clarity and type balance. */
+.team-card .team-icon{width:42px;height:42px;border-radius:11px;margin-bottom:17px}
+.team-card .team-icon .icon{width:22px;height:22px}
+.team-card h3{font-size:18px;line-height:1.5;font-weight:600;margin-bottom:5px}
+.team-card p{font-size:13px;line-height:1.65}
+.team-card strong{font-size:22px;line-height:1.5;margin-top:15px}
+.d1-stat span,.d1-stat small{font-size:13px;line-height:1.65}
+.d1-panel-head p{font-size:13px;line-height:1.7}
+.d1-tabs button{font-size:14px;font-weight:600}
+.d1-filters label,.d1-dialog label{font-size:13px;font-weight:600}
+.d1-filters input,.d1-filters select,.d1-dialog input,.d1-dialog select{font-size:14px;font-weight:400}
+.d1-table th{font-size:13px}
+.d1-table td{font-size:14px;font-weight:500;line-height:1.7}
+.d1-table .person strong{font-size:14px;font-weight:600}
+.d1-table .person small{font-size:12px}
+.d1-footnote{font-size:12px;line-height:1.8}
+.d1-plus .icon{width:17px;height:17px;stroke-width:2.2}
+@media(max-width:760px){.team-card h3{font-size:17px}.team-card strong{font-size:21px}.d1-tabs button{font-size:13px}.d1-stat span,.d1-stat small{font-size:12px}.d1-table td{font-size:13px}.d1-table td:not(:first-child)::before{font-size:12px}}

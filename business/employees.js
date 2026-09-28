@@ -24,7 +24,7 @@ function renderPeople(){
 }
 [search,team,status].forEach(control => control.addEventListener('input',renderPeople));
 document.querySelector('#clear-filters').addEventListener('click',()=>{search.value='';team.value='all';status.value='all';renderPeople();search.focus()});
-document.querySelector('#team-grid').innerHTML=teams.map(([name,total])=>`<article class="team-card"><div class="team-icon" aria-hidden="true">♧</div><h3>${safe(name)}</h3><p>فريق ضمن الشركة النموذجية</p><strong>${total.toLocaleString('ar-SA')} موظفًا</strong></article>`).join('');
+document.querySelector('#team-grid').innerHTML=teams.map(([name,total])=>`<article class="team-card"><div class="team-icon" aria-hidden="true"><svg class="icon"><use href="#i-users"/></svg></div><h3>${safe(name)}</h3><p>فريق ضمن الشركة النموذجية</p><strong>${total.toLocaleString('ar-SA')} موظفًا</strong></article>`).join('');
 const employeesTab=document.querySelector('#employees-tab'),teamsTab=document.querySelector('#teams-tab');
 function showTab(which){const isEmployees=which==='employees';employeesTab.setAttribute('aria-selected',String(isEmployees));teamsTab.setAttribute('aria-selected',String(!isEmployees));document.querySelector('#employees-panel').hidden=!isEmployees;document.querySelector('#teams-panel').hidden=isEmployees;}
 employeesTab.addEventListener('click',()=>showTab('employees'));teamsTab.addEventListener('click',()=>showTab('teams'));
