@@ -20,7 +20,7 @@ D6 Company Settings [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
 Design pages must follow approved KFO identity. Each internal page must be reviewed; sidebar links alone are not completion.
 
 ## Implementation DAG
-B0 Source inventory/mapping: map every repo/source artifact to domain/page/API/entity/test and classify matching/partial/missing/uninspected.
+B0 Source inventory/mapping [SOURCE INSPECTION COMPLETE — 28 SEP 2026]: `B0-SOURCE-INVENTORY.md` maps current previews, approved checkpoint and archived frontend/backend to domains/pages/API/entities/tests. Runtime and cross-tenant behavior remain unverified.
 B1 Foundation app architecture and chosen stack [blocked by Human Decision Gate only if final backend choice materially differs from available source].
 B2 Identity/auth/profile/use-type flow.
 B3 Organizations/branches/departments/memberships/invitations.
