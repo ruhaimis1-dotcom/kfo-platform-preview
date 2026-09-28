@@ -1,6 +1,6 @@
 # D1 Employees & Teams — design review
 
-Status: prepared for Saud's desktop and mobile visual review; not approved. Route: `/business/employees` on isolated draft branch.
+Status: DESIGN APPROVED by Saud on 28 Sep 2026 after review of the employee table, team cards, buttons, iconography and typography. Route: `/business/employees` on isolated draft branch. This is a visual design decision; the mobile device QA, implementation, merge and release are separate gates.
 
 The D1 concept inherits the approved KFO logo, colors, IBM Plex Sans Arabic/Inter weights, company shell and RTL. It shows a company-scoped employee directory, team list, search and filters, active versus pending invitation states, and a design-only invitation preview. The 128 active employees across six teams match D0; six pending invitations are separately counted. Only five illustrative records are listed, and none is real.
 
@@ -13,4 +13,4 @@ The D1 concept inherits the approved KFO logo, colors, IBM Plex Sans Arabic/Inte
 - Tenant resolution from the subdomain and `organization_id` isolation across API, database and storage belong to implementation gates B3/B4, not this design preview.
 - No employee records, roles, or invitations are created by this static design. Loading/error/forbidden states and audit must be implemented and tested during the foundation work.
 
-Review gate: verify hierarchy, fields, filters, empty results, team view and invite preview on desktop and phone; collect design approval or revisions before D2 Courses & Seats. D1 approval does not authorize merging or releasing implementation.
+Review gate: design approval recorded on 28 Sep 2026. The desktop preview and the employee/team tabs were checked after the final icon and typography refinement. Complete phone QA of the directory, filters, team cards and invite preview before implementation/release; D2 Courses & Seats may proceed as a separate design slice. D1 approval does not authorize merging or releasing implementation.
