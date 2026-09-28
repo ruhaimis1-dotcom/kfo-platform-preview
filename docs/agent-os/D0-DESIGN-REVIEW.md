@@ -6,4 +6,11 @@ Route: `/business/dashboard` on an isolated preview branch. The static screen sh
 
 The actions show a preview notice. Other company navigation items say “قريباً”; a visible sidebar is not implementation of those pages. No membership routing, real tenant data, backend authorization, purchase or assignment is implied. Company reporting excludes personal learning by contract.
 
+## Refinement for review
+
+- The September demo cohort contains 96 assignments: 38 complete, 42 in progress, 16 not started. The displayed completion rate is 38 / 96, rounded to 40%; labels state the period and denominator.
+- A design-only scenario selector shows a populated company, a new company, depleted seats, and a load error. The primary action changes with the context. Disabled assignment controls explain their prerequisite. The error view never displays stale figures as current.
+- On narrow screens, alerts precede metrics, and assignment rows become readable cards rather than requiring horizontal table scrolling.
+- Navigation and metric icons use one inline SVG set. The KFO logo, approved colours, IBM Plex Sans Arabic / Inter and their bundled weights remain intact.
+
 Review gate: desktop and mobile visual review, then user approval or revisions. D1 Employees & Teams follows D0 approval. Implementation follows the separate B/C gates in `TASK-GRAPH.md`.
