@@ -14,9 +14,9 @@ D0 Company Training Dashboard visual preview [DESIGN APPROVED — SAUD, 28 SEP 2
 D1 Employees & Teams [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
 D2 Courses & Seats [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
 D3 Training Assignment [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
-D4 Reports & Certificates [PREPARED — AWAITING HUMAN DESIGN REVIEW]
-D5 Orders & Invoices [PREPARED — AWAITING HUMAN DESIGN REVIEW]
-D6 Company Settings
+D4 Reports & Certificates [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
+D5 Orders & Invoices [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
+D6 Company Settings [PREPARED — AWAITING HUMAN DESIGN REVIEW]
 Design pages must follow approved KFO identity. Each internal page must be reviewed; sidebar links alone are not completion.
 
 ## Implementation DAG

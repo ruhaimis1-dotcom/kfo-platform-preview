@@ -1,6 +1,6 @@
 # D4 Reports & Certificates / D5 Orders & Invoices — design review
 
-Status: prepared for visual review on an isolated draft branch. Routes: `/business/reports` and `/business/orders`.
+Status: design approved by Saud on 28 Sep 2026; implementation, merge, release and phone QA remain open. Routes: `/business/reports` and `/business/orders`.
 
 These pages inherit the approved KFO company shell, logo, bundled font and weights, colour palette, RTL, card frames, buttons and inline SVG icon set. Names, dates, prices, order numbers and quantities are expressly illustrative.
 
