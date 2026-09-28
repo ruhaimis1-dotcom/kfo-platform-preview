@@ -11,8 +11,8 @@ A3 Data/RBAC contract reconciled.
 
 ## Design continuation — exact current checkpoint
 D0 Company Training Dashboard visual preview [DESIGN APPROVED — SAUD, 28 SEP 2026]
-D1 Employees & Teams [NEXT — DESIGN PREVIEW]
-D2 Courses & Seats
+D1 Employees & Teams [DESIGN APPROVED — SAUD, 28 SEP 2026; PHONE QA OPEN]
+D2 Courses & Seats [NEXT DESIGN SLICE]
 D3 Training Assignment
 D4 Reports & Certificates
 D5 Orders & Invoices

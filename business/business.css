@@ -7,3 +7,20 @@
 /* D0 review refinements */
 [hidden]{display:none!important}.svg-defs{position:absolute;width:0;height:0;overflow:hidden}.icon{display:inline-block;width:19px;height:19px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.nav-item .icon{width:19px;height:19px}.metric-symbol .icon{width:18px;height:18px}.action{display:inline-flex;align-items:center;justify-content:center;gap:7px}.action .icon{width:17px;height:17px}.action:disabled{opacity:.52;cursor:not-allowed}.action:disabled:hover{background:#fff}.menu-button{min-width:44px;min-height:44px}.scenario{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;color:#526758;font-size:12px}.scenario label{font-weight:700}.scenario select{font:inherit;background:#fff;color:var(--deep);border:1px solid #aebfb2;border-radius:7px;min-height:38px;padding:5px 10px}.scenario span{font-size:11px;color:#697d6d}.state-panel{border:1px solid var(--line);border-radius:11px;background:#fff;text-align:center;padding:48px 20px;margin-top:20px}.state-mark{display:grid;place-items:center;width:56px;height:56px;margin:0 auto 15px;background:var(--sage);color:var(--green);border-radius:14px}.state-mark .icon{width:28px;height:28px}.state-panel h2{font-size:20px;margin:0 0 6px}.state-panel p{font-size:14px;color:var(--muted);margin:0 auto;max-width:520px}.state-panel button{margin-top:18px;background:var(--green);border:0;border-radius:7px;color:#fff;padding:10px 16px;font-weight:700}.metric small,.quiet,.panel-foot,.table-foot{font-size:12px}.person small{font-size:11px}.status{font-size:12px}.preview-note{line-height:1.6}.assignments{margin-top:0}
 @media(max-width:760px){.scenario{margin-top:15px}.scenario span{width:100%}.dashboard-content{display:flex;flex-direction:column;gap:12px}.content-grid{display:contents}.alerts-panel{order:1}.metrics{order:2;margin:0}.progress-panel{order:3}.assignments{order:4}.action-bar{margin:18px 0 20px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{min-height:133px}.metric small{font-size:11px;line-height:1.4;display:block}.metric-top{font-size:12px}.panel-head{align-items:flex-start}.quiet{white-space:normal;text-align:left;max-width:110px}.table-scroll{overflow:visible}table,tbody,tr,td{display:block;width:100%;min-width:0}thead{display:none}tbody{padding:0 12px 12px;display:grid;gap:10px}tbody tr{border:1px solid var(--line);border-radius:9px;padding:12px 13px;background:#fff}td{padding:6px 0;border:0;white-space:normal;font-size:12px}td:first-child{padding-bottom:10px;border-bottom:1px solid var(--line);margin-bottom:4px}td:not(:first-child){display:flex;align-items:center;justify-content:space-between;gap:15px}td:not(:first-child)::before{content:attr(data-label);color:#667b6b;font-weight:600;white-space:nowrap}.progress-cell{min-width:126px;justify-content:flex-end}.progress-track{width:75px}.person strong{font-size:13px}.person small{font-size:11px}.status{white-space:nowrap}.table-foot{line-height:1.6}.state-panel{padding:32px 18px}}
+
+/* Typography rhythm shared by D0 and D1; uses the approved IBM Plex Sans Arabic faces. */
+.page-heading p{font-size:15px;line-height:1.75}
+.section-kicker,.eyebrow{font-size:13px;font-weight:600}
+.nav-item{font-size:13px;line-height:1.5}
+table{font-size:14px;line-height:1.65}
+th{font-size:13px;font-weight:700;color:#425b49}
+td{font-weight:500;color:#263e2e}
+.person strong{font-size:14px;font-weight:600}
+.person small{font-size:12px;font-weight:400}
+.panel-head h2{font-size:19px;line-height:1.5}
+.alert strong{font-size:14px;font-weight:600}
+.alert p{font-size:13px;line-height:1.7}
+.metric-top{font-size:14px}
+.metric small,.quiet,.panel-foot,.table-foot{font-size:13px;line-height:1.7}
+.status{font-size:12px}
+@media(max-width:760px){.page-heading p{font-size:13px}.panel-head h2{font-size:17px}.metric-top{font-size:12px}.metric small,.quiet,.panel-foot,.table-foot{font-size:12px}.alert p{font-size:12px}td{font-size:13px}.person strong{font-size:14px}.person small{font-size:12px}}
