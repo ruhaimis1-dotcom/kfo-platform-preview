@@ -19,10 +19,10 @@ document.addEventListener('keydown', event => { if (event.key === 'Escape') clos
 let toastTimer;
 const toast = document.querySelector('#toast');
 document.querySelectorAll('[data-action]').forEach(button => button.addEventListener('click', () => {
-  toast.textContent = `${button.dataset.action}: هذا الإجراء يظهر ضمن المعاينة التصميمية وسيفعّل في مرحلة التنفيذ.`;
+  toast.textContent = `${button.dataset.action}: إجراء توضيحي غير مفعّل بعد.`;
   toast.hidden = false;
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { toast.hidden = true; }, 4500);
+  toastTimer = setTimeout(() => { toast.hidden = true; }, 2500);
 }));
 
 const scenario = document.querySelector('#scenario');
