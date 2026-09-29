@@ -6,6 +6,9 @@ export function passwordIssue(password, confirmation) {
 
 export function authErrorMessage(error, action) {
   const code = error?.code || '';
+  if (error?.name === 'AuthRetryableFetchError' || code === 'network_error') {
+    return 'خدمة تسجيل الدخول غير متاحة مؤقتاً. انتظر قليلاً ثم أعد المحاولة.';
+  }
   if (code === 'invalid_credentials' || code === 'email_not_confirmed') {
     return code === 'email_not_confirmed'
       ? 'يرجى تأكيد بريدك الإلكتروني من الرسالة المرسلة إليك، ثم حاول مجدداً.'
