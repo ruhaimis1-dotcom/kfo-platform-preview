@@ -18,6 +18,8 @@ The browser receives no table UPDATE grant and no service-role key. The caller's
 
 ## Verification before use
 
-`supabase/tests/invitation_acceptance.sql` passed against KFO inside one transaction. It exercises own acceptance, retry, anonymous and cross-user denial, disabled tenant denial, missing-role denial, and audit count, then rolls back all fixtures. Afterwards the database still had one original Auth user and zero organizations, memberships, or audit events. The authenticated HTTP RPC test with nonproduction sessions remains pending before wiring the UI.
+`supabase/tests/invitation_acceptance.sql` passed against KFO inside one transaction. It exercises own acceptance, retry, anonymous and cross-user denial, disabled tenant denial, missing-role denial, and audit count, then rolls back all fixtures. Afterwards the database still had one original Auth user and zero organizations, memberships, or audit events. An anonymous HTTP RPC request was rejected with `401 / 42501`. The authenticated HTTP RPC test with nonproduction sessions remains pending before wiring the UI.
+
+`scripts/check-invitation-http.mjs` repeats the anonymous check using `KFO_HTTP_URL` and `KFO_PUBLISHABLE_KEY`. To test authenticated acceptance, provide a disposable `KFO_TEST_ACCESS_TOKEN` and two different precreated membership IDs (`KFO_TEST_OWN_MEMBERSHIP_ID` for that user, and `KFO_TEST_OTHER_MEMBERSHIP_ID` for another user). The script never prints tokens. A successful test activates the own invitation; use test data and inspect the audit record afterwards. Never commit tokens or put them in command history.
 
 Migration `20260929063838_accept_existing_user_invitation.sql` matches the version recorded in project `ktkdcfxeaicbykdurlfg`. The RPC exists, `authenticated` can execute it, `anon` cannot, and `authenticated` still lacks direct UPDATE on memberships. No migration was applied to Hirely.
