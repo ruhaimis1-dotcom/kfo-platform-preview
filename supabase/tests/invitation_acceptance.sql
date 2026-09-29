@@ -24,6 +24,17 @@ insert into public.membership_roles
   ('61000000-0000-4000-8000-000000000002', '62000000-0000-4000-8000-000000000002', 'EM'),
   ('61000000-0000-4000-8000-000000000003', '62000000-0000-4000-8000-000000000003', 'EM');
 
+set local role anon;
+do $$
+begin
+  begin
+    perform public.accept_invitation('62000000-0000-4000-8000-000000000001');
+    raise exception 'anonymous invitation accepted';
+  exception when insufficient_privilege then null;
+  end;
+end;
+$$;
+
 set local role authenticated;
 select set_config('request.jwt.claim.sub', '60000000-0000-4000-8000-000000000001', true);
 
@@ -63,15 +74,8 @@ begin
         '62000000-0000-4000-8000-000000000003',
         '62000000-0000-4000-8000-000000000004'
       ) and status = 'invited') <> 3
-    or (select count(*) from public.audit_events
-      where resource_type = 'organization_memberships'
-        and resource_id = '62000000-0000-4000-8000-000000000001'
-        and action = 'update'
-        and actor_id = '60000000-0000-4000-8000-000000000001') <> 1
-    or has_table_privilege('authenticated',
-      'public.organization_memberships', 'update')
   then
-    raise exception 'acceptance state, audit, or grant invariant failed';
+    raise exception 'first invitation acceptance state failed';
   end if;
 end;
 $$;
@@ -90,6 +94,29 @@ begin
       where id = '62000000-0000-4000-8000-000000000002'
         and status = 'active' and joined_at is not null) <> 1 then
     raise exception 'second user's invitation was not accepted';
+  end if;
+end;
+$$;
+
+-- Inspect audit rows as the trusted SQL runner; the invited employee should
+-- not need permission to read the audit table to accept an invitation.
+reset role;
+do $$
+begin
+  if (select count(*) from public.audit_events
+      where resource_type = 'organization_memberships'
+        and resource_id = '62000000-0000-4000-8000-000000000001'
+        and action = 'update'
+        and actor_id = '60000000-0000-4000-8000-000000000001') <> 1
+    or (select count(*) from public.audit_events
+      where resource_type = 'organization_memberships'
+        and resource_id = '62000000-0000-4000-8000-000000000002'
+        and action = 'update'
+        and actor_id = '60000000-0000-4000-8000-000000000002') <> 1
+    or has_table_privilege('authenticated',
+      'public.organization_memberships', 'update')
+  then
+    raise exception 'audit or grant invariant failed';
   end if;
 end;
 $$;
