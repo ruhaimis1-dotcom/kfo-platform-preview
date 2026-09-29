@@ -1,6 +1,6 @@
 # B1 — Existing-user invitation acceptance
 
-Status: prepared for KFO database review; not applied or live-tested yet.
+Status: applied to KFO on 29 Sep 2026. Transactional SQL test passed and rolled back; authenticated HTTP test remains pending.
 
 The current schema can invite an **existing Auth user ID** by inserting an `invited` organization membership and assigning a scoped role. It has no email-address invitation token, delivery or pending-user claim flow. This slice accepts only that existing-user invitation; the email delivery workflow remains separate.
 
@@ -18,6 +18,6 @@ The browser receives no table UPDATE grant and no service-role key. The caller's
 
 ## Verification before use
 
-Run `supabase/tests/invitation_acceptance.sql` against the connected KFO project in one transaction. It exercises own acceptance, retry, cross-user denial, disabled tenant denial, missing-role denial, and audit count, then rolls back all fixtures. Recheck that the original Auth-user count and zero organization/membership counts remain unchanged. Then test the RPC over HTTP with actual nonproduction sessions before wiring the UI.
+`supabase/tests/invitation_acceptance.sql` passed against KFO inside one transaction. It exercises own acceptance, retry, anonymous and cross-user denial, disabled tenant denial, missing-role denial, and audit count, then rolls back all fixtures. Afterwards the database still had one original Auth user and zero organizations, memberships, or audit events. The authenticated HTTP RPC test with nonproduction sessions remains pending before wiring the UI.
 
-The migration was generated locally as `20260928210735_accept_existing_user_invitation.sql`. On application, align its filename with the version recorded in Supabase migration history. The connected account must list project `ktkdcfxeaicbykdurlfg` before any application. The connection switched to Hirely during preparation, so no KFO migration was attempted successfully and no Hirely schema was changed.
+Migration `20260929063838_accept_existing_user_invitation.sql` matches the version recorded in project `ktkdcfxeaicbykdurlfg`. The RPC exists, `authenticated` can execute it, `anon` cannot, and `authenticated` still lacks direct UPDATE on memberships. No migration was applied to Hirely.

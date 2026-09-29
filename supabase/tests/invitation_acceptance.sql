@@ -68,12 +68,6 @@ begin
   if (select count(*) from public.organization_memberships
       where id = '62000000-0000-4000-8000-000000000001'
         and status = 'active' and joined_at is not null) <> 1
-    or (select count(*) from public.organization_memberships
-      where id in (
-        '62000000-0000-4000-8000-000000000002',
-        '62000000-0000-4000-8000-000000000003',
-        '62000000-0000-4000-8000-000000000004'
-      ) and status = 'invited') <> 3
   then
     raise exception 'first invitation acceptance state failed';
   end if;
@@ -93,7 +87,7 @@ begin
   if (select count(*) from public.organization_memberships
       where id = '62000000-0000-4000-8000-000000000002'
         and status = 'active' and joined_at is not null) <> 1 then
-    raise exception 'second user's invitation was not accepted';
+    raise exception 'second user invitation was not accepted';
   end if;
 end;
 $$;
@@ -103,7 +97,13 @@ $$;
 reset role;
 do $$
 begin
-  if (select count(*) from public.audit_events
+  if (select count(*) from public.organization_memberships
+      where id = '62000000-0000-4000-8000-000000000003'
+        and status = 'invited') <> 1
+    or (select count(*) from public.organization_memberships
+      where id = '62000000-0000-4000-8000-000000000004'
+        and status = 'invited') <> 1
+    or (select count(*) from public.audit_events
       where resource_type = 'organization_memberships'
         and resource_id = '62000000-0000-4000-8000-000000000001'
         and action = 'update'
