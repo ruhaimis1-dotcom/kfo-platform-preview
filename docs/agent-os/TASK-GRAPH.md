@@ -24,6 +24,7 @@ B0 Source inventory/mapping [SOURCE INSPECTION COMPLETE — 28 SEP 2026]: `B0-SO
 B1 Foundation app architecture and chosen stack [blocked by Human Decision Gate only if final backend choice materially differs from available source].
 B1 preflight [28 SEP 2026]: `B1-TEST-AND-ENVIRONMENT-GATE.md`; auth/build/route checks pass. KFO Supabase tenant schema inspected; public resolver/RLS scope corrected. Transactional anonymous and authenticated membership/branch read-isolation tests pass. Existing trusted database organization bootstrap also passes. Application entrypoints for bootstrap/invitation/settings and HTTP API isolation tests remain pending.
 B1 invitation slice [DATABASE TEST PASSED — 29 SEP 2026]: `B1-INVITATION-ACCEPTANCE.md` and migration/test SQL for existing-user acceptance. Migration applied to KFO and transactional SQL role/audit test passed with rollback; authenticated HTTP session test remains required before UI use. Email-address invitation issuance and delivery remain separate.
+B1 company name setting [DATABASE TEST PASSED — 29 SEP 2026]: `B1-COMPANY-NAME-SETTING.md` and narrow RPC/migration/test SQL. Owner role, employee/anonymous/cross-tenant denial, input validation and audit passed in a rolled-back transaction. Authenticated HTTP and D6 UI wiring remain pending.
 B2 Identity/auth/profile/use-type flow.
 B3 Organizations/branches/departments/memberships/invitations.
 B4 RBAC + tenant isolation + audit.
