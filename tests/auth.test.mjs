@@ -9,7 +9,7 @@ test('recovery password rejects short or mismatched values', () => {
 });
 
 test('authentication errors do not expose provider internals', () => {
-  assert.match(authErrorMessage({ code: 'invalid_credentials' }, 'login'), /غير صحيحة/);
+  assert.match(authErrorMessage({ code: 'invalid_credentials' }, 'login'), /كلمة مرور جديدة/);
   assert.match(authErrorMessage({ status: 429 }, 'forgot'), /بعد قليل/);
   assert.match(authErrorMessage({ name: 'AuthRetryableFetchError' }, 'login'), /غير متاحة مؤقتاً/);
   assert.doesNotMatch(authErrorMessage({ message: 'sensitive internal detail' }, 'forgot'), /sensitive/);

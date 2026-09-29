@@ -7,12 +7,14 @@ export function passwordIssue(password, confirmation) {
 export function authErrorMessage(error, action) {
   const code = error?.code || '';
   if (error?.name === 'AuthRetryableFetchError' || code === 'network_error') {
-    return 'خدمة تسجيل الدخول غير متاحة مؤقتاً. انتظر قليلاً ثم أعد المحاولة.';
+    return action === 'login'
+      ? 'خدمة تسجيل الدخول غير متاحة مؤقتاً. انتظر قليلاً ثم أعد المحاولة.'
+      : 'الخدمة غير متاحة مؤقتاً. انتظر قليلاً ثم أعد المحاولة.';
   }
   if (code === 'invalid_credentials' || code === 'email_not_confirmed') {
     return code === 'email_not_confirmed'
       ? 'يرجى تأكيد بريدك الإلكتروني من الرسالة المرسلة إليك، ثم حاول مجدداً.'
-      : 'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+      : 'تعذر تسجيل الدخول بهذه البيانات. تحقق من بريدك وكلمة المرور، أو عيّن كلمة مرور جديدة.';
   }
   if (code === 'over_email_send_rate_limit' || code === 'over_request_rate_limit' || error?.status === 429) {
     return 'طلبات كثيرة خلال وقت قصير. حاول مرة أخرى بعد قليل.';

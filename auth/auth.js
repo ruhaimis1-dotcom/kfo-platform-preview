@@ -35,7 +35,7 @@ if (page === 'login') {
       });
       if (error) throw error;
       form.classList.add('hidden');
-      showMessage('success', 'تم تسجيل الدخول بنجاح. مساحة العمل قيد التجهيز، وستظهر بعد تفعيل العضويات والصلاحيات.');
+      showMessage('success', 'أهلاً بك في كفو. تم تسجيل الدخول، ومساحة العمل قيد التجهيز.');
     } catch (error) {
       showMessage('error', authErrorMessage(error, 'login'));
     } finally {
@@ -56,7 +56,7 @@ if (page === 'forgot') {
       });
       if (error) throw error;
       form.classList.add('hidden');
-      showMessage('success', 'إذا كان البريد مرتبطاً بحساب، فستصلك رسالة تحتوي على رابط الاستعادة. تحقق من صندوق الوارد والبريد غير المرغوب فيه.');
+      showMessage('success', 'إذا كان لديك حساب بهذا البريد، سيصلك رابط الاستعادة. تحقق أيضاً من البريد غير المرغوب فيه.');
     } catch (error) {
       showMessage('error', authErrorMessage(error, 'forgot'));
     } finally {
@@ -77,7 +77,7 @@ if (page === 'reset') {
     if (event === 'PASSWORD_RECOVERY') {
       recoverySession = true;
       form.classList.remove('hidden');
-      showMessage('info', 'تم التحقق من الرابط. يمكنك تعيين كلمة مرور جديدة.');
+      showMessage('info', 'الرابط صالح. اختر كلمة مرور جديدة لحسابك.');
       // Remove access tokens from the address bar after the SDK has consumed them.
       history.replaceState(null, '', '/reset-password');
     } else if (event === 'INITIAL_SESSION' && !recoverySession && !linkError) {
@@ -98,7 +98,7 @@ if (page === 'reset') {
       recoverySession = false;
       form.reset();
       form.classList.add('hidden');
-      showMessage('success', 'تم تغيير كلمة المرور. يمكنك الآن تسجيل الدخول من صفحة الدخول.');
+      showMessage('success', 'تم حفظ كلمة المرور الجديدة. يمكنك الآن تسجيل الدخول.');
     } catch (error) {
       showMessage('error', authErrorMessage(error, 'reset'));
     } finally {
