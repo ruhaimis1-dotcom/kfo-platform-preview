@@ -9,6 +9,7 @@ const pages = [
   'login.html',
   'forgot-password.html',
   'reset-password.html',
+  'auth-check.html',
   ...['dashboard', 'employees', 'courses', 'assignments', 'reports', 'orders', 'settings']
     .map((page) => `business/${page}.html`),
 ];

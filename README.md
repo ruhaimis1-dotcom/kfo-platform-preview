@@ -16,6 +16,8 @@ Serve `dist/` with a static server. Vercel uses `vercel.json` to publish the bui
 
 ## Authentication configuration
 
+`/auth-check` is a preview-only HTTP gate for the three fixed KFO QA accounts. It requires actual sign-in and an explicit start click. An invited user's own test membership becomes active on success. Results distinguish first acceptance from retries. See `docs/agent-os/B1-BROWSER-HTTP-GATE.md` for the remaining audit/isolation gates. It is not linked from production navigation.
+
 The client uses the KFO Supabase project URL and its **publishable** key. The key is intentionally public; never add a secret or service-role key to browser code. Authorization for private data must be enforced with RLS and the planned membership/RBAC foundation.
 
 Before testing recovery on a deployed preview, add its exact `https://<preview-host>/reset-password` URL under **Supabase Authentication → URL Configuration → Redirect URLs**. For production, add the exact production URL and update the Site URL from localhost to the production origin during release configuration. Avoid a broad wildcard for arbitrary preview hosts.
