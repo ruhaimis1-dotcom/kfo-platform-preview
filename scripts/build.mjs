@@ -11,6 +11,8 @@ for (const name of ['index.html', 'hero-industrial-v2.png', 'home-preview.png', 
 }
 await cp(join(root, 'upload'), join(out, 'upload'), { recursive: true });
 await cp(join(root, 'auth', 'auth.css'), join(out, 'assets', 'auth.css'));
+await cp(join(root, 'auth', 'workspace.css'), join(out, 'assets', 'workspace.css'));
+await cp(join(root, 'auth', 'workspace.html'), join(out, 'workspace.html'));
 await cp(join(root, 'qa', 'qa.css'), join(out, 'assets', 'qa.css'));
 await cp(join(root, 'qa', 'qa.html'), join(out, 'auth-check.html'));
 await cp(join(root, 'business', 'business.css'), join(out, 'assets', 'business.css'));
@@ -69,4 +71,9 @@ await build({
   entryPoints: [join(root, 'qa', 'qa.js')],
   bundle: true, minify: true, format: 'esm', target: ['es2020'],
   outfile: join(out, 'assets', 'qa.js'),
+});
+await build({
+  entryPoints: [join(root, 'auth', 'workspace.js')],
+  bundle: true, minify: true, format: 'esm', target: ['es2020'],
+  outfile: join(out, 'assets', 'workspace.js'),
 });

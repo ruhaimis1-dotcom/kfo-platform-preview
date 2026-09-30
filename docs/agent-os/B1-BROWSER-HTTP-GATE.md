@@ -22,3 +22,9 @@ The only intended persisted change is an invited fixture user's own membership b
 ## Gate
 
 Local runner tests use stubbed HTTP responses and cannot establish authenticated live success. Build, route checks and original auth tests are required. Run EM first, then BM/CO with local sign-out between accounts; record actual time/results, then inspect membership/audit before business UI wiring. The connector exposes no Auth URL Configuration method, so the current preview reset redirect allowlist has not been verified. The user must complete recovery from a fresh email link on the current origin.
+
+## Login landing follow-up — 30 Sep
+
+The user reported successful login and invitation acceptance. This is user-reported evidence, not an independently inspected database/audit result. The Supabase connector now denies read permission, so no new state or audit query has succeeded.
+
+Replaced the fixed login success placeholder with `/workspace`: Auth verifies identity; RLS reads are filtered to the current user's memberships and their active organization IDs. Pending/active/unavailable/empty/error states are explicit. No role is inferred from email or user-editable metadata, no table grants or database writes are added, and no sample business dashboard is entered. A test-organization-only link returns to the HTTP runner. Role-specific company/employee portals, invitation issuance, cross-tenant/storage tests and audit verification remain open.
