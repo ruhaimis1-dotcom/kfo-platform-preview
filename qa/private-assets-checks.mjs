@@ -39,7 +39,7 @@ export async function runPrivateAssetChecks({ client, action = 'verify', onResul
   }
   const ownPath = paths[ownOrg];
   if (action === 'prepare') {
-    const { error } = await bucket.upload(ownPath, new Blob([ASSET_MARKER], { type: 'text/plain' }), { upsert: false });
+    const { error } = await bucket.upload(ownPath, new Blob([ASSET_MARKER], { type: 'text/plain' }), { upsert: false, cacheControl: '0' });
     check('رفع ملف الاختبار الخاص بشركتك دون استبدال ملف قائم', !error);
   }
   const missing = (response) => !response.data && [400, 404].includes(Number(response.error?.statusCode))
@@ -84,7 +84,7 @@ export async function runPrivateAssetChecks({ client, action = 'verify', onResul
   check('منع إنشاء رابط مؤقت لملف الشركة الأخرى', !foreignSigned.data?.signedUrl && denied(foreignSigned.error));
   // Unique reserved probe path avoids overwriting even if authorization unexpectedly allows insertion.
   const probePath = `${otherOrg}/qa-g1-20261001/denied-${crypto.randomUUID()}.txt`;
-  const write = await bucket.upload(probePath, new Blob([ASSET_MARKER], { type: 'text/plain' }), { upsert: false });
+  const write = await bucket.upload(probePath, new Blob([ASSET_MARKER], { type: 'text/plain' }), { upsert: false, cacheControl: '0' });
   if (!write.error) {
     // Report only this known test object for cleanup by the other company's owner.
     onResult({ label: `يلزم تنظيف ملف اختبار غير متوقع: ${probePath}`, passed: false });

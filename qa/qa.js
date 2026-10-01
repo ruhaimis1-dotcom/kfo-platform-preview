@@ -4,7 +4,8 @@ import { KFO_URL, KFO_KEY, FIXTURES, runInvitationChecks, runAnonymousCheck } fr
 import { runRoleContextChecks } from './role-context-checks.mjs';
 import { runPrivateAssetChecks } from './private-assets-checks.mjs';
 
-const client = createClient(KFO_URL, KFO_KEY, { auth: { detectSessionInUrl: false, persistSession: true } });
+const client = createClient(KFO_URL, KFO_KEY, { auth: { detectSessionInUrl: false, persistSession: true },
+  global: { fetch: (input, init) => fetch(input, { ...init, cache: 'no-store' }) } });
 const form = document.getElementById('qa-login');
 const sessionPanel = document.getElementById('session');
 const message = document.getElementById('message');
