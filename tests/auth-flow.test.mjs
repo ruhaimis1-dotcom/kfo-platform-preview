@@ -45,12 +45,12 @@ function page(kind, auth, href = 'https://preview.example/reset-password') {
   let route = null;
   const location = new URL(href);
   const context = {
-    __client: { auth },
+    __client: { auth: { getUser: async () => ({ data: { user: null }, error: null }), ...auth } },
     document: {
       body: { dataset: { page: kind } },
       getElementById: (id) => id === 'auth-form' ? form : message,
     },
-    window: { location: { href, origin: location.origin } },
+    window: { location: { href, origin: location.origin, assign: (path) => { route = path; } } },
     history: { replaceState: (_state, _title, path) => { route = path; } },
     URL,
     URLSearchParams,
@@ -63,7 +63,7 @@ function page(kind, auth, href = 'https://preview.example/reset-password') {
   };
 }
 
-test('login submits password credentials and does not enter a mock dashboard', async () => {
+test('login submits password credentials and enters the real membership landing', async () => {
   let credentials;
   const ui = page('login', { signInWithPassword: async (value) => {
     credentials = value;
@@ -75,7 +75,16 @@ test('login submits password credentials and does not enter a mock dashboard', a
   });
   assert.equal(ui.message.dataset.kind, 'success');
   assert.equal(ui.hidden.has('hidden'), true);
-  assert.equal(ui.route(), null);
+  assert.equal(ui.route(), '/workspace');
+});
+
+test('existing session redirects only after Auth verifies a user', async () => {
+  const ui = page('login', { getUser: async () => ({ data: { user: { id: 'verified' } }, error: null }) });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(ui.route(), '/workspace');
+  const rejected = page('login', { getUser: async () => ({ data: { user: { id: 'untrusted' } }, error: new Error('denied') }) });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(rejected.route(), null);
 });
 
 test('forgot password sends an origin-specific reset URL', async () => {

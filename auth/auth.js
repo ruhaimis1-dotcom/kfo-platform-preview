@@ -23,6 +23,10 @@ function busy(value, label = 'جارٍ الإرسال…') {
 }
 
 if (page === 'login') {
+  // Resume a server-verified session instead of leaving the user on the login screen.
+  supabase.auth.getUser().then(({ data, error }) => {
+    if (!error && data?.user) window.location.assign('/workspace');
+  }).catch(() => {});
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (!form.reportValidity()) return;
@@ -35,7 +39,8 @@ if (page === 'login') {
       });
       if (error) throw error;
       form.classList.add('hidden');
-      showMessage('success', 'أهلاً بك في كفو. تم تسجيل الدخول، ومساحة العمل قيد التجهيز.');
+      showMessage('success', 'تم تسجيل الدخول. جارٍ فتح عضوياتك…');
+      window.location.assign('/workspace');
     } catch (error) {
       showMessage('error', authErrorMessage(error, 'login'));
     } finally {
