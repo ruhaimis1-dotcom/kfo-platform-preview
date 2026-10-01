@@ -6,11 +6,11 @@ const owner = Object.keys(FIXTURES).find((id) => FIXTURES[id].role === 'CO');
 const employee = Object.keys(FIXTURES).find((id) => FIXTURES[id].role === 'EM');
 const denied = { statusCode: '404', message: 'Object not found' };
 function fixture({ userId = owner, missingContext = false, wrongBytes = false, signedOrigin = KFO_URL,
-  foreignSuccess = false, wrongDenial = false, cleanupError = false } = {}) {
+  foreignSuccess = false, wrongDenial = false, cleanupError = false, missingStatus = 404, alreadyRemoved = false, listError = false, stillListed = false } = {}) {
   const ownOrg = userId === employee ? ASSET_ORG_B : QA_ORG;
   const ownPath = `${ownOrg}/qa-g1-20261001/probe.txt`;
   const calls = [];
-  let removed = false;
+  let removed = alreadyRemoved;
   const bucket = {
     async upload(path, bytes, options) {
       calls.push(['upload', path]); assert.equal(options.upsert, false);
@@ -19,7 +19,7 @@ function fixture({ userId = owner, missingContext = false, wrongBytes = false, s
     },
     async download(path) {
       calls.push(['download', path]);
-      if (removed) return { error: cleanupError ? new Error('network error') : denied };
+      if (removed) return { error: cleanupError ? new Error('network error') : { ...denied, statusCode: String(missingStatus) } };
       if (path === ownPath) return { data: new Blob([wrongBytes ? 'unrelated content' : ASSET_MARKER]) };
       return foreignSuccess ? { data: new Blob([ASSET_MARKER]) } : { error: wrongDenial ? { statusCode: 500, message: 'Object not found' } : denied };
     },
@@ -27,6 +27,7 @@ function fixture({ userId = owner, missingContext = false, wrongBytes = false, s
       calls.push(['sign', path]); assert.equal(expiry, 30);
       return path === ownPath ? { data: { signedUrl: `${signedOrigin}/storage/v1/object/sign/tenant-private/${ownPath}?token=test` } } : { error: denied };
     },
+    async list(folder, options) { calls.push(['list', folder]); assert.equal(options.search, 'probe.txt'); return listError ? { error: new Error('network') } : { data: stillListed ? [{ name: 'probe.txt' }] : [] }; },
     async remove(paths) { calls.push(['remove', paths]); assert.deepEqual(paths, [ownPath]); removed = true; return { data: [{ name: ownPath }] }; },
   };
   return { calls, client: {
@@ -72,4 +73,16 @@ test('unexpected foreign read success stops before a write probe', async () => {
 test('cleanup verifies the marker first, removes only the fixed object and requires actual not-found', async () => {
   const f = fixture(); assert.equal((await runPrivateAssetChecks({ ...f, action: 'cleanup' })).results.length, 3);
   await assert.rejects(runPrivateAssetChecks({ ...fixture({ cleanupError: true }), action: 'cleanup' }));
+});
+
+test('cleanup accepts legacy missing status only with successful independent absence listing', async () => {
+  for (const missingStatus of [400, 404]) {
+    const f = fixture({ missingStatus, alreadyRemoved: true });
+    const r = await runPrivateAssetChecks({ ...f, action: 'cleanup' });
+    assert.equal(r.results.length, 1);
+    assert.equal(f.calls.some(([kind]) => kind === 'remove'), false);
+  }
+  for (const options of [{ listError: true }, { stillListed: true }, { missingStatus: 500 }]) {
+    await assert.rejects(runPrivateAssetChecks({ ...fixture(options), action: 'cleanup' }));
+  }
 });

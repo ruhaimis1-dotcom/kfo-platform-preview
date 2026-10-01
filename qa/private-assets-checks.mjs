@@ -42,13 +42,25 @@ export async function runPrivateAssetChecks({ client, action = 'verify', onResul
     const { error } = await bucket.upload(ownPath, new Blob([ASSET_MARKER], { type: 'text/plain' }), { upsert: false });
     check('رفع ملف الاختبار الخاص بشركتك دون استبدال ملف قائم', !error);
   }
+  const missing = (response) => !response.data && [400, 404].includes(Number(response.error?.statusCode))
+    && ['Object not found', 'The resource was not found'].includes(response.error?.message);
+  async function confirmAbsent(response) {
+    const listed = await bucket.list(ownPath.slice(0, ownPath.lastIndexOf('/')), { search: 'probe.txt', limit: 100 });
+    check('التحقق من زوال ملف الاختبار بالتنزيل وقائمة الملفات', missing(response)
+      && !listed.error && Array.isArray(listed.data) && !listed.data.some((entry) => entry.name === 'probe.txt'));
+  }
   const own = await bucket.download(ownPath);
+  if (action === 'cleanup' && missing(own)) {
+    await confirmAbsent(own);
+    await verifyIdentity();
+    return { action, organizationId: ownOrg, results };
+  }
   check('قراءة بايتات ملف شركتك والتحقق من علامة الاختبار', !own.error && own.data && await own.data.text() === ASSET_MARKER);
   if (action === 'cleanup') {
     const removed = await bucket.remove([ownPath]);
     check('حذف ملف الاختبار المحدد فقط', !removed.error && removed.data?.some((r) => r.name === ownPath));
     const gone = await bucket.download(ownPath);
-    check('التحقق من زوال ملف الاختبار', Number(gone.error?.statusCode) === 404 && gone.error?.message === 'Object not found');
+    await confirmAbsent(gone);
     await verifyIdentity();
     return { action, organizationId: ownOrg, results };
   }
