@@ -65,3 +65,9 @@ Only stop for unresolved source conflicts or product policy: backend final techn
 
 ## Latest checkpoint — 1 Oct 2026
 See `PROJECT-REPORT-2026-10-01-AR.md`. Private Storage configuration inspected: private bucket, organization/permission scoped policies, zero objects; live asset isolation is untested. G1 remains open. Next: cross-tenant HTTP/assets, verified role context, first real role portal slice, separate SA access foundation, then QA/Human Gate.
+
+Role-context continuation: `B1-ROLE-CONTEXT-2026-10-01.md`. Read-only own-role RPC proposal and client loader prepared; build + 28 local tests and rolled-back database context integration passed. Cleanup independently confirmed. Proposal is not applied or wired; no push/deployment. Authenticated HTTP/assets remain open; current browser has no KFO session. No SA promotion.
+
+Subsequent checkpoint: `B1-HTTP-ASSETS-CHECKPOINT-2026-10-01-AR.md`. RPC applied as migration 20261001090607, database integration passed with rollback; anonymous live HTTP 401/42501 passed. Workspace roles wired locally; role HTTP and fixed private-asset prepare/verify/cleanup runners added. Build + 40 local tests passed. No UI deployment/merge/push; no live authenticated asset success. SQL permission denied for fixture rehearsal and final read, so G1 remains blocked on restored KFO connector access plus preview/session/asset gates.
+
+Connector-restored follow-up: SQL reads and rolled-back QA-B fixture rehearsal passed after user reconnect. Post-rehearsal SQL confirms no QA-B/test-user/test-company residue, three original active QA memberships and zero tenant-private objects. Actual CO/BM/EM context returned expected scopes through SQL authenticated-identity simulation, not live HTTP. SQL blocker resolved; next is approval of updated QA preview, authenticated role HTTP, temporary QA-B preparation and two-owner asset gate. No push/deployment or G1 closure.

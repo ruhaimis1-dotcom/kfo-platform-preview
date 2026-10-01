@@ -1,6 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import { authErrorMessage } from '../auth/validation.mjs';
 import { KFO_URL, KFO_KEY, FIXTURES, runInvitationChecks, runAnonymousCheck } from './invitation-checks.mjs';
+import { runRoleContextChecks } from './role-context-checks.mjs';
+import { runPrivateAssetChecks } from './private-assets-checks.mjs';
 
 const client = createClient(KFO_URL, KFO_KEY, { auth: { detectSessionInUrl: false, persistSession: true } });
 const form = document.getElementById('qa-login');
@@ -9,11 +11,19 @@ const message = document.getElementById('message');
 const run = document.getElementById('run');
 const signout = document.getElementById('signout');
 const results = document.getElementById('results');
+const roles = document.getElementById('roles');
+const assetButtons = ['prepare', 'verify', 'cleanup'].map((action) => document.getElementById(`asset-${action}`));
+function assetAvailability(busy = false) {
+  const role = identity && FIXTURES[identity]?.role;
+  assetButtons.forEach((button) => { button.disabled = busy || !['CO', 'EM'].includes(role); });
+}
 let identity = null;
 function status(kind, text) { message.dataset.kind = kind; message.textContent = text; }
 async function refreshIdentity() {
   run.disabled = true;
+  roles.disabled = true;
   identity = null;
+  assetAvailability();
   const { data, error } = await client.auth.getUser();
   const user = !error && data?.user;
   form.classList.toggle('hidden', Boolean(user));
@@ -24,6 +34,8 @@ async function refreshIdentity() {
   if (!fixture) return status('error', 'هذا الحساب خارج مجموعة الاختبار. يمكنك تسجيل الخروج وتجربة حساب الاختبار.');
   identity = user.id;
   run.disabled = false;
+  roles.disabled = false;
+  assetAvailability();
   status('info', `تم التحقق من الدخول. دور الاختبار المتوقع: ${fixture.label}. الصلاحيات ستُختبر بطلبات حقيقية.`);
 }
 form.addEventListener('submit', async (event) => {
@@ -42,6 +54,8 @@ form.addEventListener('submit', async (event) => {
 });
 run.addEventListener('click', async () => {
   run.disabled = true;
+  roles.disabled = true;
+  assetAvailability(true);
   signout.disabled = true;
   results.replaceChildren();
   status('info', 'جارٍ الفحص. ستظهر كل نتيجة بعد وصول استجابة كفو…');
@@ -59,8 +73,42 @@ run.addEventListener('click', async () => {
     status('error', error instanceof TypeError || error?.name === 'TimeoutError'
       ? 'تعذر الوصول إلى خدمة كفو. قد يكون طلب سابق اكتمل؛ أعد الفحص للتحقق من الحالة.'
       : error.message || 'توقف الفحص. النتائج المكتملة أعلاه لا تعني اكتمال البوابة.');
-  } finally { run.disabled = false; signout.disabled = false; }
+  } finally { run.disabled = !identity; roles.disabled = !identity; signout.disabled = false; assetAvailability(); }
 });
+roles.addEventListener('click', async () => {
+  roles.disabled = true; run.disabled = true; signout.disabled = true;
+  assetAvailability(true);
+  results.replaceChildren();
+  status('info', 'جارٍ التحقق من الأدوار والصلاحيات…');
+  try {
+    const { data, error } = await client.auth.getSession();
+    if (error || !data?.session?.access_token) throw new Error('انتهت الجلسة. أعد تسجيل الدخول.');
+    const report = await runRoleContextChecks({ userId: identity, accessToken: data.session.access_token,
+      onResult: (row) => {
+        const li = document.createElement('li'); li.dataset.passed = String(row.passed);
+        li.textContent = `${row.passed ? 'نجح' : 'لم ينجح'} — ${row.label} (HTTP ${row.status})`;
+        results.append(li);
+      } });
+    status('success', `اكتملت ${report.results.length} فحوص لقراءة الأدوار. فحص عزل الملفات مستقل.`);
+  } catch { status('error', 'توقف فحص الأدوار؛ النتائج الجزئية لا تغلق البوابة.'); }
+  finally { roles.disabled = !identity; run.disabled = !identity; signout.disabled = false; assetAvailability(); }
+});
+for (const action of ['prepare', 'verify', 'cleanup']) {
+  document.getElementById(`asset-${action}`).addEventListener('click', async () => {
+    roles.disabled = true; run.disabled = true; signout.disabled = true; assetAvailability(true);
+    results.replaceChildren(); status('info', 'جارٍ تنفيذ إجراء ملفات الاختبار…');
+    try {
+      const report = await runPrivateAssetChecks({ client, action, onResult: (row) => {
+        const li = document.createElement('li'); li.dataset.passed = String(row.passed);
+        li.textContent = `${row.passed ? 'نجح' : 'لم ينجح'} — ${row.label}`; results.append(li);
+      } });
+      status('success', report.requiresBothPrepareEvidence
+        ? 'اكتمل فحص هذا الحساب. لا تُغلق بوابة الملفات حتى توثيق تحضير الملفين وفحص الحساب الآخر ثم التنظيف.'
+        : action === 'prepare' ? 'تم رفع ملف شركتك وقراءة محتواه. حضّر ملف الشركة الأخرى قبل اختبار العزل.' : 'تم تنظيف ملف اختبار شركتك والتحقق من زواله.');
+    } catch (error) { status('error', error.message || 'توقف فحص الملفات؛ البوابة لم تكتمل.'); }
+    finally { roles.disabled = !identity; run.disabled = !identity; signout.disabled = false; assetAvailability(); }
+  });
+}
 signout.addEventListener('click', async () => {
   signout.disabled = true;
   try {
