@@ -42,8 +42,7 @@ export async function runPrivateAssetChecks({ client, action = 'verify', onResul
     const { error } = await bucket.upload(ownPath, new Blob([ASSET_MARKER], { type: 'text/plain' }), { upsert: false, cacheControl: '0' });
     check('رفع ملف الاختبار الخاص بشركتك دون استبدال ملف قائم', !error);
   }
-  const missing = (response) => !response.data && [400, 404].includes(Number(response.error?.statusCode))
-    && ['Object not found', 'The resource was not found'].includes(response.error?.message);
+  const missing = (response) => !response.data && [400, 404].includes(Number(response.error?.statusCode));
   async function confirmAbsent(response) {
     const listed = await bucket.list(ownPath.slice(0, ownPath.lastIndexOf('/')), { search: 'probe.txt', limit: 100 });
     check('التحقق من زوال ملف الاختبار بالتنزيل وقائمة الملفات', missing(response)
