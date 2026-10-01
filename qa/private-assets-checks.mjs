@@ -42,18 +42,21 @@ export async function runPrivateAssetChecks({ client, action = 'verify', onResul
     const { error } = await bucket.upload(ownPath, new Blob([ASSET_MARKER], { type: 'text/plain' }), { upsert: false, cacheControl: '0' });
     check('رفع ملف الاختبار الخاص بشركتك دون استبدال ملف قائم', !error);
   }
-  const missing = (response) => !response.data && [400, 404].includes(Number(response.error?.statusCode));
-  async function confirmAbsent(response) {
+  async function listProbe() {
     const listed = await bucket.list(ownPath.slice(0, ownPath.lastIndexOf('/')), { search: 'probe.txt', limit: 100 });
-    check('التحقق من زوال ملف الاختبار بالتنزيل وقائمة الملفات', missing(response)
-      && !listed.error && Array.isArray(listed.data) && !listed.data.some((entry) => entry.name === 'probe.txt'));
+    check('قراءة قائمة ملفات الاختبار من الخادم', !listed.error && Array.isArray(listed.data));
+    return listed.data.some((entry) => entry.name === 'probe.txt');
   }
-  const own = await bucket.download(ownPath);
-  if (action === 'cleanup' && missing(own)) {
-    await confirmAbsent(own);
+  async function confirmAbsent(response) {
+    const exists = await listProbe();
+    check('التحقق من زوال ملف الاختبار بالتنزيل وقائمة الملفات', !response.data && !exists);
+  }
+  if (action === 'cleanup' && !await listProbe()) {
+    check('تأكيد عدم وجود ملف الاختبار في قائمة الخادم', true);
     await verifyIdentity();
     return { action, organizationId: ownOrg, results };
   }
+  const own = await bucket.download(ownPath);
   check('قراءة بايتات ملف شركتك والتحقق من علامة الاختبار', !own.error && own.data && await own.data.text() === ASSET_MARKER);
   if (action === 'cleanup') {
     const removed = await bucket.remove([ownPath]);

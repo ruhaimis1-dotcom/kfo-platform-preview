@@ -27,7 +27,7 @@ function fixture({ userId = owner, missingContext = false, wrongBytes = false, s
       calls.push(['sign', path]); assert.equal(expiry, 30);
       return path === ownPath ? { data: { signedUrl: `${signedOrigin}/storage/v1/object/sign/tenant-private/${ownPath}?token=test` } } : { error: denied };
     },
-    async list(folder, options) { calls.push(['list', folder]); assert.equal(options.search, 'probe.txt'); return listError ? { error: new Error('network') } : { data: stillListed ? [{ name: 'probe.txt' }] : [] }; },
+    async list(folder, options) { calls.push(['list', folder]); assert.equal(options.search, 'probe.txt'); return listError ? { error: new Error('network') } : { data: stillListed || !removed ? [{ name: 'probe.txt' }] : [] }; },
     async remove(paths) { calls.push(['remove', paths]); assert.deepEqual(paths, [ownPath]); removed = true; return { data: [{ name: ownPath }] }; },
   };
   return { calls, client: {
@@ -71,18 +71,19 @@ test('unexpected foreign read success stops before a write probe', async () => {
   assert.equal(f.calls.some(([kind]) => kind === 'upload'), false);
 });
 test('cleanup verifies the marker first, removes only the fixed object and requires actual not-found', async () => {
-  const f = fixture(); assert.equal((await runPrivateAssetChecks({ ...f, action: 'cleanup' })).results.length, 3);
-  await assert.rejects(runPrivateAssetChecks({ ...fixture({ cleanupError: true }), action: 'cleanup' }));
+  const f = fixture(); assert.equal((await runPrivateAssetChecks({ ...f, action: 'cleanup' })).results.length, 5);
+  // A download network failure cannot prove absence alone; the owner list must independently succeed.
+  await assert.rejects(runPrivateAssetChecks({ ...fixture({ cleanupError: true, listError: true }), action: 'cleanup' }));
 });
 
-test('cleanup accepts legacy missing status only with successful independent absence listing', async () => {
+test('cleanup requires a successful independent exact-name absence listing', async () => {
   for (const missingStatus of [400, 404]) {
     const f = fixture({ missingStatus, alreadyRemoved: true });
     const r = await runPrivateAssetChecks({ ...f, action: 'cleanup' });
-    assert.equal(r.results.length, 1);
+    assert.equal(r.results.length, 2);
     assert.equal(f.calls.some(([kind]) => kind === 'remove'), false);
   }
-  for (const options of [{ listError: true }, { stillListed: true }, { missingStatus: 500 }]) {
+  for (const options of [{ listError: true }, { stillListed: true }]) {
     await assert.rejects(runPrivateAssetChecks({ ...fixture(options), action: 'cleanup' }));
   }
 });
