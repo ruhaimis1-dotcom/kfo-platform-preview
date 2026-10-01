@@ -27,7 +27,7 @@ B1 invitation slice [DATABASE TEST PASSED — 29 SEP 2026]: `B1-INVITATION-ACCEP
 B1 company name setting [DATABASE TEST PASSED — 29 SEP 2026]: `B1-COMPANY-NAME-SETTING.md` and narrow RPC/migration/test SQL. Owner role, employee/anonymous/cross-tenant denial, input validation and audit passed in a rolled-back transaction. Authenticated HTTP and D6 UI wiring remain pending.
 B1 existing-user employee invite issuance [DATABASE TEST PASSED — 29 SEP 2026]: `B1-EXISTING-USER-INVITE-ISSUANCE.md` and atomic membership/EM role RPC. Issuance → acceptance and isolation passed in rolled-back SQL; email delivery, pending-user claim, authenticated HTTP and D1 UI wiring remain pending.
 B2 Identity/auth/profile/use-type flow.
-B1 browser HTTP gate [EM LIVE HTTP PASSED — 30 SEP 2026]: `B1-BROWSER-HTTP-GATE.md` and `/auth-check` use a real browser session with fixed QA memberships. Three accounts and CO/BM/EM test memberships exist; EM independently reads active through HTTP; all 9 EM live checks pass (active retries, not first acceptance). Verified existing-session login redirect and real membership landing are deployed. Build and 23 local tests pass. BM/CO HTTP, audit verification (connector permission denied), cross-tenant HTTP/Storage and role-specific business UI wiring remain open.
+B1 browser HTTP gate [EM LIVE HTTP PASSED — 30 SEP 2026]: `B1-BROWSER-HTTP-GATE.md` and `/auth-check` use a real browser session with fixed QA memberships. Three accounts and CO/BM/EM test memberships exist; EM independently reads active through HTTP; all 9 EM live checks pass (active retries, not first acceptance). Verified existing-session login redirect and real membership landing are deployed. Build and 23 local tests pass. CO 10/10 and BM 9/9 HTTP results supplied in user screenshots on 1 Oct; account mapping is user-reported. Connector restored; independent SQL confirms three active memberships and one correctly attributed EM invitation transition, with no later EM updates. Cross-tenant SQL regression passed again with rollback and verified cleanup on 1 Oct. Cross-tenant HTTP/Storage and role-specific business UI remain open.
 B3 Organizations/branches/departments/memberships/invitations.
 B4 RBAC + tenant isolation + audit.
 Gate G1: foundation exit tests.
@@ -62,3 +62,6 @@ Advanced skills/gaps/recommendations/readiness; deep Hirely integration; mobile 
 
 ## Human Decision Gates
 Only stop for unresolved source conflicts or product policy: backend final technology if needed; content-manager role mapping; FI access to private company content; organization lifecycle states; operating policies (revenue share, seat withdrawal after learning starts, refunds, default passing/renewal rules). Do not invent them.
+
+## Latest checkpoint — 1 Oct 2026
+See `PROJECT-REPORT-2026-10-01-AR.md`. Private Storage configuration inspected: private bucket, organization/permission scoped policies, zero objects; live asset isolation is untested. G1 remains open. Next: cross-tenant HTTP/assets, verified role context, first real role portal slice, separate SA access foundation, then QA/Human Gate.

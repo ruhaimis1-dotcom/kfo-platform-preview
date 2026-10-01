@@ -36,3 +36,6 @@ Vercel reports success for commit `9e492bcd2ca4d7ac55b3f521d3a9e454863bfe88`; it
 The actual `/auth-check` EM run completed all 9 HTTP checks: identity 200, own membership 200, anonymous denial 401/42501, cross-user acceptance denial 403/42501, two active retries 200, persisted active read 200, self-only membership scope 200, settings denial 403/42501. EM was already active before execution: first acceptance and its audit were not tested in this run. No credentials were exported.
 
 KFO connector `get_project` still returns permission denied. SQL audit actor/count/before/after remains blocked; BM/CO authenticated HTTP, cross-tenant HTTP, private Storage and role-specific portal wiring remain pending. G1 stays open.
+
+## Restored connector and user role results — 1 Oct 2026
+CO screenshot: 10/10; BM screenshot: 9/9. Account mapping comes from the user; headers are cropped. Both tested already-active retries; CO requested unchanged name only. Independent KFO SQL confirms all three memberships active and exactly one EM invited-to-active update by EM at 2026-09-30 10:38:38.323827 UTC, with no later updates. The previous permission blocker is resolved. Read-only Storage review and rolled-back SQL isolation regression are recorded in PROJECT-REPORT-2026-10-01-AR.md; authenticated cross-tenant HTTP/asset tests and G1 remain pending.
