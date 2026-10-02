@@ -7,6 +7,27 @@ const paths = {
   [QA_ORG]: `${QA_ORG}/qa-g1-20261001/probe.txt`,
   [ASSET_ORG_B]: `${ASSET_ORG_B}/qa-g1-20261001/probe.txt`,
 };
+
+async function storageDenial(error) {
+  let status = Number(error?.status ?? error?.statusCode);
+  let payload = error;
+  // storage-js 2.12.2 downloads use noResolveJson: a rejected HTTP response
+  // becomes StorageUnknownError, with the untouched Response in originalError.
+  // A generic UnknownError/network exception is never isolation evidence.
+  if (error?.name === 'StorageUnknownError') {
+    if (!(error.originalError instanceof Response)) return { passed: false, status: null };
+    status = error.originalError.status;
+    if (![400, 403, 404].includes(status)) return { passed: false, status };
+    try { payload = await error.originalError.clone().json(); }
+    catch { return { passed: false, status }; }
+  }
+  const passed = Boolean(payload && [400, 403, 404].includes(status)
+    && (payload.statusCode === undefined || [400, 403, 404].includes(Number(payload.statusCode)))
+    && ['Object not found', 'new row violates row-level security policy', 'Unauthorized'].includes(payload.message));
+  // Report only HTTP status; raw responses/URLs/headers/errors may contain secrets.
+  return { passed, status: Number.isInteger(status) && status >= 100 && status <= 599 ? status : null };
+}
+
 export async function runPrivateAssetChecks({ client, action = 'verify', onResult = () => {}, fetchImpl = fetch }) {
   const { data: auth, error: authError } = await client.auth.getUser();
   const userId = auth?.user?.id;
@@ -33,8 +54,8 @@ export async function runPrivateAssetChecks({ client, action = 'verify', onResul
   }
   await verifyIdentity();
   const results = [];
-  function check(label, passed) {
-    const row = { label, passed: Boolean(passed) }; results.push(row); onResult(row);
+  function check(label, passed, status) {
+    const row = { label, passed: Boolean(passed), ...(status != null ? { status } : {}) }; results.push(row); onResult(row);
     if (!passed) throw new Error(`توقف فحص الملفات: ${label}`);
   }
   const ownPath = paths[ownOrg];
@@ -78,12 +99,12 @@ export async function runPrivateAssetChecks({ client, action = 'verify', onResul
     return { action, organizationId: ownOrg, results };
   }
   // Verify BOTH prepare reports independently before counting these denials as isolation evidence.
-  const denied = (error) => error && [400,403,404].includes(Number(error.statusCode))
-    && ['Object not found', 'new row violates row-level security policy', 'Unauthorized'].includes(error.message);
   const foreign = await bucket.download(paths[otherOrg]);
-  check('منع قراءة ملف الشركة الأخرى', !foreign.data && denied(foreign.error));
+  const readDenial = await storageDenial(foreign.error);
+  check('منع قراءة ملف الشركة الأخرى', !foreign.data && readDenial.passed, readDenial.status);
   const foreignSigned = await bucket.createSignedUrl(paths[otherOrg], 30);
-  check('منع إنشاء رابط مؤقت لملف الشركة الأخرى', !foreignSigned.data?.signedUrl && denied(foreignSigned.error));
+  const signDenial = await storageDenial(foreignSigned.error);
+  check('منع إنشاء رابط مؤقت لملف الشركة الأخرى', !foreignSigned.data?.signedUrl && signDenial.passed, signDenial.status);
   // Unique reserved probe path avoids overwriting even if authorization unexpectedly allows insertion.
   const probePath = `${otherOrg}/qa-g1-20261001/denied-${crypto.randomUUID()}.txt`;
   const write = await bucket.upload(probePath, new Blob([ASSET_MARKER], { type: 'text/plain' }), { upsert: false, cacheControl: '0' });
@@ -91,7 +112,8 @@ export async function runPrivateAssetChecks({ client, action = 'verify', onResul
     // Report only this known test object for cleanup by the other company's owner.
     onResult({ label: `يلزم تنظيف ملف اختبار غير متوقع: ${probePath}`, passed: false });
   }
-  check('منع الكتابة في الشركة الأخرى', denied(write.error));
+  const writeDenial = await storageDenial(write.error);
+  check('منع الكتابة في الشركة الأخرى', !write.data && writeDenial.passed, writeDenial.status);
   await verifyIdentity();
   return { action, organizationId: ownOrg, results, requiresBothPrepareEvidence: true };
 }

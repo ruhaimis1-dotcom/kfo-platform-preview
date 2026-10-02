@@ -101,7 +101,7 @@ for (const action of ['prepare', 'verify', 'cleanup']) {
     try {
       const report = await runPrivateAssetChecks({ client, action, onResult: (row) => {
         const li = document.createElement('li'); li.dataset.passed = String(row.passed);
-        li.textContent = `${row.passed ? 'نجح' : 'لم ينجح'} — ${row.label}`; results.append(li);
+        li.textContent = `${row.passed ? 'نجح' : 'لم ينجح'} — ${row.label}${row.status ? ` (HTTP ${row.status})` : ''}`; results.append(li);
       } });
       status('success', report.requiresBothPrepareEvidence
         ? 'اكتمل فحص هذا الحساب. لا تُغلق بوابة الملفات حتى توثيق تحضير الملفين وفحص الحساب الآخر ثم التنظيف.'
