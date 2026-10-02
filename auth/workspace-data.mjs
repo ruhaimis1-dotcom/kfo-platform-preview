@@ -18,7 +18,7 @@ export async function loadWorkspace(client) {
     }
     organizations = data;
   }
-  return { kind: 'ready', email: user.email, memberships: memberships.map((m) => {
+  return { kind: 'ready', userId: user.id, email: user.email, memberships: memberships.map((m) => {
     const org = organizations.find((o) => o.id === m.organization_id);
     return {
       id: m.id, organizationId: m.organization_id,

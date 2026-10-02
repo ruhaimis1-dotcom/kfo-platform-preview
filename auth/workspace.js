@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { loadWorkspace } from './workspace-data.mjs';
+import { loadAccessContext, attachAccessContext } from './access-context.mjs';
 const client = createClient('https://ktkdcfxeaicbykdurlfg.supabase.co', 'sb_publishable_P6NrKFErT6ntjXg2UMWbPw_OtRapbiF');
 const message = document.getElementById('message');
 const list = document.getElementById('memberships');
@@ -17,10 +18,14 @@ async function render() {
     const data = await loadWorkspace(client);
     if (attempt !== generation) return;
     if (data.kind === 'signed-out') return window.location.replace('/login');
+    const context = await loadAccessContext(client);
+    if (attempt !== generation) return;
+    if (context.kind === 'signed-out') return window.location.replace('/login');
+    const memberships = attachAccessContext(data, context);
     document.getElementById('identity').textContent = data.email || '';
     message.dataset.kind = data.memberships.length ? 'success' : 'info';
     message.textContent = data.memberships.length ? 'تم التحقق من حسابك. هذه حالة عضوياتك الآن.' : 'لا توجد عضوية شركة مرتبطة بحسابك حاليًا.';
-    for (const membership of data.memberships) {
+    for (const membership of memberships) {
       const card = document.createElement('section');
       card.className = 'membership';
       const title = document.createElement('h2');
@@ -33,6 +38,15 @@ async function render() {
       note.textContent = membership.accessible ? 'تم تفعيل عضويتك. صفحات العمل والتعلّم ما زالت في مرحلة الربط.'
         : membership.status === 'invited' ? 'الدعوة لم تُفعّل بعد. قبول الدعوة وتسجيل الدخول خطوتان منفصلتان.' : 'راجع مسؤول الشركة بشأن حالة العضوية والوصول.';
       card.append(title, state, note);
+      if (membership.accessible) {
+        const roles = document.createElement('p');
+        const labels = { CO: 'مالك الشركة', BM: 'مدير الفرع أو القسم', EM: 'موظف', FI: 'مسؤول مالي',
+          IN: 'مدرّب', TC: 'مركز تدريب', CQ: 'مراجع جودة', PA: 'مسؤول الشريك', SU: 'متعلم مستقل' };
+        roles.textContent = membership.roles.length ? `دورك: ${membership.roles.map((r) =>
+          `${labels[r.code] || 'دور مرتبط بالعضوية'}${r.department_id ? ' — ضمن القسم المحدد' : r.branch_id ? ' — ضمن الفرع المحدد' : ''}`
+        ).join('، ')}` : 'لا يوجد دور عمل مفعّل لهذه العضوية حاليًا.';
+        card.append(roles);
+      }
       // QA is only a diagnostic link for the existing isolated fixture organization.
       if (membership.organizationId === 'aa7a54d0-9bce-455d-adb4-971c21d9fdf1') {
         const link = document.createElement('a');
