@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { authErrorMessage } from '../auth/validation.mjs';
 import { KFO_URL, KFO_KEY, FIXTURES, runInvitationChecks, runAnonymousCheck } from './invitation-checks.mjs';
 import { runRoleContextChecks } from './role-context-checks.mjs';
+import { runSettingsPermissionChecks } from './settings-permission-checks.mjs';
 import { runPrivateAssetChecks } from './private-assets-checks.mjs';
 
 const client = createClient(KFO_URL, KFO_KEY, { auth: { detectSessionInUrl: false, persistSession: true },
@@ -13,19 +14,24 @@ const run = document.getElementById('run');
 const signout = document.getElementById('signout');
 const results = document.getElementById('results');
 const roles = document.getElementById('roles');
+const settingsDenial = document.getElementById('settings-denial');
 const assetButtons = ['prepare', 'verify', 'cleanup'].map((action) => document.getElementById(`asset-${action}`));
 function assetAvailability(busy = false) {
   const role = identity && FIXTURES[identity]?.role;
+  settingsDenial.disabled = busy || !['BM', 'EM'].includes(role);
   assetButtons.forEach((button) => { button.disabled = busy || !['CO', 'EM'].includes(role); });
 }
 let identity = null;
+let identityGeneration = 0;
 function status(kind, text) { message.dataset.kind = kind; message.textContent = text; }
 async function refreshIdentity() {
+  const generation = ++identityGeneration;
   run.disabled = true;
   roles.disabled = true;
   identity = null;
   assetAvailability();
   const { data, error } = await client.auth.getUser();
+  if (generation !== identityGeneration) return;
   const user = !error && data?.user;
   form.classList.toggle('hidden', Boolean(user));
   sessionPanel.classList.toggle('hidden', !user);
@@ -94,6 +100,27 @@ roles.addEventListener('click', async () => {
   } catch { status('error', 'توقف فحص الأدوار؛ النتائج الجزئية لا تغلق البوابة.'); }
   finally { roles.disabled = !identity; run.disabled = !identity; signout.disabled = false; assetAvailability(); }
 });
+settingsDenial.addEventListener('click', async () => {
+  const userId = identity;
+  const generation = identityGeneration;
+  roles.disabled = true; run.disabled = true; signout.disabled = true; assetAvailability(true);
+  results.replaceChildren();
+  status('info', 'جارٍ فحص رفض الإعدادات بطلب لا يغيّر اسم الشركة…');
+  try {
+    const { data, error } = await client.auth.getSession();
+    if (error || !data?.session?.access_token || generation !== identityGeneration) throw new Error();
+    const report = await runSettingsPermissionChecks({ userId, accessToken: data.session.access_token,
+      onResult: (row) => {
+        if (generation !== identityGeneration) return;
+        const li = document.createElement('li'); li.dataset.passed = String(row.passed);
+        li.textContent = `${row.passed ? 'نجح' : 'لم ينجح'} — ${row.label} (HTTP ${row.status})`;
+        results.append(li);
+      } });
+    if (generation === identityGeneration) status('success', `اكتملت ${report.results.length} فحوص. رفض الخادم صلاحية حفظ الإعدادات؛ اسم الشركة لم يتغير.`);
+  } catch {
+    if (generation === identityGeneration) status('error', 'لم يثبت رفض الإعدادات المتوقع. النتائج الجزئية لا تغلق البوابة.');
+  } finally { roles.disabled = !identity; run.disabled = !identity; signout.disabled = false; assetAvailability(); }
+});
 for (const action of ['prepare', 'verify', 'cleanup']) {
   document.getElementById(`asset-${action}`).addEventListener('click', async () => {
     roles.disabled = true; run.disabled = true; signout.disabled = true; assetAvailability(true);
@@ -119,6 +146,15 @@ signout.addEventListener('click', async () => {
     await refreshIdentity();
   } catch { status('error', 'تعذر تسجيل الخروج. حاول مجددًا.'); }
   finally { signout.disabled = false; }
+});
+client.auth.onAuthStateChange((event) => {
+  if (event !== 'SIGNED_OUT') return;
+  ++identityGeneration; identity = null;
+  run.disabled = true; roles.disabled = true; assetAvailability();
+  results.replaceChildren();
+  document.getElementById('identity').textContent = '';
+  form.classList.remove('hidden'); sessionPanel.classList.add('hidden');
+  status('info', 'انتهت الجلسة. سجّل الدخول لإكمال الفحص.');
 });
 refreshIdentity().catch(() => status('error', 'تعذر التحقق من الجلسة. حاول تحديث الصفحة.'));
 document.getElementById('anonymous').addEventListener('click', async (event) => {
