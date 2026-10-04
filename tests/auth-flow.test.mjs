@@ -44,7 +44,9 @@ function page(kind, auth, href = 'https://preview.example/reset-password') {
   const message = { dataset: {}, textContent: '' };
   let route = null;
   const location = new URL(href);
+  const storage = new Map();
   const context = {
+    sessionStorage: { setItem: (key, value) => storage.set(key, value), removeItem: key => storage.delete(key) },
     __client: { auth: { getUser: async () => ({ data: { user: null }, error: null }), ...auth } },
     document: {
       body: { dataset: { page: kind } },
@@ -57,7 +59,7 @@ function page(kind, auth, href = 'https://preview.example/reset-password') {
   };
   runInNewContext(code, context);
   return {
-    form, message, hidden,
+    form, message, hidden, storage,
     submit: () => handlers.submit({ preventDefault() {} }),
     route: () => route,
   };
@@ -97,6 +99,36 @@ test('forgot password sends an origin-specific reset URL', async () => {
   assert.equal(request[0], 'person@example.com');
   assert.equal(request[1].redirectTo, 'https://kfo-preview.example/reset-password');
   assert.equal(ui.message.dataset.kind, 'success');
+});
+
+test('login failure records only sanitized diagnostics and does not redirect', async () => {
+  const ui = page('login', { signInWithPassword: async () => ({ error: {
+    name: 'AuthRetryableFetchError', status: 503, message: 'private credentials and token',
+  } }) });
+  await ui.submit();
+  assert.equal(ui.route(), null);
+  assert.equal(ui.hidden.has('hidden'), false);
+  assert.equal(ui.message.dataset.diagnosticCategory, 'service-gateway');
+  assert.equal(ui.message.dataset.diagnosticStatus, '503');
+  assert.doesNotMatch(JSON.stringify(ui.message), /private credentials|token/);
+  const diagnostic = JSON.parse(ui.storage.get('kfo-auth-diagnostic'));
+  assert.deepEqual(Object.keys(diagnostic).sort(), ['action', 'at', 'category', 'status']);
+  assert.equal(diagnostic.status, 503);
+  assert.doesNotMatch(JSON.stringify(diagnostic), /private credentials|token|person@example/);
+});
+
+test('successful retry clears the prior diagnostic without an automatic retry', async () => {
+  let calls = 0;
+  const ui = page('login', { signInWithPassword: async () => (++calls === 1
+    ? { error: { name: 'AuthRetryableFetchError', status: 0 } } : { error: null }) });
+  await ui.submit();
+  assert.equal(calls, 1);
+  assert.equal(ui.storage.has('kfo-auth-diagnostic'), true);
+  await ui.submit();
+  assert.equal(calls, 2);
+  assert.equal(ui.storage.has('kfo-auth-diagnostic'), false);
+  assert.equal(ui.message.dataset.diagnosticCategory, undefined);
+  assert.equal(ui.route(), '/workspace');
 });
 
 test('reset form requires a recovery event and signs out after updating', async () => {
