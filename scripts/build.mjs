@@ -14,6 +14,7 @@ await writeFile(join(out, 'catalog.html'), renderCatalogue(courses));
 for (const course of courses) await writeFile(join(out, 'catalog', `${course.slug}.html`), renderCourse(course));
 await cp(join(root, 'learning', 'learning.css'), join(out, 'assets', 'learning.css'));
 await cp(join(root, 'learning', 'course.js'), join(out, 'assets', 'course.js'));
+await cp(join(root, 'learning', 'images'), join(out, 'assets', 'course-images'), { recursive: true });
 for (const name of ['index.html', 'hero-industrial-v2.png', 'home-preview.png', 'logo-approved.png', 'screens-preview.png']) {
   await cp(join(root, name), join(out, name));
 }
