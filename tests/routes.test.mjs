@@ -11,6 +11,7 @@ const pages = [
   'reset-password.html',
   'auth-check.html',
   'workspace.html',
+  'company/settings.html',
   ...['dashboard', 'employees', 'courses', 'assignments', 'reports', 'orders', 'settings']
     .map((page) => `business/${page}.html`),
 ];

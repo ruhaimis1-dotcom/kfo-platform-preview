@@ -50,6 +50,10 @@ for (const name of ['login', 'forgot-password', 'reset-password']) {
   await cp(join(root, 'auth', `${name}.html`), join(out, `${name}.html`));
 }
 await mkdir(join(out, 'business'), { recursive: true });
+await mkdir(join(out, 'company'), { recursive: true });
+await cp(join(root, 'company', 'settings.html'), join(out, 'company', 'settings.html'));
+await build({ entryPoints: [join(root, 'company', 'settings.js')], bundle: true, minify: true,
+  format: 'esm', target: ['es2020'], outfile: join(out, 'assets', 'company-settings.js') });
 await cp(join(root, 'business', 'dashboard.html'), join(out, 'business', 'dashboard.html'));
 await cp(join(root, 'business', 'employees.html'), join(out, 'business', 'employees.html'));
 await cp(join(root, 'business', 'courses.html'), join(out, 'business', 'courses.html'));

@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { authErrorMessage, passwordIssue } from './validation.mjs';
+import { authErrorMessage, passwordIssue, authDiagnostic } from './validation.mjs';
 
 // This is a public browser key. Authorization must be enforced by Supabase RLS.
 const supabase = createClient(
@@ -17,6 +17,17 @@ function showMessage(kind, value) {
   message.dataset.kind = kind;
   message.textContent = value;
 }
+function clearDiagnostic() {
+  delete message.dataset.diagnosticCategory;
+  delete message.dataset.diagnosticStatus;
+  try { sessionStorage.removeItem('kfo-auth-diagnostic'); } catch {}
+}
+function recordDiagnostic(error) {
+  const diagnostic = authDiagnostic(error, page === 'forgot' ? 'forgot' : page);
+  message.dataset.diagnosticCategory = diagnostic.category;
+  message.dataset.diagnosticStatus = diagnostic.status === null ? 'unknown' : String(diagnostic.status);
+  try { sessionStorage.setItem('kfo-auth-diagnostic', JSON.stringify({ ...diagnostic, at: new Date().toISOString() })); } catch {}
+}
 function busy(value, label = 'جارٍ الإرسال…') {
   submit.disabled = value;
   submit.textContent = value ? label : originalLabel;
@@ -31,6 +42,7 @@ if (page === 'login') {
     event.preventDefault();
     if (!form.reportValidity()) return;
     busy(true, 'جارٍ تسجيل الدخول…');
+    clearDiagnostic();
     showMessage('info', 'جارٍ التحقق من بياناتك…');
     try {
       const { error } = await supabase.auth.signInWithPassword({
@@ -42,6 +54,7 @@ if (page === 'login') {
       showMessage('success', 'تم تسجيل الدخول. جارٍ فتح عضوياتك…');
       window.location.assign('/workspace');
     } catch (error) {
+      recordDiagnostic(error);
       showMessage('error', authErrorMessage(error, 'login'));
     } finally {
       busy(false);
@@ -54,6 +67,7 @@ if (page === 'forgot') {
     event.preventDefault();
     if (!form.reportValidity()) return;
     busy(true);
+    clearDiagnostic();
     showMessage('info', 'جارٍ معالجة طلبك…');
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(form.elements.email.value.trim(), {
@@ -63,6 +77,7 @@ if (page === 'forgot') {
       form.classList.add('hidden');
       showMessage('success', 'إذا كان لديك حساب بهذا البريد، سيصلك رابط الاستعادة. تحقق أيضاً من البريد غير المرغوب فيه.');
     } catch (error) {
+      recordDiagnostic(error);
       showMessage('error', authErrorMessage(error, 'forgot'));
     } finally {
       busy(false);
@@ -95,6 +110,7 @@ if (page === 'reset') {
     const issue = passwordIssue(form.elements.password.value, form.elements.confirm.value);
     if (issue) return showMessage('error', issue);
     busy(true, 'جارٍ الحفظ…');
+    clearDiagnostic();
     showMessage('info', 'جارٍ حفظ كلمة المرور…');
     try {
       const { error } = await supabase.auth.updateUser({ password: form.elements.password.value });
@@ -105,6 +121,7 @@ if (page === 'reset') {
       form.classList.add('hidden');
       showMessage('success', 'تم حفظ كلمة المرور الجديدة. يمكنك الآن تسجيل الدخول.');
     } catch (error) {
+      recordDiagnostic(error);
       showMessage('error', authErrorMessage(error, 'reset'));
     } finally {
       busy(false);

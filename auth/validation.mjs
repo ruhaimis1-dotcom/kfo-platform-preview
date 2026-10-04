@@ -4,9 +4,27 @@ export function passwordIssue(password, confirmation) {
   return null;
 }
 
+// Store only an allowlisted category and HTTP status, never provider messages,
+// request URLs, credentials, user identity, response bodies or session data.
+export function authDiagnostic(error, action) {
+  const status = Number.isInteger(error?.status) && error.status >= 0 && error.status <= 599 ? error.status : null;
+  const code = error?.code;
+  let category = 'unknown';
+  if (status === 429 || ['over_email_send_rate_limit', 'over_request_rate_limit'].includes(code)) category = 'rate-limit';
+  else if ([502, 503, 504].includes(status)) category = 'service-gateway';
+  else if (error?.name === 'AuthRetryableFetchError' || code === 'network_error') category = status === 0 || status === null ? 'connection' : 'retryable-response';
+  else if (code === 'invalid_credentials') category = 'credentials';
+  else if (code === 'email_not_confirmed') category = 'email-unconfirmed';
+  else if (['weak_password', 'same_password'].includes(code)) category = 'password-policy';
+  return { action: ['login', 'forgot', 'reset'].includes(action) ? action : 'unknown', category, status };
+}
+
 export function authErrorMessage(error, action) {
   const code = error?.code || '';
   if (error?.name === 'AuthRetryableFetchError' || code === 'network_error') {
+    if (authDiagnostic(error, action).category === 'connection') {
+      return 'تعذر الاتصال بخدمة الدخول. تحقق من اتصالك ثم حاول مجددًا.';
+    }
     return action === 'login'
       ? 'خدمة تسجيل الدخول غير متاحة مؤقتاً. انتظر قليلاً ثم أعد المحاولة.'
       : 'الخدمة غير متاحة مؤقتاً. انتظر قليلاً ثم أعد المحاولة.';

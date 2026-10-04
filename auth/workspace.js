@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { loadWorkspace } from './workspace-data.mjs';
 import { loadAccessContext, attachAccessContext } from './access-context.mjs';
+import { canManageSettings } from '../company/settings-data.mjs';
 const client = createClient('https://ktkdcfxeaicbykdurlfg.supabase.co', 'sb_publishable_P6NrKFErT6ntjXg2UMWbPw_OtRapbiF');
 const message = document.getElementById('message');
 const list = document.getElementById('memberships');
@@ -46,6 +47,12 @@ async function render() {
           `${labels[r.code] || 'دور مرتبط بالعضوية'}${r.department_id ? ' — ضمن القسم المحدد' : r.branch_id ? ' — ضمن الفرع المحدد' : ''}`
         ).join('، ')}` : 'لا يوجد دور عمل مفعّل لهذه العضوية حاليًا.';
         card.append(roles);
+        if (canManageSettings(membership)) {
+          const settings = document.createElement('a');
+          settings.href = `/company/settings?organization=${encodeURIComponent(membership.organizationId)}`;
+          settings.textContent = 'إعدادات الشركة';
+          card.append(settings);
+        }
       }
       // QA is only a diagnostic link for the existing isolated fixture organization.
       if (membership.organizationId === 'aa7a54d0-9bce-455d-adb4-971c21d9fdf1') {
