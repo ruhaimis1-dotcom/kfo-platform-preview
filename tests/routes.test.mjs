@@ -3,7 +3,10 @@ import assert from 'node:assert/strict';
 import { access, readFile } from 'node:fs/promises';
 
 const root = new URL('../dist/', import.meta.url);
+const { courses } = JSON.parse(await readFile(new URL('../content/free-courses.json', import.meta.url), 'utf8'));
 const pages = [
+  'catalog.html',
+  ...courses.map(course => `catalog/${course.slug}.html`),
   'index.html',
   'review/index.html',
   'login.html',

@@ -57,7 +57,7 @@ async function render() {
       // QA is only a diagnostic link for the existing isolated fixture organization.
       if (membership.organizationId === 'aa7a54d0-9bce-455d-adb4-971c21d9fdf1') {
         const link = document.createElement('a');
-        link.href = '/auth-check'; link.textContent = 'فحص حساب شركة الاختبار';
+        link.href = '/auth-check'; link.textContent = 'فحص الصلاحيات';
         card.append(link);
       }
       list.append(card);

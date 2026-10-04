@@ -2,10 +2,19 @@ import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { build } from 'esbuild';
+import { renderCatalogue, renderCourse } from '../learning/render.mjs';
+import { validateContent } from '../learning/content-contract.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const out = join(root, 'dist');
 await mkdir(join(out, 'assets'), { recursive: true });
+const courses = validateContent(JSON.parse(await readFile(join(root, 'content', 'free-courses.json'), 'utf8')));
+await mkdir(join(out, 'catalog'), { recursive: true });
+await writeFile(join(out, 'catalog.html'), renderCatalogue(courses));
+for (const course of courses) await writeFile(join(out, 'catalog', `${course.slug}.html`), renderCourse(course));
+await cp(join(root, 'learning', 'learning.css'), join(out, 'assets', 'learning.css'));
+await cp(join(root, 'learning', 'course.js'), join(out, 'assets', 'course.js'));
+await cp(join(root, 'learning', 'images'), join(out, 'assets', 'course-images'), { recursive: true });
 for (const name of ['index.html', 'hero-industrial-v2.png', 'home-preview.png', 'logo-approved.png', 'screens-preview.png']) {
   await cp(join(root, name), join(out, name));
 }
