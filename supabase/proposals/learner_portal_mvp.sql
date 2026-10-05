@@ -162,3 +162,31 @@ begin
  return jsonb_build_object('attempt_id',v_attempt,'score_percent',v_score,'passed',v_passed,'certificate_code',v_certificate);
 end $$;
 revoke all on function private.record_graded_assessment(uuid,integer[],integer[],text[],numeric) from public,anon,authenticated;
+
+
+-- Official assessment answer keys live only in the database/server boundary.
+create table if not exists private.course_assessment_keys (
+ course_slug text not null, course_version integer not null, question_ids text[] not null,
+ correct_answers integer[] not null, required_lessons text[] not null, pass_percent numeric(5,2) not null default 75,
+ primary key(course_slug,course_version),
+ check(cardinality(question_ids)>0 and cardinality(question_ids)=cardinality(correct_answers)),
+ check(cardinality(required_lessons)>0), check(pass_percent between 1 and 100)
+);
+revoke all on private.course_assessment_keys from public,anon,authenticated;
+
+create or replace function public.submit_official_assessment(p_assignment_id uuid,p_question_ids text[],p_answers integer[])
+returns jsonb language plpgsql security definer set search_path to '' as $$
+declare v_a public.learning_assignments%rowtype; v_key private.course_assessment_keys%rowtype;
+begin
+ select a.* into v_a from public.learning_assignments a join public.organization_memberships m
+ on m.id=a.membership_id and m.organization_id=a.organization_id
+ where a.id=p_assignment_id and m.user_id=auth.uid() and m.status='active' and a.status<>'cancelled';
+ if not found then raise exception 'assignment unavailable' using errcode='42501'; end if;
+ select * into v_key from private.course_assessment_keys k where k.course_slug=v_a.course_slug and k.course_version=v_a.course_version;
+ if not found then raise exception 'assessment unavailable' using errcode='22023'; end if;
+ if p_question_ids is distinct from v_key.question_ids or cardinality(p_answers)<>cardinality(v_key.correct_answers)
+ then raise exception 'assessment payload mismatch' using errcode='22023'; end if;
+ return private.record_graded_assessment(v_a.id,p_answers,v_key.correct_answers,v_key.required_lessons,v_key.pass_percent);
+end $$;
+revoke all on function public.submit_official_assessment(uuid,text[],integer[]) from public,anon;
+grant execute on function public.submit_official_assessment(uuid,text[],integer[]) to authenticated;
