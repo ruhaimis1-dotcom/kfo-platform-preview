@@ -14,6 +14,11 @@ await writeFile(join(out, 'catalog.html'), renderCatalogue(courses));
 for (const course of courses) await writeFile(join(out, 'catalog', `${course.slug}.html`), renderCourse(course));
 await cp(join(root, 'learning', 'learning.css'), join(out, 'assets', 'learning.css'));
 await cp(join(root, 'learning', 'course.js'), join(out, 'assets', 'course.js'));
+await cp(join(root, 'learning', 'intelligent-player.css'), join(out, 'assets', 'intelligent-player.css'));
+await mkdir(join(out, 'learn'), { recursive: true });
+await cp(join(root, 'learning', 'player.html'), join(out, 'learn', 'index.html'));
+await mkdir(join(out, 'assets', 'reference'), { recursive: true });
+await cp(join(root, 'content', 'reference', 'customer-service-reference.json'), join(out, 'assets', 'reference', 'customer-service-reference.json'));
 await cp(join(root, 'learning', 'images'), join(out, 'assets', 'course-images'), { recursive: true });
 for (const name of ['index.html', 'hero-industrial-v2.png', 'home-preview.png', 'logo-approved.png', 'screens-preview.png']) {
   await cp(join(root, name), join(out, name));
@@ -85,6 +90,7 @@ await build({
   bundle: true, minify: true, format: 'esm', target: ['es2020'],
   outfile: join(out, 'assets', 'qa.js'),
 });
+await build({ entryPoints: [join(root, 'learning', 'intelligent-player.js')], bundle: true, minify: true, format: 'esm', target: ['es2020'], outfile: join(out, 'assets', 'intelligent-player.js') });
 await build({
   entryPoints: [join(root, 'auth', 'workspace.js')],
   bundle: true, minify: true, format: 'esm', target: ['es2020'],
