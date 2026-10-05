@@ -135,3 +135,46 @@ create policy learner_creates_own_progress on public.enrollment_progress for ins
 create policy learner_updates_own_progress on public.enrollment_progress for update to authenticated using(user_id=auth.uid()) with check(user_id=auth.uid());
 revoke all on function public.complete_my_lesson(uuid,text) from public,anon;
 grant execute on function public.complete_my_lesson(uuid,text) to authenticated;
+
+
+-- Official grading for unified enrollment model.
+create table if not exists private.enrollment_assessment_keys (
+ course_slug text not null, course_version integer not null, question_ids text[] not null, correct_answers integer[] not null,
+ required_lessons text[] not null, pass_percent numeric(5,2) not null default 75,
+ primary key(course_slug,course_version), check(cardinality(question_ids)>0 and cardinality(question_ids)=cardinality(correct_answers)),
+ check(cardinality(required_lessons)>0), check(pass_percent between 1 and 100)
+);
+revoke all on private.enrollment_assessment_keys from public,anon,authenticated;
+
+create or replace function public.submit_official_assessment(p_enrollment_id uuid,p_question_ids text[],p_answers integer[])
+returns jsonb language plpgsql security definer set search_path to '' as $$
+declare v_uid uuid:=auth.uid(); v_e public.learning_enrollments%rowtype; v_key private.enrollment_assessment_keys%rowtype;
+v_done integer; v_score numeric; v_passed boolean; v_attempt uuid; v_completion uuid; v_certificate text;
+begin
+ if v_uid is null then raise exception 'authenticated identity required' using errcode='42501'; end if;
+ select * into v_e from public.learning_enrollments e where e.id=p_enrollment_id and e.user_id=v_uid and e.status='active' for update;
+ if not found then raise exception 'enrollment unavailable' using errcode='42501'; end if;
+ select * into v_key from private.enrollment_assessment_keys k where k.course_slug=v_e.course_slug and k.course_version=v_e.course_version;
+ if not found then raise exception 'assessment unavailable' using errcode='22023'; end if;
+ if p_question_ids is distinct from v_key.question_ids or cardinality(p_answers)<>cardinality(v_key.correct_answers) then raise exception 'assessment payload mismatch' using errcode='22023'; end if;
+ select count(distinct p.lesson_id) into v_done from public.enrollment_progress p where p.enrollment_id=v_e.id and p.user_id=v_uid and p.completed_at is not null and p.lesson_id=any(v_key.required_lessons);
+ if v_done<>cardinality(v_key.required_lessons) then raise exception 'lessons incomplete' using errcode='22023'; end if;
+ select 100.0*count(*) filter(where x.answer=x.correct)/cardinality(p_answers) into v_score from unnest(p_answers,v_key.correct_answers) x(answer,correct);
+ v_passed:=v_score>=v_key.pass_percent;
+ insert into public.enrollment_assessment_attempts(enrollment_id,user_id,score_percent,passed) values(v_e.id,v_uid,v_score,v_passed) returning id into v_attempt;
+ if v_passed then
+  insert into public.enrollment_completions(enrollment_id,user_id,passing_attempt_id) values(v_e.id,v_uid,v_attempt)
+  on conflict(enrollment_id) do update set passing_attempt_id=excluded.passing_attempt_id returning id into v_completion;
+  update public.learning_enrollments set status='completed' where id=v_e.id;
+  insert into public.learner_certificates(completion_id,user_id) values(v_completion,v_uid) on conflict(completion_id) do nothing;
+  select certificate_code into v_certificate from public.learner_certificates where completion_id=v_completion;
+  insert into public.learner_notifications(user_id,kind,title,body,enrollment_id)
+  values(v_uid,'certificate','صدرت شهادتك','أكملت متطلبات الدورة وصدرت شهادتك في كفو.',v_e.id);
+ else
+  insert into public.learner_notifications(user_id,kind,title,body,enrollment_id)
+  values(v_uid,'assessment_result','نتيجة الاختبار','تم تسجيل نتيجة الاختبار. يمكنك مراجعة المحتوى والمحاولة مجددًا.',v_e.id);
+ end if;
+ return jsonb_build_object('attempt_id',v_attempt,'score_percent',v_score,'passed',v_passed,'certificate_code',v_certificate);
+end $$;
+revoke all on function public.submit_official_assessment(uuid,text[],integer[]) from public,anon;
+grant execute on function public.submit_official_assessment(uuid,text[],integer[]) to authenticated;
