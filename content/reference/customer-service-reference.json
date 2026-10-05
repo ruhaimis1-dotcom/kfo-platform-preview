@@ -1,0 +1,202 @@
+{
+  "slug": "customer-service-reference",
+  "version": 1,
+  "title": "خدمة العملاء: من الفهم إلى الأثر",
+  "provider": "KFO",
+  "audience": [
+    "personal",
+    "organization"
+  ],
+  "certificatePolicy": "assessment_and_evidence",
+  "passPercent": 75,
+  "skills": [
+    {
+      "code": "CS-DIAGNOSE",
+      "title": "تشخيص حاجة العميل",
+      "outcome": "يميز الوقائع من الافتراضات ويجمع الحد الأدنى الآمن من المعلومات."
+    },
+    {
+      "code": "CS-EXPECT",
+      "title": "إدارة التوقعات",
+      "outcome": "يقدم التزامًا واقعيًا ويفرق بين المراجعة والحل."
+    },
+    {
+      "code": "CS-ESCALATE",
+      "title": "التصعيد المهني",
+      "outcome": "يبني تصعيدًا قابلًا للتنفيذ دون تجاوز الصلاحيات."
+    },
+    {
+      "code": "CS-CLOSE",
+      "title": "الإغلاق والتحسين",
+      "outcome": "يتحقق من النتيجة ويستخرج تحسينًا تشغيليًا قابلًا للقياس."
+    }
+  ],
+  "activities": [
+    {
+      "key": "pre-check",
+      "type": "scenario",
+      "title": "قبل أن تبدأ: كيف تتصرف؟",
+      "sequence": 1,
+      "required": true,
+      "skillCodes": [
+        "CS-DIAGNOSE"
+      ],
+      "prompt": "يقول العميل: طلبي ضاع ولم يساعدني أحد. ما أول خطوة؟",
+      "options": [
+        "أعده بحل فوري",
+        "أتحقق من الطلب وآخر تحديث عبر القناة المعتمدة",
+        "أطلب كلمة المرور",
+        "أحوله مباشرة دون معلومات"
+      ],
+      "measurementStage": "pre"
+    },
+    {
+      "key": "diagnose-content",
+      "type": "content",
+      "title": "افهم الحاجة قبل اقتراح الحل",
+      "sequence": 2,
+      "required": true,
+      "skillCodes": [
+        "CS-DIAGNOSE"
+      ],
+      "content": [
+        "ابدأ بالاستماع ثم افصل بين وصف العميل والوقائع التي تستطيع التحقق منها.",
+        "اطلب الحد الأدنى اللازم للتحقق ولا تطلب كلمة مرور أو رمز دخول.",
+        "لخّص ما فهمته واترك للعميل فرصة تصحيح الصورة قبل اقتراح الحل."
+      ]
+    },
+    {
+      "key": "diagnose-error",
+      "type": "error_spotting",
+      "title": "اكتشف الخطأ",
+      "sequence": 3,
+      "required": true,
+      "skillCodes": [
+        "CS-DIAGNOSE"
+      ],
+      "prompt": "موظف يقول: أعطني كلمة المرور لأتأكد من الطلب. ما الخطأ الأهم؟",
+      "options": [
+        "لم يعتذر",
+        "طلب بيانات دخول سرية",
+        "لم يعرض خصمًا",
+        "لم ينه المكالمة"
+      ]
+    },
+    {
+      "key": "expect-scenario",
+      "type": "scenario",
+      "title": "وعد يمكن تنفيذه",
+      "sequence": 4,
+      "required": true,
+      "skillCodes": [
+        "CS-EXPECT"
+      ],
+      "prompt": "لا يوجد موعد إصلاح مؤكد، لكن الفريق سيراجع الحالة اليوم. ماذا تقول؟",
+      "options": [
+        "سيحل اليوم بالتأكيد",
+        "سأرسل لك تحديثًا قبل الرابعة يوضح نتيجة المراجعة والخطوة التالية",
+        "انتظر فقط",
+        "المشكلة ليست عندنا"
+      ]
+    },
+    {
+      "key": "escalation-task",
+      "type": "practical_task",
+      "title": "ابنِ تصعيدًا مهنيًا",
+      "sequence": 5,
+      "required": true,
+      "skillCodes": [
+        "CS-ESCALATE"
+      ],
+      "instructions": "اكتب ملخص تصعيد يتضمن: الوقائع، أثر المشكلة، ما تم التحقق منه، القرار المطلوب، وصاحب وموعد المتابعة.",
+      "rubricKey": "escalation-rubric"
+    },
+    {
+      "key": "close-order",
+      "type": "ordering",
+      "title": "رتّب الإغلاق الصحيح",
+      "sequence": 6,
+      "required": true,
+      "skillCodes": [
+        "CS-CLOSE"
+      ],
+      "prompt": "رتب خطوات الإغلاق من التحقق إلى التعلم.",
+      "items": [
+        "التحقق من تنفيذ الحل",
+        "تأكيد النتيجة المناسبة مع العميل",
+        "توثيق ما تم وحدود التحقق",
+        "استخراج سبب متكرر",
+        "اقتراح تحسين قابل للقياس"
+      ]
+    },
+    {
+      "key": "impact-reflection",
+      "type": "reflection",
+      "title": "حوّل الشكوى إلى تحسين",
+      "sequence": 7,
+      "required": true,
+      "skillCodes": [
+        "CS-CLOSE"
+      ],
+      "prompt": "اختر شكوى متكررة في بيئة عمل واقعية واقترح تغييرًا واحدًا ومؤشرًا يقيس أثره دون استخدام بيانات تعريفية."
+    },
+    {
+      "key": "official-assessment",
+      "type": "assessment",
+      "title": "التقييم النهائي",
+      "sequence": 8,
+      "required": true,
+      "skillCodes": [
+        "CS-DIAGNOSE",
+        "CS-EXPECT",
+        "CS-ESCALATE",
+        "CS-CLOSE"
+      ],
+      "instructions": "أكمل التقييم النهائي. النتيجة الرسمية تُصحح على الخادم ولا يظهر مفتاح الإجابة في الصفحة.",
+      "measurementStage": "post"
+    }
+  ],
+  "rubrics": [
+    {
+      "key": "escalation-rubric",
+      "title": "جودة التصعيد المهني",
+      "criteria": [
+        {
+          "code": "facts",
+          "title": "وضوح الوقائع",
+          "weight": 25
+        },
+        {
+          "code": "impact",
+          "title": "تحديد الأثر",
+          "weight": 20
+        },
+        {
+          "code": "action",
+          "title": "وضوح القرار أو الإجراء المطلوب",
+          "weight": 25
+        },
+        {
+          "code": "ownership",
+          "title": "المسؤول والموعد",
+          "weight": 20
+        },
+        {
+          "code": "professionalism",
+          "title": "لغة مهنية وحدود الصلاحية",
+          "weight": 10
+        }
+      ]
+    }
+  ],
+  "impact": {
+    "organization": [
+      30,
+      60,
+      90
+    ],
+    "personal": [
+      30
+    ]
+  }
+}
