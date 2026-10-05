@@ -1,3 +1,9 @@
+-- DEPRECATED PROPOSAL — DO NOT APPLY.
+-- Superseded on 2026-10-05 by supabase/proposals/unified_learner_context.sql.
+-- Retained temporarily as design history for review only. The assignment-only model incorrectly
+-- requires organization membership for every learner and must not be used for migrations or MVP release.
+-- No Deploy Until MVP Gate.
+
 -- KFO Learner Portal MVP: tenant-scoped assignments and progress.
 -- Existing organization_memberships remains the source of truth for employee/company/branch/department identity.
 
