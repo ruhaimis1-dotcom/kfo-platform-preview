@@ -3,6 +3,7 @@ import { loadWorkspace } from './workspace-data.mjs';
 import { loadAccessContext, attachAccessContext } from './access-context.mjs';
 import { canManageSettings } from '../company/settings-data.mjs';
 import { loadLearnerHome } from './learner-home-data.mjs';
+import { updateMyProfile, markNotificationRead } from './learner-actions.mjs';
 const client = createClient('https://ktkdcfxeaicbykdurlfg.supabase.co', 'sb_publishable_P6NrKFErT6ntjXg2UMWbPw_OtRapbiF');
 const message = document.getElementById('message');
 const list = document.getElementById('memberships');
@@ -12,12 +13,13 @@ const learner=document.getElementById('learner');
 const companies=document.getElementById('companies');
 const assignments=document.getElementById('assignments');
 const stats=document.getElementById('stats'), profile=document.getElementById('profile'), notifications=document.getElementById('notifications'), certificates=document.getElementById('certificates');
+const profileForm=document.getElementById('profile-form'), profileName=document.getElementById('profile-name'), profileHeadline=document.getElementById('profile-headline'), profileStatus=document.getElementById('profile-status');
 let generation = 0;
 async function render() {
   const attempt = ++generation;
   retry.classList.add('hidden');
   list.replaceChildren();
-  learner.classList.add('hidden'); companies.replaceChildren(); assignments.replaceChildren(); stats.replaceChildren(); profile.replaceChildren(); notifications.replaceChildren(); certificates.replaceChildren();
+  learner.classList.add('hidden'); companies.replaceChildren(); assignments.replaceChildren(); stats.replaceChildren(); profile.replaceChildren(); notifications.replaceChildren(); certificates.replaceChildren(); profileForm.classList.add('hidden');
   document.getElementById('identity').textContent = '';
   message.dataset.kind = 'info';
   message.textContent = 'جارٍ تحميل حسابك…';
@@ -37,9 +39,9 @@ async function render() {
       learner.classList.remove('hidden');
       const metricLabels={total:'إجمالي الدورات',personal:'دوراتي الشخصية',organization:'دورات جهة العمل',active:'قيد التعلم',completed:'مكتملة',certificates:'الشهادات',unread_notifications:'إشعارات جديدة'};
       for(const key of Object.keys(metricLabels)){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=String(home.dashboard[key]??0);const p=document.createElement('p');p.textContent=metricLabels[key];card.append(h,p);stats.append(card)}
-      {const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=home.profile?.display_name||data.email||'متدرب كفو';const p=document.createElement('p');p.textContent=home.profile?.headline||'ملف التعلم الخاص بك';card.append(h,p);profile.append(card)}
+      {const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=home.profile?.display_name||data.email||'متدرب كفو';const p=document.createElement('p');p.textContent=home.profile?.headline||'ملف التعلم الخاص بك';card.append(h,p);profile.append(card);profileName.value=home.profile?.display_name||'';profileHeadline.value=home.profile?.headline||'';profileForm.classList.remove('hidden')}
       if(!home.notifications.length){const card=document.createElement('article');card.className='portal-card';card.textContent='لا توجد إشعارات جديدة.';notifications.append(card)}
-      for(const n of home.notifications){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=n.title;const p=document.createElement('p');p.textContent=n.body;card.append(h,p);notifications.append(card)}
+      for(const n of home.notifications){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=n.title;const p=document.createElement('p');p.textContent=n.body;card.append(h,p);if(!n.read_at){const b=document.createElement('button');b.type='button';b.textContent='تحديد كمقروء';b.addEventListener('click',async()=>{b.disabled=true;try{await markNotificationRead(client,n.id);b.remove()}catch{b.disabled=false}});card.append(b)}notifications.append(card)}
       if(!home.certificates.length){const card=document.createElement('article');card.className='portal-card';card.textContent='ستظهر شهاداتك هنا بعد إكمال متطلبات الدورات.';certificates.append(card)}
       for(const c of home.certificates){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=c.certificate_code;const p=document.createElement('p');p.textContent='صدرت '+new Intl.DateTimeFormat('ar-SA',{dateStyle:'medium'}).format(new Date(c.issued_at));card.append(h,p);certificates.append(card)}
       const organizationEnrollments = home.enrollments.filter((e) => e.context_type === 'organization');
@@ -112,6 +114,7 @@ async function render() {
     retry.classList.remove('hidden');
   }
 }
+profileForm.addEventListener('submit',async(event)=>{event.preventDefault();const button=profileForm.querySelector('button[type="submit"]');button.disabled=true;profileStatus.textContent='جارٍ الحفظ…';try{await updateMyProfile(client,{displayName:profileName.value,headline:profileHeadline.value});profileStatus.textContent='تم حفظ الملف.'}catch(error){profileStatus.textContent=error.message||'تعذر حفظ الملف.'}finally{button.disabled=false}});
 retry.addEventListener('click', render);
 signout.addEventListener('click', async () => {
   generation++;
