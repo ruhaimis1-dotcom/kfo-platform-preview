@@ -90,3 +90,41 @@ select jsonb_build_object(
 $$;
 revoke all on function public.my_learner_portal() from public, anon;
 grant execute on function public.my_learner_portal() to authenticated;
+
+
+create table if not exists public.assessment_attempts (
+ id uuid primary key default gen_random_uuid(), assignment_id uuid not null references public.learning_assignments(id) on delete cascade,
+ user_id uuid not null references auth.users(id) on delete cascade, score_percent numeric(5,2) not null check(score_percent between 0 and 100),
+ passed boolean not null, submitted_at timestamptz not null default now()
+);
+create table if not exists public.course_completions (
+ id uuid primary key default gen_random_uuid(), assignment_id uuid not null unique references public.learning_assignments(id) on delete cascade,
+ user_id uuid not null references auth.users(id) on delete cascade, completed_at timestamptz not null default now(),
+ passing_attempt_id uuid not null references public.assessment_attempts(id)
+);
+create table if not exists public.certificates (
+ id uuid primary key default gen_random_uuid(), completion_id uuid not null unique references public.course_completions(id) on delete cascade,
+ user_id uuid not null references auth.users(id) on delete cascade, organization_id uuid not null references public.organizations(id) on delete cascade,
+ certificate_code text not null unique default ('KFO-'||upper(substr(replace(gen_random_uuid()::text,'-',''),1,16))),
+ issued_at timestamptz not null default now(), revoked_at timestamptz
+);
+alter table public.assessment_attempts enable row level security;
+alter table public.course_completions enable row level security;
+alter table public.certificates enable row level security;
+create policy learner_reads_own_attempts on public.assessment_attempts for select to authenticated using(user_id=auth.uid());
+create policy learner_reads_own_completions on public.course_completions for select to authenticated using(user_id=auth.uid());
+create policy learner_reads_own_certificates on public.certificates for select to authenticated using(user_id=auth.uid());
+revoke insert,update,delete on public.assessment_attempts from authenticated;
+revoke insert,update,delete on public.course_completions from authenticated;
+revoke insert,update,delete on public.certificates from authenticated;
+-- Grading/completion/certificate creation must be atomic in a reviewed server-side RPC.
+-- No browser-facing grant may create these evidence rows directly.
+create or replace function public.verify_certificate(p_code text)
+returns table(certificate_code text,issued_at timestamptz,revoked boolean,course_slug text,course_version integer,organization_name text)
+language sql stable security definer set search_path to ''
+as $$ select c.certificate_code,c.issued_at,c.revoked_at is not null,a.course_slug,a.course_version,o.name
+from public.certificates c join public.course_completions cc on cc.id=c.completion_id
+join public.learning_assignments a on a.id=cc.assignment_id join public.organizations o on o.id=c.organization_id
+where c.certificate_code=upper(btrim(p_code)) limit 1 $$;
+revoke all on function public.verify_certificate(text) from public;
+grant execute on function public.verify_certificate(text) to anon,authenticated;
