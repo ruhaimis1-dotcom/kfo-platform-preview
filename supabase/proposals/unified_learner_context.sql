@@ -35,7 +35,7 @@ alter table public.learner_notifications enable row level security;
 create policy learner_owns_profile on public.learner_profiles for select to authenticated using(user_id=auth.uid());
 create policy learner_reads_enrollments on public.learning_enrollments for select to authenticated using(user_id=auth.uid());
 create policy learner_reads_notifications on public.learner_notifications for select to authenticated using(user_id=auth.uid());
-create policy learner_marks_notifications on public.learner_notifications for update to authenticated using(user_id=auth.uid()) with check(user_id=auth.uid());
+revoke insert,update,delete on public.learner_notifications from authenticated;
 -- Profile mutation will use a narrow RPC; organization enrollments are never self-created by learners.
 
 
@@ -90,7 +90,7 @@ grant execute on function public.my_learning_dashboard() to authenticated;
 
 -- Narrow learner mutations. Callers never supply user_id.
 create or replace function public.update_my_learner_profile(p_display_name text,p_headline text)
-returns public.learner_profiles language plpgsql security invoker set search_path to '' as $$
+returns public.learner_profiles language plpgsql security definer set search_path to '' as $$
 declare v_name text:=nullif(btrim(p_display_name),''); v_headline text:=nullif(btrim(p_headline),''); v_row public.learner_profiles;
 begin
  if auth.uid() is null then raise exception 'authenticated identity required' using errcode='42501'; end if;
@@ -99,14 +99,14 @@ begin
  on conflict(user_id) do update set display_name=excluded.display_name,headline=excluded.headline,updated_at=now()
  returning * into v_row; return v_row;
 end $$;
-grant insert,update on public.learner_profiles to authenticated;
+revoke insert,update,delete on public.learner_profiles from authenticated;
 create policy learner_creates_own_profile on public.learner_profiles for insert to authenticated with check(user_id=auth.uid());
 create policy learner_updates_own_profile on public.learner_profiles for update to authenticated using(user_id=auth.uid()) with check(user_id=auth.uid());
 revoke all on function public.update_my_learner_profile(text,text) from public,anon;
 grant execute on function public.update_my_learner_profile(text,text) to authenticated;
 
 create or replace function public.mark_my_notification_read(p_notification_id uuid)
-returns timestamptz language plpgsql security invoker set search_path to '' as $$
+returns timestamptz language plpgsql security definer set search_path to '' as $$
 declare v_read timestamptz;
 begin
  update public.learner_notifications set read_at=coalesce(read_at,now())
@@ -118,7 +118,7 @@ revoke all on function public.mark_my_notification_read(uuid) from public,anon;
 grant execute on function public.mark_my_notification_read(uuid) to authenticated;
 
 create or replace function public.complete_my_lesson(p_enrollment_id uuid,p_lesson_id text)
-returns public.enrollment_progress language plpgsql security invoker set search_path to '' as $$
+returns public.enrollment_progress language plpgsql security definer set search_path to '' as $$
 declare v_row public.enrollment_progress; v_lesson text:=btrim(p_lesson_id);
 begin
  if auth.uid() is null then raise exception 'authenticated identity required' using errcode='42501'; end if;
@@ -130,7 +130,7 @@ begin
  on conflict(enrollment_id,lesson_id) do update set completed_at=coalesce(public.enrollment_progress.completed_at,excluded.completed_at),updated_at=now()
  returning * into v_row; return v_row;
 end $$;
-grant insert,update on public.enrollment_progress to authenticated;
+revoke insert,update,delete on public.enrollment_progress from authenticated;
 create policy learner_creates_own_progress on public.enrollment_progress for insert to authenticated with check(user_id=auth.uid() and exists(select 1 from public.learning_enrollments e where e.id=enrollment_id and e.user_id=auth.uid() and e.status='active'));
 create policy learner_updates_own_progress on public.enrollment_progress for update to authenticated using(user_id=auth.uid()) with check(user_id=auth.uid());
 revoke all on function public.complete_my_lesson(uuid,text) from public,anon;
