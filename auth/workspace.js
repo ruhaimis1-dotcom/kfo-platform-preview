@@ -2,16 +2,21 @@ import { createClient } from '@supabase/supabase-js';
 import { loadWorkspace } from './workspace-data.mjs';
 import { loadAccessContext, attachAccessContext } from './access-context.mjs';
 import { canManageSettings } from '../company/settings-data.mjs';
+import { loadLearnerPortal } from './learner-data.mjs';
 const client = createClient('https://ktkdcfxeaicbykdurlfg.supabase.co', 'sb_publishable_P6NrKFErT6ntjXg2UMWbPw_OtRapbiF');
 const message = document.getElementById('message');
 const list = document.getElementById('memberships');
 const retry = document.getElementById('retry');
 const signout = document.getElementById('signout');
+const learner=document.getElementById('learner');
+const companies=document.getElementById('companies');
+const assignments=document.getElementById('assignments');
 let generation = 0;
 async function render() {
   const attempt = ++generation;
   retry.classList.add('hidden');
   list.replaceChildren();
+  learner.classList.add('hidden'); companies.replaceChildren(); assignments.replaceChildren();
   document.getElementById('identity').textContent = '';
   message.dataset.kind = 'info';
   message.textContent = 'جارٍ التحقق من حسابك وعضوياتك…';
@@ -24,8 +29,33 @@ async function render() {
     if (context.kind === 'signed-out') return window.location.replace('/login');
     const memberships = attachAccessContext(data, context);
     document.getElementById('identity').textContent = data.email || '';
+    const learnerRole = memberships.some((m) => m.accessible && m.roles.some((r) => r.code === 'EM' || r.code === 'SU'));
+    if (learnerRole) {
+      const portal = await loadLearnerPortal(client, data.userId);
+      if (attempt !== generation) return;
+      learner.classList.remove('hidden');
+      for (const company of portal.memberships) {
+        const card=document.createElement('article'); card.className='portal-card';
+        const h=document.createElement('h3'); h.textContent=company.organization_name || 'شركتك';
+        const p=document.createElement('p'); p.className='state'; p.textContent='عضوية نشطة';
+        const scope=document.createElement('p'); scope.textContent=[company.branch_id?'فرع مرتبط':'',company.department_id?'قسم مرتبط':''].filter(Boolean).join(' — ') || 'ضمن الشركة';
+        card.append(h,p,scope); companies.append(card);
+      }
+      if (!portal.assignments.length) {
+        const card=document.createElement('article'); card.className='portal-card';
+        const h=document.createElement('h3'); h.textContent='لا توجد دورات موكلة حاليًا';
+        const p=document.createElement('p'); p.textContent='عند تكليفك بدورة من شركتك ستظهر هنا تلقائيًا.'; card.append(h,p); assignments.append(card);
+      }
+      for (const item of portal.assignments) {
+        const card=document.createElement('article'); card.className='portal-card';
+        const h=document.createElement('h3'); h.textContent=item.course_slug;
+        const p=document.createElement('p'); p.className='state'; p.textContent=({assigned:'لم تبدأ',in_progress:'قيد التعلم',completed:'مكتملة'})[item.status] || 'موكلة';
+        const due=document.createElement('p'); due.textContent=item.due_at ? 'الموعد: '+new Intl.DateTimeFormat('ar-SA',{dateStyle:'medium'}).format(new Date(item.due_at)) : 'بدون موعد نهائي';
+        card.append(h,p,due); assignments.append(card);
+      }
+    }
     message.dataset.kind = data.memberships.length ? 'success' : 'info';
-    message.textContent = data.memberships.length ? 'تم التحقق من حسابك. هذه حالة عضوياتك الآن.' : 'لا توجد عضوية شركة مرتبطة بحسابك حاليًا.';
+    message.textContent = learnerRole ? 'تم تحميل ملفك التعليمي وتكليفاتك.' : data.memberships.length ? 'تم التحقق من حسابك. هذه حالة عضوياتك الآن.' : 'لا توجد عضوية شركة مرتبطة بحسابك حاليًا.';
     for (const membership of memberships) {
       const card = document.createElement('section');
       card.className = 'membership';
