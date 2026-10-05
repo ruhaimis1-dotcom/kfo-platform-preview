@@ -11,15 +11,16 @@ const signout = document.getElementById('signout');
 const learner=document.getElementById('learner');
 const companies=document.getElementById('companies');
 const assignments=document.getElementById('assignments');
+const stats=document.getElementById('stats'), profile=document.getElementById('profile'), notifications=document.getElementById('notifications'), certificates=document.getElementById('certificates');
 let generation = 0;
 async function render() {
   const attempt = ++generation;
   retry.classList.add('hidden');
   list.replaceChildren();
-  learner.classList.add('hidden'); companies.replaceChildren(); assignments.replaceChildren();
+  learner.classList.add('hidden'); companies.replaceChildren(); assignments.replaceChildren(); stats.replaceChildren(); profile.replaceChildren(); notifications.replaceChildren(); certificates.replaceChildren();
   document.getElementById('identity').textContent = '';
   message.dataset.kind = 'info';
-  message.textContent = 'جارٍ التحقق من حسابك وعضوياتك…';
+  message.textContent = 'جارٍ تحميل حسابك…';
   try {
     const data = await loadWorkspace(client);
     if (attempt !== generation) return;
@@ -34,6 +35,13 @@ async function render() {
     const hasLearning = Boolean(home.profile) || home.enrollments.length > 0 || memberships.some((m) => m.accessible && m.roles.some((r) => r.code === 'EM'));
     if (hasLearning) {
       learner.classList.remove('hidden');
+      const metricLabels={total:'إجمالي الدورات',personal:'دوراتي الشخصية',organization:'دورات جهة العمل',active:'قيد التعلم',completed:'مكتملة',certificates:'الشهادات',unread_notifications:'إشعارات جديدة'};
+      for(const key of Object.keys(metricLabels)){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=String(home.dashboard[key]??0);const p=document.createElement('p');p.textContent=metricLabels[key];card.append(h,p);stats.append(card)}
+      {const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=home.profile?.display_name||data.email||'متدرب كفو';const p=document.createElement('p');p.textContent=home.profile?.headline||'ملف التعلم الخاص بك';card.append(h,p);profile.append(card)}
+      if(!home.notifications.length){const card=document.createElement('article');card.className='portal-card';card.textContent='لا توجد إشعارات جديدة.';notifications.append(card)}
+      for(const n of home.notifications){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=n.title;const p=document.createElement('p');p.textContent=n.body;card.append(h,p);notifications.append(card)}
+      if(!home.certificates.length){const card=document.createElement('article');card.className='portal-card';card.textContent='ستظهر شهاداتك هنا بعد إكمال متطلبات الدورات.';certificates.append(card)}
+      for(const c of home.certificates){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=c.certificate_code;const p=document.createElement('p');p.textContent='صدرت '+new Intl.DateTimeFormat('ar-SA',{dateStyle:'medium'}).format(new Date(c.issued_at));card.append(h,p);certificates.append(card)}
       const organizationEnrollments = home.enrollments.filter((e) => e.context_type === 'organization');
       const personalEnrollments = home.enrollments.filter((e) => e.context_type === 'personal');
       for (const membership of memberships.filter((m) => m.accessible && m.roles.some((r) => r.code === 'EM'))) {
@@ -58,6 +66,7 @@ async function render() {
     }
     message.dataset.kind = data.memberships.length ? 'success' : 'info';
     message.textContent = hasLearning ? 'تم تحميل ملفك التعليمي.' : data.memberships.length ? 'تم التحقق من حسابك. هذه حالة عضوياتك الآن.' : 'لا توجد عضوية شركة مرتبطة بحسابك حاليًا.';
+    if (!hasLearning) {
     for (const membership of memberships) {
       const card = document.createElement('section');
       card.className = 'membership';
@@ -93,6 +102,7 @@ async function render() {
         card.append(link);
       }
       list.append(card);
+    }
     }
     retry.classList.remove('hidden');
   } catch {
