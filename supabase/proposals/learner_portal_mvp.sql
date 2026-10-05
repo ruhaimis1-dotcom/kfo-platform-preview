@@ -128,3 +128,37 @@ join public.learning_assignments a on a.id=cc.assignment_id join public.organiza
 where c.certificate_code=upper(btrim(p_code)) limit 1 $$;
 revoke all on function public.verify_certificate(text) from public;
 grant execute on function public.verify_certificate(text) to anon,authenticated;
+
+
+-- Server-side assessment contract. Answer keys are passed only by trusted server code after matching
+-- the versioned course content; browser clients must never receive or choose p_correct_answers.
+create or replace function private.record_graded_assessment(
+  p_assignment_id uuid, p_answers integer[], p_correct_answers integer[], p_required_lessons text[], p_pass_percent numeric default 75
+) returns jsonb language plpgsql security definer set search_path to '' as $$
+declare v_uid uuid:=auth.uid(); v_a public.learning_assignments%rowtype; v_done integer; v_score numeric; v_passed boolean;
+v_attempt uuid; v_completion uuid; v_certificate text;
+begin
+ if v_uid is null then raise exception 'authenticated identity required' using errcode='42501'; end if;
+ select a.* into v_a from public.learning_assignments a join public.organization_memberships m
+ on m.id=a.membership_id and m.organization_id=a.organization_id
+ where a.id=p_assignment_id and m.user_id=v_uid and m.status='active' and a.status<>'cancelled' for update;
+ if not found then raise exception 'assignment unavailable' using errcode='42501'; end if;
+ if cardinality(p_answers)=0 or cardinality(p_answers)<>cardinality(p_correct_answers) then raise exception 'invalid assessment payload' using errcode='22023'; end if;
+ select count(distinct lp.lesson_id) into v_done from public.learning_progress lp
+ where lp.assignment_id=v_a.id and lp.user_id=v_uid and lp.completed_at is not null and lp.lesson_id=any(p_required_lessons);
+ if v_done<>cardinality(p_required_lessons) then raise exception 'lessons incomplete' using errcode='22023'; end if;
+ select 100.0*count(*) filter(where x.answer=x.correct)/cardinality(p_answers) into v_score
+ from unnest(p_answers,p_correct_answers) as x(answer,correct);
+ v_passed:=v_score>=p_pass_percent;
+ insert into public.assessment_attempts(assignment_id,user_id,score_percent,passed) values(v_a.id,v_uid,v_score,v_passed) returning id into v_attempt;
+ if v_passed then
+   insert into public.course_completions(assignment_id,user_id,passing_attempt_id) values(v_a.id,v_uid,v_attempt)
+   on conflict(assignment_id) do update set passing_attempt_id=excluded.passing_attempt_id returning id into v_completion;
+   update public.learning_assignments set status='completed' where id=v_a.id;
+   insert into public.certificates(completion_id,user_id,organization_id) values(v_completion,v_uid,v_a.organization_id)
+   on conflict(completion_id) do nothing;
+   select c.certificate_code into v_certificate from public.certificates c where c.completion_id=v_completion;
+ end if;
+ return jsonb_build_object('attempt_id',v_attempt,'score_percent',v_score,'passed',v_passed,'certificate_code',v_certificate);
+end $$;
+revoke all on function private.record_graded_assessment(uuid,integer[],integer[],text[],numeric) from public,anon,authenticated;
