@@ -52,3 +52,48 @@ revoke insert,update,delete on public.learning_evidence from authenticated;
 revoke insert,update,delete on public.evidence_reviews from authenticated;
 revoke insert,update,delete on public.skill_measurements from authenticated;
 revoke insert,update,delete on public.impact_checkpoints from authenticated;
+
+
+-- Learner evidence submission is RPC-only and bound to owned active enrollment + exact course activity.
+create or replace function public.submit_my_learning_evidence(p_enrollment_id uuid,p_activity_id uuid,p_evidence_type text,p_payload jsonb)
+returns public.learning_evidence language plpgsql security definer set search_path to '' as $$
+declare v_uid uuid:=auth.uid(); v_e public.learning_enrollments%rowtype; v_a public.course_activities%rowtype; v_row public.learning_evidence;
+begin
+ if v_uid is null then raise exception 'authenticated identity required' using errcode='42501'; end if;
+ select * into v_e from public.learning_enrollments where id=p_enrollment_id and user_id=v_uid and status='active';
+ if not found then raise exception 'enrollment unavailable' using errcode='42501'; end if;
+ select * into v_a from public.course_activities where id=p_activity_id and course_slug=v_e.course_slug and course_version=v_e.course_version;
+ if not found or v_a.activity_type not in ('reflection','practical_task','file_evidence') then raise exception 'activity unavailable' using errcode='42501'; end if;
+ if p_evidence_type not in ('text','structured','file') or p_payload is null or p_payload='{}'::jsonb then raise exception 'invalid evidence' using errcode='22023'; end if;
+ insert into public.learning_evidence(enrollment_id,activity_id,user_id,evidence_type,payload,review_status)
+ values(v_e.id,v_a.id,v_uid,p_evidence_type,p_payload,'pending') returning * into v_row;
+ return v_row;
+end $$;
+revoke all on function public.submit_my_learning_evidence(uuid,uuid,text,jsonb) from public,anon;
+grant execute on function public.submit_my_learning_evidence(uuid,uuid,text,jsonb) to authenticated;
+
+-- Human/deterministic review result is applied through a private helper; AI assist cannot finalize evidence.
+create or replace function private.finalize_evidence_review(p_evidence_id uuid,p_rubric_id uuid,p_reviewer_type text,p_reviewer_user_id uuid,p_score numeric,p_feedback text,p_status text)
+returns uuid language plpgsql security definer set search_path to '' as $$
+declare v_review uuid;
+begin
+ if p_reviewer_type not in ('human','deterministic') then raise exception 'AI assist cannot finalize evidence' using errcode='42501'; end if;
+ if p_status not in ('passed','needs_revision','failed') or p_score<0 or p_score>100 then raise exception 'invalid review' using errcode='22023'; end if;
+ if p_reviewer_type='human' and p_reviewer_user_id is null then raise exception 'human reviewer required' using errcode='22023'; end if;
+ insert into public.evidence_reviews(evidence_id,rubric_id,reviewer_type,reviewer_user_id,score,feedback)
+ values(p_evidence_id,p_rubric_id,p_reviewer_type,p_reviewer_user_id,p_score,p_feedback) returning id into v_review;
+ update public.learning_evidence set review_status=p_status where id=p_evidence_id;
+ return v_review;
+end $$;
+revoke all on function private.finalize_evidence_review(uuid,uuid,text,uuid,numeric,text,text) from public,anon,authenticated;
+
+create or replace function private.record_skill_measurement(p_enrollment_id uuid,p_skill_id uuid,p_stage text,p_score numeric,p_source text)
+returns uuid language plpgsql security definer set search_path to '' as $$
+declare v_user uuid; v_id uuid;
+begin
+ select user_id into v_user from public.learning_enrollments where id=p_enrollment_id;
+ if v_user is null or p_stage not in ('pre','during','post','followup') or p_score<0 or p_score>100 then raise exception 'invalid measurement' using errcode='22023'; end if;
+ insert into public.skill_measurements(enrollment_id,skill_id,user_id,stage,score,source)
+ values(p_enrollment_id,p_skill_id,v_user,p_stage,p_score,p_source) returning id into v_id; return v_id;
+end $$;
+revoke all on function private.record_skill_measurement(uuid,uuid,text,numeric,text) from public,anon,authenticated;
