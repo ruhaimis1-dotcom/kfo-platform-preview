@@ -142,3 +142,38 @@ begin
 end $$;
 revoke all on function public.finalize_my_file_evidence(uuid,uuid,text,text,text,bigint) from public,anon;
 grant execute on function public.finalize_my_file_evidence(uuid,uuid,text,text,text,bigint) to authenticated;
+
+
+-- Finalization must verify the private Storage object server-side before evidence exists.
+-- This helper expects the bucket/object to be present in storage.objects and validates owner path + metadata.
+create or replace function public.finalize_verified_file_evidence(p_enrollment_id uuid,p_activity_id uuid,p_object_path text,p_original_name text,p_expected_mime text,p_expected_size bigint)
+returns public.learning_evidence language plpgsql security definer set search_path to '' as $$
+declare v_uid uuid:=auth.uid(); v_prefix text; v_obj record; v_ev public.learning_evidence;
+begin
+ if v_uid is null then raise exception 'authenticated identity required' using errcode='42501'; end if;
+ v_prefix:=v_uid::text||'/'||p_enrollment_id::text||'/'||p_activity_id::text||'/';
+ if position(v_prefix in p_object_path)<>1 then raise exception 'invalid object path' using errcode='42501'; end if;
+ select o.name,o.metadata into v_obj from storage.objects o where o.bucket_id='kfo-learning-evidence' and o.name=p_object_path limit 1;
+ if not found then raise exception 'uploaded object unavailable' using errcode='22023'; end if;
+ if coalesce((v_obj.metadata->>'size')::bigint,-1)<>p_expected_size or coalesce(v_obj.metadata->>'mimetype','')<>p_expected_mime
+ then raise exception 'uploaded object metadata mismatch' using errcode='22023'; end if;
+ v_ev:=public.submit_my_learning_evidence(p_enrollment_id,p_activity_id,'file',jsonb_build_object('storage','private'));
+ insert into public.evidence_files(evidence_id,user_id,object_path,original_name,mime_type,size_bytes)
+ values(v_ev.id,v_uid,p_object_path,p_original_name,p_expected_mime,p_expected_size);
+ return v_ev;
+end $$;
+revoke all on function public.finalize_verified_file_evidence(uuid,uuid,text,text,text,bigint) from public,anon;
+grant execute on function public.finalize_verified_file_evidence(uuid,uuid,text,text,text,bigint) to authenticated;
+
+-- Skill measurement summary for the learner; raw evidence/reviewer details remain separate.
+create or replace function public.my_skill_measurements(p_enrollment_id uuid)
+returns table(skill_code text,skill_title text,stage text,score numeric,measured_at timestamptz)
+language sql stable security invoker set search_path to '' as $$
+ select s.skill_code,s.title,m.stage,m.score,m.measured_at
+ from public.skill_measurements m join public.course_skills s on s.id=m.skill_id
+ join public.learning_enrollments e on e.id=m.enrollment_id
+ where m.enrollment_id=p_enrollment_id and m.user_id=auth.uid() and e.user_id=auth.uid()
+ order by s.skill_code,m.measured_at;
+$$;
+revoke all on function public.my_skill_measurements(uuid) from public,anon;
+grant execute on function public.my_skill_measurements(uuid) to authenticated;
