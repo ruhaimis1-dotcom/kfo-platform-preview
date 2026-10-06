@@ -1,0 +1,7 @@
+import test from'node:test';import assert from'node:assert/strict';import{readFile}from'node:fs/promises';
+const sql=await readFile(new URL('../supabase/proposals/intelligent_course_engine.sql',import.meta.url),'utf8');
+test('evidence submission is bound to owned active enrollment and exact course version activity',()=>{assert.match(sql,/submit_my_learning_evidence[\s\S]*id=p_enrollment_id and user_id=v_uid and status='active'/);assert.match(sql,/course_slug=v_e\.course_slug and course_version=v_e\.course_version/)});
+test('learner can submit only evidence-capable activity types and pending is forced server-side',()=>{assert.match(sql,/activity_type not in \('reflection','practical_task','file_evidence'\)/);assert.match(sql,/values\(v_e\.id,v_a\.id,v_uid,p_evidence_type,p_payload,'pending'\)/)});
+test('AI assist cannot finalize evidence review',()=>{assert.match(sql,/p_reviewer_type not in \('human','deterministic'\)/);assert.match(sql,/AI assist cannot finalize evidence/)});
+test('human review requires reviewer identity and bounded score',()=>{assert.match(sql,/p_reviewer_type='human' and p_reviewer_user_id is null/);assert.match(sql,/p_score<0 or p_score>100/)});
+test('skill measurements inherit enrollment user and private helper is not browser executable',()=>{assert.match(sql,/select user_id into v_user from public\.learning_enrollments where id=p_enrollment_id/);assert.match(sql,/revoke all on function private\.record_skill_measurement[\s\S]*authenticated/)});
