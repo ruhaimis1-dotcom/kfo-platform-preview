@@ -162,6 +162,7 @@ begin
  select 100.0*count(*) filter(where x.answer=x.correct)/cardinality(p_answers) into v_score from unnest(p_answers,v_key.correct_answers) x(answer,correct);
  v_passed:=v_score>=v_key.pass_percent;
  insert into public.enrollment_assessment_attempts(enrollment_id,user_id,score_percent,passed) values(v_e.id,v_uid,v_score,v_passed) returning id into v_attempt;
+ perform private.record_post_skill_scores(v_e.id,p_question_ids,p_answers,v_key.correct_answers);
  if v_passed then
   insert into public.enrollment_completions(enrollment_id,user_id,passing_attempt_id) values(v_e.id,v_uid,v_attempt)
   on conflict(enrollment_id) do update set passing_attempt_id=excluded.passing_attempt_id returning id into v_completion;
