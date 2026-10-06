@@ -87,6 +87,66 @@ begin
 end $$;
 revoke all on function private.finalize_evidence_review(uuid,uuid,text,uuid,numeric,text,text) from public,anon,authenticated;
 
+-- Human review entry point. SA may review any evidence; CO/BM are restricted to organization learning in their own scope.
+create or replace function public.review_learning_evidence(p_evidence_id uuid,p_rubric_id uuid,p_score numeric,p_feedback text,p_status text)
+returns public.learning_evidence language plpgsql security definer set search_path to '' as $
+declare
+ v_uid uuid:=auth.uid(); v_ev public.learning_evidence%rowtype; v_en public.learning_enrollments%rowtype;
+ v_learner_membership public.organization_memberships%rowtype; v_allowed boolean:=false; v_review uuid;
+begin
+ if v_uid is null then raise exception 'authenticated identity required' using errcode='42501'; end if;
+ if p_status not in ('passed','needs_revision','failed') or p_score<0 or p_score>100
+ then raise exception 'invalid review' using errcode='22023'; end if;
+
+ select * into v_ev from public.learning_evidence where id=p_evidence_id for update;
+ if not found then raise exception 'evidence unavailable' using errcode='42501'; end if;
+ select * into v_en from public.learning_enrollments where id=v_ev.enrollment_id;
+ if not found then raise exception 'enrollment unavailable' using errcode='42501'; end if;
+
+ -- Platform admin role can review personal or organization evidence.
+ select exists(
+   select 1 from public.organization_memberships rm
+   join public.membership_roles rr on rr.membership_id=rm.id and rr.organization_id=rm.organization_id
+   where rm.user_id=v_uid and rm.status='active' and rr.role_code='SA'
+ ) into v_allowed;
+
+ if not v_allowed and v_en.context_type='organization' then
+   select * into v_learner_membership
+   from public.organization_memberships
+   where id=v_en.membership_id and organization_id=v_en.organization_id and user_id=v_en.user_id;
+
+   if found then
+     select exists(
+       select 1
+       from public.organization_memberships rm
+       join public.membership_roles rr on rr.membership_id=rm.id and rr.organization_id=rm.organization_id
+       where rm.user_id=v_uid and rm.status='active' and rm.organization_id=v_en.organization_id
+         and (
+           rr.role_code='CO'
+           or (
+             rr.role_code='BM'
+             and (coalesce(rm.branch_id,rr.branch_id) is null or coalesce(rm.branch_id,rr.branch_id)=v_learner_membership.branch_id)
+             and (coalesce(rm.department_id,rr.department_id) is null or coalesce(rm.department_id,rr.department_id)=v_learner_membership.department_id)
+           )
+         )
+     ) into v_allowed;
+   end if;
+ end if;
+
+ if not v_allowed then raise exception 'review unavailable' using errcode='42501'; end if;
+
+ if p_rubric_id is not null and not exists(
+   select 1 from public.course_rubrics r
+   where r.id=p_rubric_id and r.course_slug=v_en.course_slug and r.course_version=v_en.course_version
+ ) then raise exception 'rubric unavailable' using errcode='22023'; end if;
+
+ v_review:=private.finalize_evidence_review(p_evidence_id,p_rubric_id,'human',v_uid,p_score,p_feedback,p_status);
+ select * into v_ev from public.learning_evidence where id=p_evidence_id;
+ return v_ev;
+end $;
+revoke all on function public.review_learning_evidence(uuid,uuid,numeric,text,text) from public,anon;
+grant execute on function public.review_learning_evidence(uuid,uuid,numeric,text,text) to authenticated;
+
 create or replace function private.record_skill_measurement(p_enrollment_id uuid,p_skill_id uuid,p_stage text,p_score numeric,p_source text)
 returns uuid language plpgsql security definer set search_path to '' as $$
 declare v_user uuid; v_id uuid;
