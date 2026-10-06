@@ -1,0 +1,6 @@
+-- PRIVATE REVIEW SEED ONLY. Do not expose through build assets. No Deploy Until MVP Gate.
+-- Course: customer-service-reference v1
+-- Question ids: csr-q1,csr-q2,csr-q3,csr-q4,csr-q5,csr-q6,csr-q7,csr-q8
+-- Correct answers: 1,3,1,2,1,1,1,1
+-- Required activity keys: pre-check,diagnose-content,diagnose-error,expect-scenario,escalation-task,close-order,impact-reflection
+-- Pass percent: 75
