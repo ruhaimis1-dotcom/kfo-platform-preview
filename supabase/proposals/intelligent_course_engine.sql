@@ -97,3 +97,48 @@ begin
  values(p_enrollment_id,p_skill_id,v_user,p_stage,p_score,p_source) returning id into v_id; return v_id;
 end $$;
 revoke all on function private.record_skill_measurement(uuid,uuid,text,numeric,text) from public,anon,authenticated;
+
+
+-- Private evidence files. Bucket creation/configuration remains an MVP Gate operation.
+-- Object path contract: <user_id>/<enrollment_id>/<activity_id>/<uuid>.<safe-ext>
+create table if not exists public.evidence_files (
+ id uuid primary key default gen_random_uuid(), evidence_id uuid not null references public.learning_evidence(id) on delete cascade,
+ user_id uuid not null references auth.users(id) on delete cascade, bucket_id text not null default 'kfo-learning-evidence',
+ object_path text not null unique, original_name text not null, mime_type text not null, size_bytes bigint not null check(size_bytes>0),
+ created_at timestamptz not null default now()
+);
+alter table public.evidence_files enable row level security;
+create policy learner_reads_own_evidence_files on public.evidence_files for select to authenticated using(user_id=auth.uid());
+revoke insert,update,delete on public.evidence_files from authenticated;
+
+create or replace function public.prepare_my_evidence_upload(p_enrollment_id uuid,p_activity_id uuid,p_original_name text,p_mime_type text,p_size_bytes bigint)
+returns jsonb language plpgsql security definer set search_path to '' as $$
+declare v_uid uuid:=auth.uid(); v_e public.learning_enrollments%rowtype; v_a public.course_activities%rowtype; v_ext text; v_object text;
+begin
+ if v_uid is null then raise exception 'authenticated identity required' using errcode='42501'; end if;
+ select * into v_e from public.learning_enrollments where id=p_enrollment_id and user_id=v_uid and status='active';
+ if not found then raise exception 'enrollment unavailable' using errcode='42501'; end if;
+ select * into v_a from public.course_activities where id=p_activity_id and course_slug=v_e.course_slug and course_version=v_e.course_version and activity_type='file_evidence';
+ if not found then raise exception 'file activity unavailable' using errcode='42501'; end if;
+ if p_size_bytes<=0 or p_size_bytes>10485760 then raise exception 'file too large' using errcode='22023'; end if;
+ if p_mime_type not in ('application/pdf','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','text/csv','image/png','image/jpeg') then raise exception 'file type unavailable' using errcode='22023'; end if;
+ v_ext:=case p_mime_type when 'application/pdf' then 'pdf' when 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' then 'xlsx' when 'text/csv' then 'csv' when 'image/png' then 'png' else 'jpg' end;
+ v_object:=v_uid::text||'/'||v_e.id::text||'/'||v_a.id::text||'/'||gen_random_uuid()::text||'.'||v_ext;
+ return jsonb_build_object('bucket','kfo-learning-evidence','object_path',v_object,'max_bytes',10485760);
+end $$;
+revoke all on function public.prepare_my_evidence_upload(uuid,uuid,text,text,bigint) from public,anon;
+grant execute on function public.prepare_my_evidence_upload(uuid,uuid,text,text,bigint) to authenticated;
+
+create or replace function public.finalize_my_file_evidence(p_enrollment_id uuid,p_activity_id uuid,p_object_path text,p_original_name text,p_mime_type text,p_size_bytes bigint)
+returns public.learning_evidence language plpgsql security definer set search_path to '' as $$
+declare v_uid uuid:=auth.uid(); v_prefix text; v_ev public.learning_evidence;
+begin
+ v_prefix:=v_uid::text||'/'||p_enrollment_id::text||'/'||p_activity_id::text||'/';
+ if v_uid is null or position(v_prefix in p_object_path)<>1 then raise exception 'invalid object path' using errcode='42501'; end if;
+ v_ev:=public.submit_my_learning_evidence(p_enrollment_id,p_activity_id,'file',jsonb_build_object('storage','private'));
+ insert into public.evidence_files(evidence_id,user_id,object_path,original_name,mime_type,size_bytes)
+ values(v_ev.id,v_uid,p_object_path,p_original_name,p_mime_type,p_size_bytes);
+ return v_ev;
+end $$;
+revoke all on function public.finalize_my_file_evidence(uuid,uuid,text,text,text,bigint) from public,anon;
+grant execute on function public.finalize_my_file_evidence(uuid,uuid,text,text,text,bigint) to authenticated;
