@@ -89,7 +89,7 @@ revoke all on function private.finalize_evidence_review(uuid,uuid,text,uuid,nume
 
 -- Human review entry point. SA may review any evidence; CO/BM are restricted to organization learning in their own scope.
 create or replace function public.review_learning_evidence(p_evidence_id uuid,p_rubric_id uuid,p_score numeric,p_feedback text,p_status text)
-returns public.learning_evidence language plpgsql security definer set search_path to '' as $
+returns public.learning_evidence language plpgsql security definer set search_path to '' as $review$
 declare
  v_uid uuid:=auth.uid(); v_ev public.learning_evidence%rowtype; v_en public.learning_enrollments%rowtype;
  v_learner_membership public.organization_memberships%rowtype; v_allowed boolean:=false; v_review uuid;
