@@ -157,8 +157,20 @@ begin
  select * into v_key from private.enrollment_assessment_keys k where k.course_slug=v_e.course_slug and k.course_version=v_e.course_version;
  if not found then raise exception 'assessment unavailable' using errcode='22023'; end if;
  if p_question_ids is distinct from v_key.question_ids or cardinality(p_answers)<>cardinality(v_key.correct_answers) then raise exception 'assessment payload mismatch' using errcode='22023'; end if;
- select count(distinct p.lesson_id) into v_done from public.enrollment_progress p where p.enrollment_id=v_e.id and p.user_id=v_uid and p.completed_at is not null and p.lesson_id=any(v_key.required_lessons);
- if v_done<>cardinality(v_key.required_lessons) then raise exception 'lessons incomplete' using errcode='22023'; end if;
+ select count(distinct completed_key) into v_done
+ from (
+   select p.lesson_id as completed_key
+   from public.enrollment_progress p
+   where p.enrollment_id=v_e.id and p.user_id=v_uid and p.completed_at is not null
+     and p.lesson_id=any(v_key.required_lessons)
+   union
+   select a.activity_key as completed_key
+   from public.learning_evidence ev
+   join public.course_activities a on a.id=ev.activity_id
+   where ev.enrollment_id=v_e.id and ev.user_id=v_uid and ev.review_status='passed'
+     and a.activity_key=any(v_key.required_lessons)
+ ) completed;
+ if v_done<>cardinality(v_key.required_lessons) then raise exception 'required activities incomplete' using errcode='22023'; end if;
  select 100.0*count(*) filter(where x.answer=x.correct)/cardinality(p_answers) into v_score from unnest(p_answers,v_key.correct_answers) x(answer,correct);
  v_passed:=v_score>=v_key.pass_percent;
  insert into public.enrollment_assessment_attempts(enrollment_id,user_id,score_percent,passed) values(v_e.id,v_uid,v_score,v_passed) returning id into v_attempt;
