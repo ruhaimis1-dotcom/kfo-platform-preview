@@ -1,7 +1,7 @@
 import {createClient} from '@supabase/supabase-js';
 import {runtimeState,recommendNext} from './activity-runtime.mjs';
 import {renderActivity} from './activity-renderer.mjs';
-import {resolveEnrollment} from './enrollment-session.mjs';
+import {resolveEnrollment,saveLessonCompletion} from './enrollment-session.mjs';
 import {loadActivityRecords,submitEvidence} from './evidence-session.mjs';
 import {loadSkillMeasurements,summarizeSkills} from './skill-session.mjs';
 import {submitOfficialAssessment} from './enrollment-session.mjs';
@@ -25,7 +25,20 @@ function render(){const st=state(),a=st.activities[current];activity.innerHTML=r
 function firstBlockedIndex(st){const i=st.activities.findIndex(x=>x.required!==false&&x.state!=='completed');return i<0?st.activities.length-1:i}
 function needsEvidence(t){return['reflection','practical_task','file_evidence'].includes(t)}
 previous.addEventListener('click',()=>{if(current>0){current--;render()}});
-primary.addEventListener('click',async()=>{const st=state(),a=st.activities[current];message.textContent='';if(a.type==='assessment'){if(session.kind!=='enrolled')message.textContent='التقييم الرسمي متاح فقط من دورة مسجلة في حسابك.';else message.textContent='أكمل نموذج التقييم داخل النشاط ثم أرسله.';return}if(needsEvidence(a.type)){const input=activity.querySelector('[data-evidence]');if(!input||(!input.value&&input.type!=='file')){message.textContent='أكمل التطبيق قبل الإرسال.';return}if(session.kind!=='enrolled'){message.textContent='حفظ التطبيق يتطلب فتح الدورة من حسابك.';return}const payload=input.type==='file'?{file_name:input.files?.[0]?.name||''}:{response:input.value};const saved=await submitEvidence(client,session,course,a,payload);records=records.filter(r=>r.activity_key!==a.key);records.push(saved);message.textContent='تم إرسال التطبيق للمراجعة.'}else{records=records.filter(r=>r.activity_key!==a.key);records.push({activity_key:a.key,completed_at:new Date().toISOString()});message.textContent=session.kind==='enrolled'?'تم إكمال النشاط.':'اكتمل النشاط في العرض العام دون حفظ التقدم.';if(current<course.activities.length-1)current++}render()});
+primary.addEventListener('click',async()=>{const st=state(),a=st.activities[current];message.textContent='';if(a.type==='assessment'){if(session.kind!=='enrolled')message.textContent='التقييم الرسمي متاح فقط من دورة مسجلة في حسابك.';else message.textContent='أكمل نموذج التقييم داخل النشاط ثم أرسله.';return}if(needsEvidence(a.type)){const input=activity.querySelector('[data-evidence]');if(!input||(!input.value&&input.type!=='file')){message.textContent='أكمل التطبيق قبل الإرسال.';return}if(session.kind!=='enrolled'){message.textContent='حفظ التطبيق يتطلب فتح الدورة من حسابك.';return}const payload=input.type==='file'?{file_name:input.files?.[0]?.name||''}:{response:input.value};const saved=await submitEvidence(client,session,course,a,payload);records=records.filter(r=>r.activity_key!==a.key);records.push(saved);message.textContent='تم إرسال التطبيق للمراجعة.'}else{
+ const completedAt=new Date().toISOString();
+ if(session.kind==='enrolled'){
+  const saved=await saveLessonCompletion(client,session,a.key);
+  records=records.filter(r=>r.activity_key!==a.key);
+  records.push({activity_key:a.key,completed_at:saved?.completed_at||completedAt});
+  message.textContent='تم إكمال النشاط وحفظ تقدمك.';
+ }else{
+  records=records.filter(r=>r.activity_key!==a.key);
+  records.push({activity_key:a.key,completed_at:completedAt});
+  message.textContent='اكتمل النشاط في العرض العام دون حفظ التقدم.';
+ }
+ if(current<course.activities.length-1)current++
+}render()});
 document.getElementById('exit-course').addEventListener('click',()=>location.href='/workspace');
 render();
 }
