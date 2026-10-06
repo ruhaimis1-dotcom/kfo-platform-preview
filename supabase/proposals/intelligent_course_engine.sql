@@ -177,3 +177,29 @@ language sql stable security invoker set search_path to '' as $$
 $$;
 revoke all on function public.my_skill_measurements(uuid) from public,anon;
 grant execute on function public.my_skill_measurements(uuid) to authenticated;
+
+
+-- Assessment question-to-skill map allows post scores per skill instead of one aggregate score.
+create table if not exists private.assessment_question_skills (
+ course_slug text not null, course_version integer not null, question_id text not null,
+ skill_id uuid not null references public.course_skills(id) on delete cascade,
+ primary key(course_slug,course_version,question_id,skill_id)
+);
+revoke all on private.assessment_question_skills from public,anon,authenticated;
+
+create or replace function private.record_post_skill_scores(p_enrollment_id uuid,p_question_ids text[],p_answers integer[],p_correct_answers integer[])
+returns void language plpgsql security definer set search_path to '' as $$
+declare v_e public.learning_enrollments%rowtype; r record;
+begin
+ select * into v_e from public.learning_enrollments where id=p_enrollment_id;
+ if not found or cardinality(p_question_ids)<>cardinality(p_answers) or cardinality(p_answers)<>cardinality(p_correct_answers) then raise exception 'invalid post measurement' using errcode='22023'; end if;
+ for r in
+  select m.skill_id,100.0*count(*) filter(where q.answer=q.correct)/count(*) as score
+  from unnest(p_question_ids,p_answers,p_correct_answers) q(question_id,answer,correct)
+  join private.assessment_question_skills m on m.course_slug=v_e.course_slug and m.course_version=v_e.course_version and m.question_id=q.question_id
+  group by m.skill_id
+ loop
+  perform private.record_skill_measurement(p_enrollment_id,r.skill_id,'post',r.score,'official_assessment');
+ end loop;
+end $$;
+revoke all on function private.record_post_skill_scores(uuid,text[],integer[],integer[]) from public,anon,authenticated;
