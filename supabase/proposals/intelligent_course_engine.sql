@@ -143,7 +143,7 @@ begin
  v_review:=private.finalize_evidence_review(p_evidence_id,p_rubric_id,'human',v_uid,p_score,p_feedback,p_status);
  select * into v_ev from public.learning_evidence where id=p_evidence_id;
  return v_ev;
-end $;
+end $review$;
 revoke all on function public.review_learning_evidence(uuid,uuid,numeric,text,text) from public,anon;
 grant execute on function public.review_learning_evidence(uuid,uuid,numeric,text,text) to authenticated;
 
