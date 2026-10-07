@@ -69,7 +69,7 @@ retry.addEventListener('click', () => { scenario.value = 'active'; showScenario(
 showScenario(scenario.value);
 
 
-window.addEventListener('kfo:company-dashboard',event=>{
+const hydrateDashboard=event=>{
   const data=event.detail?.data||{};
   const metrics=[...document.querySelectorAll('.metrics .metric')];
   const n=value=>Number(value||0).toLocaleString('ar-SA');
@@ -109,7 +109,9 @@ window.addEventListener('kfo:company-dashboard',event=>{
     const foot=assignments.querySelector('.table-foot');
     if(foot)foot.textContent='تفاصيل قائمة التكليفات ستظهر بعد ربط استعلام القائمة. المؤشرات أعلاه فعلية ولا تشمل التعلم الشخصي.';
   }
-});
+};
+window.addEventListener('kfo:company-dashboard',hydrateDashboard);
+if(window.kfoCompanyLive?.['kfo:company-dashboard'])hydrateDashboard({detail:window.kfoCompanyLive['kfo:company-dashboard']});
 window.addEventListener('kfo:company-error',event=>{
   if(scenario)scenario.closest('.scenario').hidden=true;
   content.hidden=true;statePanel.hidden=false;actionBar.hidden=true;retry.hidden=true;
