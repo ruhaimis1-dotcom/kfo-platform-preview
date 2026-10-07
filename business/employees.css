@@ -58,3 +58,23 @@
 .d1-footnote{font-size:12px;line-height:1.8}
 .d1-plus .icon{width:17px;height:17px;stroke-width:2.2}
 @media(max-width:760px){.team-card h3{font-size:17px}.team-card strong{font-size:21px}.d1-tabs button{font-size:13px}.d1-stat span,.d1-stat small{font-size:12px}.d1-table td{font-size:13px}.d1-table td:not(:first-child)::before{font-size:12px}}
+
+
+/* Company Portal UI Polish R01 */
+.d1-overview{gap:13px;margin:22px 0 24px}
+.d1-stat{border-radius:14px;box-shadow:0 8px 24px #123b3209}
+.d1-toolbar{align-items:center;margin:0 0 16px}
+.d1-tabs{border-color:#d8e5db;box-shadow:none}
+.d1-tabs button{min-height:42px}
+.d1-primary{min-height:46px;border-radius:10px;background:var(--deep);box-shadow:0 7px 16px #123b3220}
+.d1-primary:hover{background:#0b3228}
+.d1-panel{box-shadow:0 8px 24px #123b3209}
+.d1-panel-head{padding:22px 24px 18px}
+.d1-filters{background:#fbfdfb}
+@media(max-width:760px){
+  .d1-overview{grid-template-columns:1fr 1fr;margin:16px 0 18px}
+  .d1-stat:first-child{grid-column:1/-1}
+  .d1-toolbar{align-items:stretch;flex-direction:column}
+  .d1-tabs{width:100%;display:grid;grid-template-columns:1fr 1fr}
+  .d1-primary{width:100%}
+}
