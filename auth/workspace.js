@@ -88,6 +88,11 @@ async function render() {
       }
     }
     const hasLearning = Boolean(home.profile) || home.enrollments.length > 0 || memberships.some((m) => m.accessible && m.roles.some((r) => r.code === 'EM'));
+    if(companyAdminMemberships.length===1&&!hasLearning){
+      const membership=companyAdminMemberships[0];
+      window.location.replace('/business/dashboard?org='+encodeURIComponent(membership.organizationId));
+      return;
+    }
     if (hasLearning) {
       learner.classList.remove('hidden');
       const metricLabels={total:'إجمالي الدورات',personal:'دوراتي الشخصية',organization:'دورات جهة العمل',active:'قيد التعلم',completed:'مكتملة',certificates:'الشهادات',unread_notifications:'إشعارات جديدة'};
