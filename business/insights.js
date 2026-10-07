@@ -86,7 +86,7 @@ if (document.querySelector('[data-page=reports]')) {
       certHost.append(article);
     }
     if(!certificates.length)certHost.innerHTML='<p class="flow-footnote">لا توجد شهادات مرتبطة بتكليفات الشركة ضمن نطاق صلاحيتك.</p>';
-    document.querySelectorAll('.preview-note').forEach(note=>note.textContent='بوابة شركة محمية • التقرير والشهادات من سياق الشركة فقط؛ التعلم الشخصي مستبعد.');
+    document.querySelectorAll('.preview-note').forEach(note=>note.textContent='التقارير محدثة لتدريب الشركة فقط.');
     filter();
   }
   search.addEventListener('input', filter);
