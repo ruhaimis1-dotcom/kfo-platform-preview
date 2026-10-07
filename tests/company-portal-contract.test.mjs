@@ -39,3 +39,16 @@ test('commerce policy remains outside this proposal',()=>{
   assert.match(sql,/refunds/);
   assert.match(sql,/separate Human\/Commerce gates/);
 });
+
+test('assignment requires a course that exists in the course engine',()=>{
+  assert.match(sql,/from public\.course_activities a/);
+  assert.match(sql,/a\.course_slug = p_course_slug/);
+  assert.match(sql,/a\.course_version = p_course_version/);
+  assert.match(sql,/raise exception 'course unavailable'/);
+});
+
+test('company certificate ledger can render learner display name without exposing personal learning',()=>{
+  assert.match(sql,/lp\.display_name/);
+  assert.match(sql,/left join public\.learner_profiles lp/);
+  assert.match(sql,/e\.context_type = 'organization'/);
+});
