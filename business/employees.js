@@ -43,14 +43,14 @@ function hydrateMembers(payload){
       team:member.department_id?'قسم محدد':'بدون قسم محدد',
       branch:member.branch_id?'فرع محدد':'على مستوى الشركة',
       state:member.membership_status||'active',
-      course:'يظهر التدريب من صفحة التقارير',
+      course:'عرض التدريب من التقارير',
       initial:name.charAt(0)||'م'
     };
   });
   const labels=['بدون قسم محدد','قسم محدد'].filter(label=>people.some(p=>p.team===label));
   team.replaceChildren(new Option('كل الأقسام','all'),...labels.map(label=>new Option(label,label)));
-  document.querySelector('#team-grid').innerHTML='<article class="team-card"><div class="team-icon" aria-hidden="true"><svg class="icon"><use href="#i-users"/></svg></div><h3>هيكلة الفرق</h3><p>أسماء الفروع والأقسام تنتظر ربط دليل التنظيم؛ قائمة الأعضاء أعلاه فعلية ومقيدة بصلاحيتك.</p><strong>'+people.length.toLocaleString('ar-SA')+' عضوًا</strong></article>';
-  document.querySelectorAll('.preview-note').forEach(note=>note.textContent='بوابة شركة محمية • قائمة الأعضاء مرتبطة بسياق الشركة الحالي.');
+  document.querySelector('#team-grid').innerHTML='<article class="team-card"><div class="team-icon" aria-hidden="true"><svg class="icon"><use href="#i-users"/></svg></div><h3>هيكلة الفرق</h3><p>سيظهر توزيع الفروع والأقسام هنا عند اكتمال ربط الهيكل التنظيمي.</p><strong>'+people.length.toLocaleString('ar-SA')+' عضوًا</strong></article>';
+  document.querySelectorAll('.preview-note').forEach(note=>note.textContent='قائمة الأعضاء محدثة حسب نطاق إدارتك.');
   renderPeople();
 }
 [search,team,status].forEach(control => control.addEventListener('input',renderPeople));
@@ -69,7 +69,7 @@ function showDialog(){returnFocus=document.activeElement;form.reset();form.hidde
 function hideDialog(){dialog.hidden=true;document.body.style.overflow='';returnFocus?.focus()}
 open.addEventListener('click',showDialog);[close,cancel,done].forEach(button=>button.addEventListener('click',hideDialog));dialog.addEventListener('click',event=>{if(event.target===dialog)hideDialog()});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'){if(!dialog.hidden)hideDialog();else closeMenu()}});
-form.addEventListener('submit',event=>{event.preventDefault();if(!form.reportValidity())return;document.querySelector('#invite-summary').textContent=`${form.elements.name.value.trim()} — ${form.elements.email.value.trim()} — ${form.elements.team.value}. الدعوة الفعلية لم تُربط بهذه الصفحة بعد.`;form.hidden=true;confirmation.hidden=false;done.focus()});
+form.addEventListener('submit',event=>{event.preventDefault();if(!form.reportValidity())return;document.querySelector('#invite-summary').textContent=`${form.elements.name.value.trim()} — ${form.elements.email.value.trim()} — ${form.elements.team.value}. إرسال الدعوة سيتم تفعيله عند اكتمال ربط الدعوات.`;form.hidden=true;confirmation.hidden=false;done.focus()});
 window.addEventListener('kfo:company-members',event=>hydrateMembers(event.detail));
 if(window.kfoCompanyLive?.['kfo:company-members'])hydrateMembers(window.kfoCompanyLive['kfo:company-members']);
 renderPeople();
