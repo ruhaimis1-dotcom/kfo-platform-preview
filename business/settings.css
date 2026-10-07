@@ -19,3 +19,16 @@
 .settings-swatch{display:flex;align-items:center;gap:9px}.settings-swatch i{width:20px;height:20px;border-radius:6px;border:1px solid #d7e4d9;display:inline-block}.settings-hero{display:flex;align-items:center;gap:11px;margin-top:16px;font-size:12px;color:#667a69}
 @media(max-width:1050px){.settings-layout{grid-template-columns:1fr}.settings-nav{position:static;display:flex;overflow-x:auto;white-space:nowrap}.settings-nav a{flex:none}.settings-panel{padding:21px}}
 @media(max-width:760px){.settings-layout{margin-top:15px;gap:13px}.settings-nav{padding:7px}.settings-nav a{font-size:12px;min-height:40px}.settings-panel{padding:18px 16px}.settings-panel h2{font-size:18px}.settings-grid{grid-template-columns:1fr;gap:13px}.settings-field.wide{grid-column:auto}.settings-row{align-items:flex-start;flex-wrap:wrap}.settings-row .value{white-space:normal}.portal-cover{min-height:95px;padding:16px}.portal-cover strong{font-size:16px}}
+
+
+/* Company Portal UI Polish R01 */
+.settings-layout{margin-top:18px}
+.settings-nav{box-shadow:0 8px 24px #123b3209}
+.settings-panel{box-shadow:0 8px 24px #123b3209}
+.settings-nav a[aria-current=page]{background:#e9f3eb;color:var(--deep)}
+.settings-note{background:#f3f8f4;border-color:#d9e7dc}
+@media(max-width:760px){
+  .settings-layout{margin-top:12px}
+  .settings-nav{scrollbar-width:none}
+  .settings-nav::-webkit-scrollbar{display:none}
+}
