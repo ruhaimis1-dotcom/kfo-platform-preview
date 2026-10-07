@@ -40,6 +40,11 @@ await cp(join(root, 'business', 'insights.css'), join(out, 'assets', 'insights.c
 await cp(join(root, 'business', 'insights.js'), join(out, 'assets', 'insights.js'));
 await cp(join(root, 'business', 'settings.css'), join(out, 'assets', 'settings.css'));
 await cp(join(root, 'business', 'settings.js'), join(out, 'assets', 'settings.js'));
+await build({
+  entryPoints: [join(root, 'business', 'company-runtime.js')],
+  bundle: true, minify: true, format: 'esm', target: ['es2020'],
+  outfile: join(out, 'assets', 'company-runtime.js'),
+});
 await mkdir(join(out, 'assets', 'fonts'), { recursive: true });
 const fontFaces = [];
 for (const [family, weights, subsets] of [
