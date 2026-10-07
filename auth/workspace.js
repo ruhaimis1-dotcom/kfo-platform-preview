@@ -10,6 +10,10 @@ const list = document.getElementById('memberships');
 const retry = document.getElementById('retry');
 const signout = document.getElementById('signout');
 const learner=document.getElementById('learner');
+const companyWorkspace=document.getElementById('company-workspace');
+const companyAdmins=document.getElementById('company-admins');
+const workspaceBadge=document.getElementById('workspace-badge');
+const workspaceTitle=document.getElementById('workspace-title');
 const companies=document.getElementById('companies');
 const assignments=document.getElementById('assignments');
 const stats=document.getElementById('stats'), profile=document.getElementById('profile'), notifications=document.getElementById('notifications'), certificates=document.getElementById('certificates');
@@ -19,7 +23,13 @@ async function render() {
   const attempt = ++generation;
   retry.classList.add('hidden');
   list.replaceChildren();
-  learner.classList.add('hidden'); companies.replaceChildren(); assignments.replaceChildren(); stats.replaceChildren(); profile.replaceChildren(); notifications.replaceChildren(); certificates.replaceChildren(); profileForm.classList.add('hidden');
+  learner.classList.add('hidden');
+  companyWorkspace.classList.add('hidden');
+  companyAdmins.replaceChildren();
+  companies.replaceChildren(); assignments.replaceChildren(); stats.replaceChildren(); profile.replaceChildren(); notifications.replaceChildren(); certificates.replaceChildren(); profileForm.classList.add('hidden');
+  workspaceBadge.textContent='حسابك في كفو';
+  workspaceTitle.textContent='مساحتك في كفو';
+  document.title='مساحتك في كفو — كفو';
   document.getElementById('identity').textContent = '';
   message.dataset.kind = 'info';
   message.textContent = 'جارٍ تحميل حسابك…';
@@ -34,6 +44,49 @@ async function render() {
     document.getElementById('identity').textContent = data.email || '';
     const home = await loadLearnerHome(client, data.userId);
     if (attempt !== generation) return;
+
+    const companyAdminMemberships=memberships.filter((m)=>m.accessible&&m.roles.some((r)=>['CO','BM','SA'].includes(r.code)));
+    if(companyAdminMemberships.length){
+      companyWorkspace.classList.remove('hidden');
+      workspaceBadge.textContent='مساحة الشركة';
+      workspaceTitle.textContent='أدر تطوير فريقك من مكان واحد';
+      document.title='مساحة الشركة — كفو';
+      const roleLabel=(membership)=>{
+        const codes=new Set(membership.roles.map((r)=>r.code));
+        if(codes.has('SA')) return 'إدارة المنصة';
+        if(codes.has('CO')) return 'مالك الشركة';
+        return 'مدير الفرع أو القسم';
+      };
+      for(const membership of companyAdminMemberships){
+        const card=document.createElement('article');
+        card.className='portal-card company-admin-card';
+        const head=document.createElement('div');
+        head.className='company-card-head';
+        const h=document.createElement('h3');h.textContent=membership.name;
+        const role=document.createElement('span');role.className='company-role';role.textContent=roleLabel(membership);
+        head.append(h,role);
+        const p=document.createElement('p');
+        p.textContent='تابع الفريق، أسند التدريب، وراقب التقدم والشهادات.';
+        const actions=document.createElement('div');
+        actions.className='company-actions';
+        const link=(href,label,primary=false)=>{
+          const a=document.createElement('a');
+          a.href=href+'?org='+encodeURIComponent(membership.organizationId);
+          a.textContent=label;
+          a.className=primary?'company-primary':'company-link';
+          return a;
+        };
+        actions.append(
+          link('/business/dashboard','دخول مساحة الشركة',true),
+          link('/business/employees','الموظفون'),
+          link('/business/assignments','إسناد التدريب'),
+          link('/business/reports','التقارير'),
+          link('/business/settings','ملف الشركة والإعدادات')
+        );
+        card.append(head,p,actions);
+        companyAdmins.append(card);
+      }
+    }
     const hasLearning = Boolean(home.profile) || home.enrollments.length > 0 || memberships.some((m) => m.accessible && m.roles.some((r) => r.code === 'EM'));
     if (hasLearning) {
       learner.classList.remove('hidden');
@@ -67,8 +120,17 @@ async function render() {
       }
     }
     message.dataset.kind = data.memberships.length ? 'success' : 'info';
-    message.textContent = hasLearning ? 'تم تحميل ملفك التعليمي.' : data.memberships.length ? 'تم التحقق من حسابك. هذه حالة عضوياتك الآن.' : 'لا توجد عضوية شركة مرتبطة بحسابك حاليًا.';
-    if (!hasLearning) {
+    if(companyAdminMemberships.length){
+      message.textContent='تم تحميل مساحة الشركة. اختر القسم الذي تريد إدارته.';
+    }else if(hasLearning){
+      workspaceBadge.textContent='بوابة التعلم';
+      workspaceTitle.textContent='تعلّمك في مكان واحد';
+      document.title='بوابة التعلم — كفو';
+      message.textContent='تم تحميل ملفك التعليمي.';
+    }else{
+      message.textContent=data.memberships.length ? 'تم التحقق من حسابك. هذه حالة عضوياتك الآن.' : 'لا توجد عضوية شركة مرتبطة بحسابك حاليًا.';
+    }
+    if (!companyAdminMemberships.length && !hasLearning) {
     for (const membership of memberships) {
       const card = document.createElement('section');
       card.className = 'membership';
@@ -79,7 +141,7 @@ async function render() {
       state.textContent = membership.status === 'invited' ? 'الدعوة بانتظار القبول'
         : membership.accessible ? 'عضويتك نشطة' : 'الوصول إلى الشركة غير متاح حاليًا';
       const note = document.createElement('p');
-      note.textContent = membership.accessible ? 'تم تفعيل عضويتك. صفحات العمل والتعلّم ما زالت في مرحلة الربط.'
+      note.textContent = membership.accessible ? 'عضويتك مفعلة ويمكنك استخدام المساحات المتاحة لدورك.'
         : membership.status === 'invited' ? 'الدعوة لم تُفعّل بعد. قبول الدعوة وتسجيل الدخول خطوتان منفصلتان.' : 'راجع مسؤول الشركة بشأن حالة العضوية والوصول.';
       card.append(title, state, note);
       if (membership.accessible) {
@@ -96,12 +158,6 @@ async function render() {
           settings.textContent = 'إعدادات الشركة';
           card.append(settings);
         }
-      }
-      // QA is only a diagnostic link for the existing isolated fixture organization.
-      if (membership.organizationId === 'aa7a54d0-9bce-455d-adb4-971c21d9fdf1') {
-        const link = document.createElement('a');
-        link.href = '/auth-check'; link.textContent = 'فحص الصلاحيات';
-        card.append(link);
       }
       list.append(card);
     }
