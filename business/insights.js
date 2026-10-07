@@ -25,20 +25,74 @@ document.querySelectorAll('[data-preview]').forEach(button => button.addEventLis
 if (document.querySelector('[data-page=reports]')) {
   const search = document.querySelector('#report-search');
   const kind = document.querySelector('#report-kind');
-  const rows = [...document.querySelectorAll('#report-rows tr')];
+  const body = document.querySelector('#report-rows');
   const empty = document.querySelector('#report-empty');
+  const courseNames={
+    'work-priorities':'تنظيم العمل والأولويات',
+    'professional-communication':'التواصل المهني الواضح',
+    'customer-service':'أساسيات خدمة العملاء',
+    'customer-service-reference':'خدمة العملاء: من الفهم إلى الأثر'
+  };
+  let reportRows=[...body.querySelectorAll('tr')];
+
   function filter() {
     const q = search.value.trim().toLocaleLowerCase('ar');
     let visible = 0;
-    rows.forEach(row => {
-      row.hidden = (kind.value !== 'all' && row.dataset.kind !== kind.value)
-        || Boolean(q && !row.dataset.title.toLocaleLowerCase('ar').includes(q));
+    reportRows.forEach(row => {
+      row.hidden = Boolean(q && !row.dataset.title.toLocaleLowerCase('ar').includes(q));
       if (!row.hidden) visible += 1;
     });
     empty.hidden = visible > 0;
   }
+  function hydrateReport(payload){
+    const report=payload?.report,certificates=payload?.certificates;
+    if(!Array.isArray(report)||!Array.isArray(certificates))return;
+    body.replaceChildren();
+    for(const item of report){
+      const title=courseNames[item.course_slug]||item.course_slug;
+      const tr=document.createElement('tr');
+      tr.dataset.kind='organization';
+      tr.dataset.title=title;
+      const notStarted=Math.max(0,Number(item.total_assignments||0)-Number(item.active_assignments||0)-Number(item.completed_assignments||0));
+      tr.innerHTML=`<td data-label="الدورة"><strong>${title}</strong><small>إصدار ${Number(item.course_version||1).toLocaleString('ar-SA')}</small></td><td data-label="التكليفات">${Number(item.total_assignments||0).toLocaleString('ar-SA')}</td><td data-label="مكتمل">${Number(item.completed_assignments||0).toLocaleString('ar-SA')}</td><td data-label="قيد التعلم">${Number(item.active_assignments||0).toLocaleString('ar-SA')}</td><td data-label="لم يبدأ">${notStarted.toLocaleString('ar-SA')}</td>`;
+      body.append(tr);
+    }
+    reportRows=[...body.querySelectorAll('tr')];
+    kind.closest('label').hidden=true;
+    const total=report.reduce((s,x)=>s+Number(x.total_assignments||0),0);
+    const completed=report.reduce((s,x)=>s+Number(x.completed_assignments||0),0);
+    const activeCerts=certificates.filter(x=>!x.revoked_at).length;
+    const metrics=[...document.querySelectorAll('.insight-metrics .flow-metric strong')];
+    if(metrics[0])metrics[0].textContent=total.toLocaleString('ar-SA');
+    if(metrics[1])metrics[1].textContent=completed.toLocaleString('ar-SA');
+    if(metrics[2])metrics[2].textContent=activeCerts.toLocaleString('ar-SA');
+
+    const certHost=document.querySelector('.insight-cert-list');
+    certHost.replaceChildren();
+    for(const cert of certificates){
+      const article=document.createElement('article');
+      article.className='insight-cert';
+      const title=courseNames[cert.course_slug]||cert.course_slug;
+      article.innerHTML=`<span class="insight-cert-icon"><svg class="icon" aria-hidden="true"><use href="#i-report"/></svg></span><div><strong></strong><small></small></div><span class="status"></span><button type="button">عرض الرمز</button>`;
+      article.querySelector('strong').textContent=cert.display_name||'موظف الشركة';
+      article.querySelector('small').textContent=title+' · إصدار '+Number(cert.course_version||1).toLocaleString('ar-SA');
+      const state=article.querySelector('.status');
+      state.textContent=cert.revoked_at?'ملغاة':'سارية';
+      state.classList.add(cert.revoked_at?'due':'done');
+      article.querySelector('button').addEventListener('click',()=>{
+        toast.textContent='رمز الشهادة: '+cert.certificate_code;
+        toast.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{toast.hidden=true},3000);
+      });
+      certHost.append(article);
+    }
+    if(!certificates.length)certHost.innerHTML='<p class="flow-footnote">لا توجد شهادات مرتبطة بتكليفات الشركة ضمن نطاق صلاحيتك.</p>';
+    document.querySelectorAll('.preview-note').forEach(note=>note.textContent='بوابة شركة محمية • التقرير والشهادات من سياق الشركة فقط؛ التعلم الشخصي مستبعد.');
+    filter();
+  }
   search.addEventListener('input', filter);
   kind.addEventListener('change', filter);
+  window.addEventListener('kfo:company-report',event=>hydrateReport(event.detail));
+  if(window.kfoCompanyLive?.['kfo:company-report'])hydrateReport(window.kfoCompanyLive['kfo:company-report']);
 }
 if (document.querySelector('[data-page=orders]')) {
   const tabs = [...document.querySelectorAll('.insight-tabs button')];
