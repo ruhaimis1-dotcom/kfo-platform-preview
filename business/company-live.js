@@ -20,7 +20,19 @@ function setLiveState(kind,message=''){
         ? 'تعذر تحميل بيانات الشركة الفعلية. لم نعرض بيانات توضيحية بدلًا منها.'
         : 'جارٍ تحميل بيانات الشركة…';
   });
-  if(message) emit('kfo:company-error',{message});
+  if(message){
+    emit('kfo:company-error',{message});
+    const main=document.querySelector('main');
+    if(main&&!main.querySelector('.company-live-error')){
+      [...main.children].forEach(child=>child.hidden=true);
+      const state=document.createElement('section');
+      state.className='company-live-error';
+      const h=document.createElement('h1');h.textContent='تعذر تحميل بيانات الشركة';
+      const p=document.createElement('p');p.textContent=message;
+      const a=document.createElement('a');a.href=location.pathname+location.search;a.textContent='إعادة المحاولة';
+      state.append(h,p,a);main.append(state);
+    }
+  }
 }
 async function start(context){
   if(!context?.organizationId||startedFor===context.organizationId)return;
