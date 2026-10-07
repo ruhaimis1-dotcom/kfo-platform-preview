@@ -48,7 +48,7 @@ function showScenario(value) {
     document.querySelector('#state-title').textContent = 'تعذر تحميل لوحة التدريب';
     document.querySelector('#state-copy').textContent = 'لم نتمكن من عرض البيانات. جرّب إعادة التحميل؛ لا تُعرض أرقام قديمة على أنها حديثة.';
   }
-  document.querySelector('#heading-help').textContent = isNew ? 'خطوتك الأولى هي إضافة الموظفين.' : noSeats ? 'تحتاج إلى مقاعد إضافية قبل تكليف دورات جديدة.' : hasError ? 'حالة توضيحية لتعذر تحميل البيانات.' : 'تابع جاهزية فريقك وتقدم التكليفات من مكان واحد.';
+  document.querySelector('#heading-help').textContent = isNew ? 'ابدأ بإضافة أعضاء الفريق.' : noSeats ? 'راجع المقاعد قبل إسناد تدريب جديد.' : hasError ? 'تعذر تحديث بيانات التدريب.' : 'راقب التقدم، المواعيد، وما يحتاج تدخل منك اليوم.';
   document.querySelector('#seat-count').textContent = noSeats ? '٠' : '٢٤';
   document.querySelector('#seat-caption').textContent = noSeats ? 'لا توجد مقاعد متاحة للتكليف' : 'جاهزة للتكليف';
   document.querySelector('#seat-alert-title').textContent = noSeats ? 'نفدت المقاعد المتاحة' : 'مقاعد بانتظار التكليف';
@@ -73,16 +73,16 @@ const hydrateDashboard=event=>{
   const data=event.detail?.data||{};
   const metrics=[...document.querySelectorAll('.metrics .metric')];
   const n=value=>Number(value||0).toLocaleString('ar-SA');
-  if(metrics[0]){metrics[0].querySelector('strong').textContent=n(data.active_members);metrics[0].querySelector('small').textContent='عضوية نشطة ضمن نطاق صلاحيتك'}
-  if(metrics[1]){metrics[1].querySelector('strong').textContent=n(data.assignments);metrics[1].querySelector('small').textContent='تكليفات الشركة ضمن نطاق صلاحيتك'}
+  if(metrics[0]){metrics[0].querySelector('strong').textContent=n(data.active_members);metrics[0].querySelector('small').textContent='عضو نشط في نطاق إدارتك'}
+  if(metrics[1]){metrics[1].querySelector('strong').textContent=n(data.assignments);metrics[1].querySelector('small').textContent='تكليف تدريبي للفريق'}
   if(metrics[2]){
     const total=Number(data.assignments||0),done=Number(data.completed_assignments||0);
     const pct=total?Math.round(done/total*100):0;
     metrics[2].querySelector('strong').textContent=pct.toLocaleString('ar-SA')+'٪';
     metrics[2].querySelector('small').textContent=n(done)+' مكتملة من '+n(total);
   }
-  if(metrics[3]){metrics[3].querySelector('strong').textContent='—';metrics[3].querySelector('small').textContent='رصيد المقاعد ينتظر بوابة التجارة'}
-  document.querySelector('.sample-tag')?.replaceChildren(document.createTextNode('بيانات فعلية'));
+  if(metrics[3]){metrics[3].querySelector('strong').textContent='—';metrics[3].querySelector('small').textContent='إدارة المقاعد قيد التجهيز'}
+  document.querySelector('.sample-tag')?.replaceChildren(document.createTextNode('محدث الآن'));
   if(scenario)scenario.closest('.scenario').hidden=true;
   const progress=document.querySelector('.progress-panel');
   if(progress){
@@ -107,7 +107,7 @@ const hydrateDashboard=event=>{
   if(assignments){
     assignments.querySelector('.table-scroll')?.setAttribute('hidden','');
     const foot=assignments.querySelector('.table-foot');
-    if(foot)foot.textContent='تفاصيل قائمة التكليفات ستظهر بعد ربط استعلام القائمة. المؤشرات أعلاه فعلية ولا تشمل التعلم الشخصي.';
+    if(foot)foot.textContent='سيظهر سجل التكليفات هنا عند توفر بياناته التفصيلية.';
   }
 };
 window.addEventListener('kfo:company-dashboard',hydrateDashboard);
