@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/assets/business.css">
   <link rel="stylesheet" href="/assets/employees.css">
 </head>
-<body>
+<body class="company-guard-pending">
   <svg class="svg-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
     <symbol id="i-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
     <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2H3ZM17 5a3 3 0 0 1 0 6M17 14a5 5 0 0 1 4 5v1h-3"/></symbol>
@@ -63,6 +63,6 @@
     </div>
   </div>
   <div class="d1-backdrop" id="invite-dialog" hidden><div class="d1-dialog" role="dialog" aria-modal="true" aria-labelledby="invite-title"><button class="d1-close" type="button" id="invite-close" aria-label="إغلاق">×</button><span class="section-kicker">خطوة تصميمية</span><h2 id="invite-title">دعوة موظف</h2><p>تُرسل الدعوة إلى بريد الموظف بعد التحقق من نطاق الشركة وصلاحية المسؤول عند التنفيذ.</p><form id="invite-form"><label>اسم الموظف<input type="text" name="name" placeholder="الاسم الكامل" required></label><label>البريد الإلكتروني<input type="email" name="email" placeholder="name@example.com" required></label><label>الفريق<select name="team" required><option value="">اختر الفريق</option><option>العمليات</option><option>المبيعات</option><option>خدمة العملاء</option><option>الموارد البشرية</option><option>المالية</option><option>التقنية</option></select></label><div class="d1-invite-note">الدعوة لا تنشئ تكليفًا تدريبيًا، ولا تعرض سجل التعلّم الشخصي للموظف.</div><div class="d1-dialog-actions"><button type="button" id="invite-cancel">إلغاء</button><button class="d1-primary" type="submit">معاينة الدعوة</button></div></form><div class="d1-confirm" id="invite-confirm" hidden role="status"><strong>هذه معاينة للدعوة فقط</strong><p id="invite-summary"></p><button class="d1-primary" type="button" id="invite-done">تم</button></div></div></div>
-  <script src="/assets/employees.js" defer></script>
+  <script type="module" src="/assets/company-runtime.js"></script><script src="/assets/employees.js" defer></script>
 </body>
 </html>
