@@ -10,7 +10,7 @@ const client=createClient(
 );
 
 let startedFor=null;
-function emit(name,detail){window.dispatchEvent(new CustomEvent(name,{detail}))}
+function emit(name,detail){window.kfoCompanyLive=window.kfoCompanyLive||{};window.kfoCompanyLive[name]=detail;window.dispatchEvent(new CustomEvent(name,{detail}))}
 function setLiveState(kind,message=''){
   document.body.dataset.companyDataState=kind;
   document.querySelectorAll('.preview-note').forEach(note=>{
