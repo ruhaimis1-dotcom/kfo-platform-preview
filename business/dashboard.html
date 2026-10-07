@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="/assets/fonts.css">
   <link rel="stylesheet" href="/assets/business.css">
 </head>
-<body>
+<body class="company-guard-pending">
   <svg class="svg-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
     <symbol id="i-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
     <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2H3ZM17 5a3 3 0 0 1 0 6M17 14a5 5 0 0 1 4 5v1h-3"/></symbol>
@@ -69,6 +69,6 @@
     </div>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
-  <script src="/assets/business.js" defer></script>
+  <script type="module" src="/assets/company-runtime.js"></script><script src="/assets/business.js" defer></script>
 </body>
 </html>
