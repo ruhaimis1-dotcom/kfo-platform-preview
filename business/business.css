@@ -27,3 +27,12 @@ td{font-weight:500;color:#263e2e}
 .metric small,.quiet,.panel-foot,.table-foot{font-size:13px;line-height:1.7}
 .status{font-size:12px}
 @media(max-width:760px){.page-heading p{font-size:13px}.panel-head h2{font-size:17px}.metric-top{font-size:12px}.metric small,.quiet,.panel-foot,.table-foot{font-size:12px}.alert p{font-size:12px}td{font-size:13px}.person strong{font-size:14px}.person small{font-size:12px}}
+
+
+/* Company Portal guard: never reveal company workspace before authenticated role/tenant resolution. */
+body.company-guard-pending .workspace,
+body.company-guard-pending .preview-note{visibility:hidden}
+.company-guard-state{max-width:680px;margin:12vh auto;padding:32px 24px;text-align:center}
+.company-guard-state h1{font-size:28px;margin:0 0 12px}
+.company-guard-state p{color:var(--muted);margin:0 0 22px}
+.company-guard-state a{display:inline-block;background:var(--deep);color:#fff;padding:11px 18px;border-radius:9px;font-weight:700}
