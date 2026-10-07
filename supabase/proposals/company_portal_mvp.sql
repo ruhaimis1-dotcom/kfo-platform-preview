@@ -201,6 +201,7 @@ declare
   v_membership uuid;
   v_user uuid;
   v_enrollment uuid;
+  v_created boolean;
 begin
   if v_uid is null then
     raise exception 'authenticated identity required' using errcode = '42501';
@@ -216,6 +217,8 @@ begin
   end if;
 
   foreach v_membership in array p_membership_ids loop
+    v_enrollment := null;
+    v_created := false;
     if not private.company_member_in_reviewer_scope(p_organization_id, v_membership) then
       raise exception 'member outside assignment scope' using errcode = '42501';
     end if;
@@ -240,6 +243,7 @@ begin
     on conflict do nothing
     returning id into v_enrollment;
 
+    v_created := v_enrollment is not null;
     if v_enrollment is null then
       select e.id into v_enrollment
       from public.learning_enrollments e
@@ -253,15 +257,17 @@ begin
       limit 1;
     end if;
 
-    insert into public.learner_notifications(
-      user_id, kind, title, body, enrollment_id
-    ) values (
-      v_user,
-      'assignment',
-      'تم تكليفك بدورة جديدة',
-      'أضيف تدريب جديد إلى تعلمك الوظيفي في كفو.',
-      v_enrollment
-    );
+    if v_created then
+      insert into public.learner_notifications(
+        user_id, kind, title, body, enrollment_id
+      ) values (
+        v_user,
+        'assignment',
+        'تم تكليفك بدورة جديدة',
+        'أضيف تدريب جديد إلى تعلمك الوظيفي في كفو.',
+        v_enrollment
+      );
+    end if;
 
     enrollment_id := v_enrollment;
     membership_id := v_membership;
