@@ -215,6 +215,14 @@ begin
   if p_due_at is not null and p_due_at <= now() then
     raise exception 'invalid due date' using errcode = '22023';
   end if;
+  if not exists(
+    select 1
+    from public.course_activities a
+    where a.course_slug = p_course_slug
+      and a.course_version = p_course_version
+  ) then
+    raise exception 'course unavailable' using errcode = '22023';
+  end if;
 
   foreach v_membership in array p_membership_ids loop
     v_enrollment := null;
