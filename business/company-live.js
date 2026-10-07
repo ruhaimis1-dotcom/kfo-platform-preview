@@ -15,10 +15,10 @@ function setLiveState(kind,message=''){
   document.body.dataset.companyDataState=kind;
   document.querySelectorAll('.preview-note').forEach(note=>{
     note.textContent=kind==='ready'
-      ? 'بوابة شركة محمية • البيانات المعروضة مرتبطة بسياق الشركة الحالي.'
+      ? 'البيانات محدثة حسب صلاحياتك في هذه الشركة.'
       : kind==='error'
         ? 'تعذر تحميل بيانات الشركة الفعلية. لم نعرض بيانات توضيحية بدلًا منها.'
-        : 'جارٍ تحميل بيانات الشركة…';
+        : 'جارٍ تحديث بيانات الشركة…';
   });
   if(message){
     emit('kfo:company-error',{message});
@@ -59,7 +59,7 @@ async function start(context){
     else {
       document.body.dataset.companyDataState='partial';
       document.querySelectorAll('.preview-note').forEach(note=>{
-        note.textContent='بوابة شركة محمية • هذه الصفحة ما زالت معاينة حتى تكتمل بوابة البيانات الخاصة بها.';
+        note.textContent='هذا القسم قيد التجهيز، والإعدادات الظاهرة فيه للمعاينة فقط.';
       });
     }
   }catch(error){
