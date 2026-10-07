@@ -33,7 +33,7 @@ function showCompany(membership){
   const avatar=document.querySelector('.tenant-avatar');
   if(avatar) avatar.textContent=(membership.name||'ش').trim().charAt(0)||'ش';
   document.querySelectorAll('.preview-note').forEach(note=>{
-    note.textContent='بوابة شركة محمية • بيانات هذه الصفحة التشغيلية ما زالت في مرحلة التكامل ولا تُعد سجلاً فعليًا.';
+    note.textContent='يتم عرض هذه المساحة حسب صلاحيات حسابك في الشركة.';
   });
   decorateNavigation(membership.organizationId);
   sessionStorage.setItem('kfo.company.org',membership.organizationId);
