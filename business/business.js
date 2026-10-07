@@ -67,3 +67,52 @@ function showScenario(value) {
 scenario.addEventListener('change', () => showScenario(scenario.value));
 retry.addEventListener('click', () => { scenario.value = 'active'; showScenario('active'); });
 showScenario(scenario.value);
+
+
+window.addEventListener('kfo:company-dashboard',event=>{
+  const data=event.detail?.data||{};
+  const metrics=[...document.querySelectorAll('.metrics .metric')];
+  const n=value=>Number(value||0).toLocaleString('ar-SA');
+  if(metrics[0]){metrics[0].querySelector('strong').textContent=n(data.active_members);metrics[0].querySelector('small').textContent='عضوية نشطة ضمن نطاق صلاحيتك'}
+  if(metrics[1]){metrics[1].querySelector('strong').textContent=n(data.assignments);metrics[1].querySelector('small').textContent='تكليفات الشركة ضمن نطاق صلاحيتك'}
+  if(metrics[2]){
+    const total=Number(data.assignments||0),done=Number(data.completed_assignments||0);
+    const pct=total?Math.round(done/total*100):0;
+    metrics[2].querySelector('strong').textContent=pct.toLocaleString('ar-SA')+'٪';
+    metrics[2].querySelector('small').textContent=n(done)+' مكتملة من '+n(total);
+  }
+  if(metrics[3]){metrics[3].querySelector('strong').textContent='—';metrics[3].querySelector('small').textContent='رصيد المقاعد ينتظر بوابة التجارة'}
+  document.querySelector('.sample-tag')?.replaceChildren(document.createTextNode('بيانات فعلية'));
+  if(scenario)scenario.closest('.scenario').hidden=true;
+  const progress=document.querySelector('.progress-panel');
+  if(progress){
+    const total=Number(data.assignments||0),done=Number(data.completed_assignments||0),active=Number(data.active_assignments||0);
+    const quiet=progress.querySelector('.quiet'); if(quiet)quiet.textContent=n(total)+' تكليفًا مؤسسيًا';
+    const donut=progress.querySelector('.donut');
+    if(donut){donut.setAttribute('aria-label',n(done)+' مكتمل، '+n(active)+' نشط');const strong=donut.querySelector('strong');if(strong)strong.textContent=n(total)}
+    const legend=[...progress.querySelectorAll('.legend > div')];
+    if(legend[0]){legend[0].querySelector('strong').textContent=n(done);legend[0].querySelector('span:nth-child(2)').textContent='مكتمل'}
+    if(legend[1]){legend[1].querySelector('strong').textContent=n(active);legend[1].querySelector('span:nth-child(2)').textContent='نشط'}
+    if(legend[2])legend[2].hidden=true;
+  }
+  const alerts=document.querySelector('.alerts-panel');
+  if(alerts){
+    const items=[...alerts.querySelectorAll('.alert')];
+    if(items[0]){items[0].querySelector('strong').textContent='تكليفات تقترب من موعدها';items[0].querySelector('p').textContent=n(data.due_within_7_days)+' تكليفات موعدها خلال ٧ أيام.'}
+    if(items[1])items[1].hidden=true;
+    const count=alerts.querySelector('.count');if(count)count.textContent=Number(data.due_within_7_days||0)>0?'١':'٠';
+    const foot=alerts.querySelector('.panel-foot');if(foot)foot.textContent='التنبيهات هنا مبنية على تكليفات الشركة فقط.';
+  }
+  const assignments=document.querySelector('.assignments');
+  if(assignments){
+    assignments.querySelector('.table-scroll')?.setAttribute('hidden','');
+    const foot=assignments.querySelector('.table-foot');
+    if(foot)foot.textContent='تفاصيل قائمة التكليفات ستظهر بعد ربط استعلام القائمة. المؤشرات أعلاه فعلية ولا تشمل التعلم الشخصي.';
+  }
+});
+window.addEventListener('kfo:company-error',event=>{
+  if(scenario)scenario.closest('.scenario').hidden=true;
+  content.hidden=true;statePanel.hidden=false;actionBar.hidden=true;retry.hidden=true;
+  document.querySelector('#state-title').textContent='تعذر تحميل بيانات الشركة';
+  document.querySelector('#state-copy').textContent=event.detail?.message||'لم نعرض بيانات توضيحية بدل البيانات الفعلية.';
+});
