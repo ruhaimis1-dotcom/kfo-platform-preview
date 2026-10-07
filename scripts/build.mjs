@@ -45,6 +45,11 @@ await build({
   bundle: true, minify: true, format: 'esm', target: ['es2020'],
   outfile: join(out, 'assets', 'company-runtime.js'),
 });
+await build({
+  entryPoints: [join(root, 'business', 'company-live.js')],
+  bundle: true, minify: true, format: 'esm', target: ['es2020'],
+  outfile: join(out, 'assets', 'company-live.js'),
+});
 await mkdir(join(out, 'assets', 'fonts'), { recursive: true });
 const fontFaces = [];
 for (const [family, weights, subsets] of [
