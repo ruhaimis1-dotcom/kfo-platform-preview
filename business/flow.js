@@ -93,14 +93,14 @@ if (document.querySelector('[data-page=assignments]')) {
       : selected.length === 1 ? 'موظف واحد' : selected.length === 2 ? 'موظفان' : selected.length ? `${selected.length.toLocaleString('ar-SA')} موظفين` : 'لم يُحدَّد موظف';
     document.querySelector('#review-date').textContent = arabicDate(deadline.value);
     document.querySelector('#review-needed').textContent = liveMode ? count.toLocaleString('ar-SA') : needsSeat ? count.toLocaleString('ar-SA') : 'لا يلزم مقعد';
-    document.querySelector('#review-available').textContent = liveMode ? 'بوابة المقاعد منفصلة' : needsSeat ? chosen.seats.toLocaleString('ar-SA') : 'محتوى الشركة';
+    document.querySelector('#review-available').textContent = liveMode ? 'يُتحقق عند الإسناد' : needsSeat ? chosen.seats.toLocaleString('ar-SA') : 'محتوى الشركة';
     const note = document.querySelector('#review-note');
     note.classList.toggle('warning', !valid);
     note.textContent = !count ? 'اختر موظفًا واحدًا على الأقل.'
       : liveMode && isTeam ? 'تكليف فريق كامل ينتظر ربط دليل الفرق؛ استخدم موظفين محددين الآن.'
       : !validDate ? 'حدد موعدًا نهائيًا من اليوم أو بعده.'
       : !sufficient ? 'الرصيد لهذه الدورة لا يكفي للمستفيدين المختارين.'
-      : liveMode ? 'سيُنشأ Enrollment مؤسسي لكل موظف ضمن نطاق صلاحيتك، دون لمس تعلمه الشخصي.'
+      : liveMode ? 'سيظهر التدريب للموظفين المختارين ضمن تدريب الشركة.'
       : needsSeat ? 'الرصيد كافٍ في هذه المعاينة.'
       : 'هذا محتوى خاص بالشركة؛ لا يستهلك مقاعد دورات كفو.';
     action.disabled = !valid;
@@ -136,10 +136,10 @@ if (document.querySelector('[data-page=assignments]')) {
     if(teamRadio){teamRadio.disabled=true;teamRadio.checked=false}
     const peopleRadio=scope.find(x=>x.value==='people');if(peopleRadio)peopleRadio.checked=true;
     team.hidden=true;people.hidden=false;
-    action.textContent='تأكيد التكليف';
+    action.textContent='إسناد التدريب';
     const head=document.querySelector('#assignment-form .flow-panel-head p');
-    if(head)head.textContent='اختر الموظفين والموعد. التكليف يُحفظ في سياق الشركة فقط.';
-    document.querySelectorAll('.preview-note').forEach(note=>note.textContent='بوابة شركة محمية • اختيار المستفيدين من عضويات الشركة الفعلية.');
+    if(head)head.textContent='اختر الموظفين وحدد الموعد النهائي لإسناد التدريب.';
+    document.querySelectorAll('.preview-note').forEach(note=>note.textContent='المستفيدون محدثون حسب أعضاء الشركة المتاحين لك.');
     bindInputs();updateReview();
   }
 
