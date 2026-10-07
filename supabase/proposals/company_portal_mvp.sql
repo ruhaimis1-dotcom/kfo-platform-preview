@@ -361,6 +361,7 @@ create or replace function public.company_certificate_ledger(p_organization_id u
 returns table(
   certificate_code text,
   user_id uuid,
+  display_name text,
   membership_id uuid,
   course_slug text,
   course_version integer,
@@ -375,6 +376,7 @@ as $company_certificates$
   select
     c.certificate_code,
     c.user_id,
+    lp.display_name,
     e.membership_id,
     e.course_slug,
     e.course_version,
@@ -383,6 +385,7 @@ as $company_certificates$
   from public.learner_certificates c
   join public.enrollment_completions ec on ec.id = c.completion_id
   join public.learning_enrollments e on e.id = ec.enrollment_id
+  left join public.learner_profiles lp on lp.user_id = c.user_id
   where e.organization_id = p_organization_id
     and e.context_type = 'organization'
     and e.source = 'organization'
