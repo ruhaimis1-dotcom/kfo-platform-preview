@@ -79,3 +79,18 @@ Coverage locks:
 ## Spending / execution rule
 
 No paid/additional-credit tool, external API/service, deployment, migration or production operation may be started without task-specific explicit permission from Saud. Previous approvals or "تابع" do not authorize new spend.
+
+
+## Migration status — 7 Oct 2026
+Applied to KFO Supabase and recorded in repository:
+- 20261007165639_unified_learner_context
+- 20261007165647_intelligent_course_engine
+- 20261007165652_reference_course_seed
+- 20261007165658_company_portal_mvp
+- 20261007165825_learner_company_security_hardening
+
+Live RPC role checks:
+- CO context: Hirely; 3 visible members.
+- BM context: Hirely; 1 member within manager scope.
+- No persistent demo assignment was left in the database.
+- Production deployment remains blocked by MVP Gate.
