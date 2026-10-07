@@ -41,7 +41,15 @@ async function start(context){
       ]);
       emit('kfo:company-report',{report,certificates,context});
     }
-    setLiveState('ready');
+    const supported=['dashboard','employees','assignments','reports'];
+    const normalized=location.pathname.split('/').pop()||page;
+    if(supported.includes(page)||supported.includes(normalized)) setLiveState('ready');
+    else {
+      document.body.dataset.companyDataState='partial';
+      document.querySelectorAll('.preview-note').forEach(note=>{
+        note.textContent='بوابة شركة محمية • هذه الصفحة ما زالت معاينة حتى تكتمل بوابة البيانات الخاصة بها.';
+      });
+    }
   }catch(error){
     setLiveState('error',error?.message||'تعذر تحميل بيانات الشركة.');
   }
