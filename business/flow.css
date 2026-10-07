@@ -42,3 +42,33 @@
 .flow-backdrop{position:fixed;inset:0;background:#061e13b8;display:grid;place-items:center;padding:20px;z-index:12}.flow-dialog{width:min(480px,100%);background:#fff;border-radius:17px;padding:27px;box-shadow:0 24px 70px #061e133d}.flow-dialog h2{font-size:24px;margin:6px 0}.flow-dialog p{font-size:14px;line-height:1.8;color:#42584a}.flow-dialog-actions{display:flex;justify-content:flex-end}
 @media(max-width:1100px){.flow-course-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.flow-assignment-layout{grid-template-columns:1fr}.flow-review{position:static}}
 @media(max-width:760px){.flow-account{font-size:10px;padding:7px 9px}.flow-main{padding-top:25px}.flow-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:20px 0 28px}.flow-metric.emphasized{grid-column:1/-1}.flow-metric{padding:15px}.flow-metric strong{font-size:26px}.flow-metric span,.flow-metric small{font-size:12px}.flow-heading-row{align-items:flex-start;flex-direction:column}.flow-heading-row h2,.flow-panel h2{font-size:18px}.flow-button{min-height:43px;font-size:13px}.flow-filter-bar{grid-template-columns:1fr;padding:14px}.flow-course-grid{grid-template-columns:1fr;gap:12px}.flow-course-art{height:92px}.flow-course h3{font-size:17px}.flow-panel-head{padding:17px 16px;align-items:flex-start;flex-wrap:wrap}.flow-seat-row{grid-template-columns:1.6fr .65fr .8fr;padding:12px 15px;font-size:12px}.flow-seat-row.headings{font-size:11px}.flow-footnote{padding:13px 16px}.flow-back{display:block;margin-top:10px}.flow-steps{overflow-x:auto;white-space:nowrap}.flow-steps span{font-size:11px;padding:8px}.flow-field-group{margin:18px 16px 0}.flow-people{grid-template-columns:1fr}.flow-review{padding:19px}}
+
+
+/* Company Portal UI Polish R01 */
+.flow-main{padding-top:30px}
+.flow-back{
+  display:inline-flex;
+  align-items:center;
+  min-height:40px;
+  padding:8px 12px;
+  border:1px solid #d2e0d4;
+  border-radius:9px;
+  background:#fff;
+  color:var(--deep);
+  text-decoration:none;
+}
+.flow-back:hover{background:#f3f8f4;text-decoration:none}
+.flow-steps{margin:20px 0 16px;gap:7px}
+.flow-steps span{border-color:#dce7de;background:#f9fbf9}
+.flow-panel{box-shadow:0 8px 24px #123b3209}
+.flow-review{border-top:3px solid #d7ead9}
+.flow-button{border-radius:10px;min-height:46px}
+.flow-button.primary{background:var(--deep);border-color:var(--deep);box-shadow:0 7px 16px #123b3220}
+.flow-button.primary:hover{background:#0b3228}
+.flow-review-note{background:#f1f7f2;border-color:#d9e8db}
+@media(max-width:760px){
+  .flow-main{padding-top:20px}
+  .flow-back{width:100%;justify-content:center;margin-top:14px}
+  .flow-steps{padding-bottom:4px;margin-top:14px}
+  .flow-review{padding:17px}
+}
