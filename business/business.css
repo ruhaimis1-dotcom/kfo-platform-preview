@@ -41,3 +41,100 @@ body.company-guard-pending .preview-note{visibility:hidden}
 .company-live-error h1{font-size:26px;margin:0 0 10px}
 .company-live-error p{color:var(--muted);margin:0 0 20px}
 .company-live-error a{display:inline-block;background:var(--deep);color:#fff;padding:10px 16px;border-radius:8px;font-weight:700}
+
+
+/* Company Portal UI Polish R01 */
+.page-heading{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:22px;
+  margin:0 0 24px;
+  padding:28px 30px;
+  border:1px solid #d8e5db;
+  border-radius:18px;
+  background:linear-gradient(135deg,#ffffff 0%,#f6faf7 68%,#edf6ef 100%);
+  box-shadow:0 14px 34px #123b320b;
+}
+.page-heading:before{
+  content:"";
+  position:absolute;
+  inset-block:22px;
+  right:0;
+  width:4px;
+  border-radius:4px 0 0 4px;
+  background:linear-gradient(var(--green),var(--lime));
+}
+.page-heading>div{max-width:720px}
+.page-heading h1{margin:5px 0 7px;font-size:31px;line-height:1.35;letter-spacing:-.25px}
+.page-heading p{max-width:680px;margin:0;color:#586f60;font-size:14px;line-height:1.8}
+.eyebrow{color:var(--green);font-size:12px;font-weight:700}
+.sample-tag{
+  align-self:flex-start;
+  border:1px solid #d2e5d5;
+  border-radius:999px;
+  background:#fff;
+  color:#386545;
+  padding:7px 11px;
+  font-size:11px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.preview-note{
+  border-bottom:1px solid #d9e8db;
+  background:#f1f7f2;
+  color:#526b58;
+  font-size:11px;
+  font-weight:500;
+  padding:8px 14px;
+}
+.action-bar{gap:10px;margin:0 0 24px}
+.action{
+  min-height:48px;
+  padding:0 18px;
+  border-radius:11px;
+  font-size:13px;
+  font-weight:700;
+  transition:transform .15s ease,box-shadow .15s ease,background .15s ease,border-color .15s ease;
+}
+.action.primary{
+  background:var(--deep);
+  border-color:var(--deep);
+  color:#fff;
+  box-shadow:0 8px 18px #123b3220;
+}
+.action.primary:hover{background:#0b3228;transform:translateY(-1px);box-shadow:0 10px 22px #123b3228}
+.action.secondary{
+  background:#fff;
+  border:1px solid #cbdace;
+  color:var(--deep);
+  box-shadow:0 2px 8px #123b3208;
+}
+.action.secondary:hover{background:#f4f9f5;border-color:#aac5af;transform:translateY(-1px)}
+.metric,.panel{border-color:#dbe7dd;box-shadow:0 8px 24px #123b3209}
+.metric{border-radius:14px}
+.panel{border-radius:16px}
+.panel-head{border-bottom-color:#edf2ee}
+.topbar{background:#ffffffed;backdrop-filter:blur(10px)}
+.tenant{border-radius:12px}
+.company-live-error,.company-guard-state{box-shadow:0 16px 40px #123b3212}
+
+@media(max-width:760px){
+  .preview-note{font-size:10px;padding:7px 10px}
+  .page-heading{
+    display:block;
+    padding:21px 18px 20px;
+    margin-bottom:18px;
+    border-radius:15px;
+  }
+  .page-heading:before{inset-block:18px}
+  .page-heading h1{font-size:24px;margin-top:4px}
+  .page-heading p{font-size:13px;line-height:1.7}
+  .sample-tag{display:inline-block;margin-top:14px}
+  .action-bar{grid-template-columns:1fr;gap:8px;margin:0 0 18px}
+  .action.primary,.action.secondary{grid-column:auto;min-height:46px}
+  .metrics{grid-template-columns:1fr 1fr}
+  .metric{min-height:122px}
+}
