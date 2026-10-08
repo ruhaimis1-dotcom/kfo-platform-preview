@@ -86,6 +86,17 @@ await cp(join(root, 'business', 'assignments.html'), join(out, 'business', 'assi
 await cp(join(root, 'business', 'reports.html'), join(out, 'business', 'reports.html'));
 await cp(join(root, 'business', 'orders.html'), join(out, 'business', 'orders.html'));
 await cp(join(root, 'business', 'settings.html'), join(out, 'business', 'settings.html'));
+await mkdir(join(out, 'admin'), { recursive: true });
+await cp(join(root, 'admin', 'admin.css'), join(out, 'assets', 'admin.css'));
+await cp(join(root, 'admin', 'admin.js'), join(out, 'assets', 'admin.js'));
+for (const name of ['dashboard','organizations','users','content','certificates','reviews','activity']) {
+  await cp(join(root, 'admin', `${name}.html`), join(out, 'admin', `${name}.html`));
+}
+await build({
+  entryPoints: [join(root, 'admin', 'admin-runtime.js')],
+  bundle: true, minify: true, format: 'esm', target: ['es2020'],
+  outfile: join(out, 'assets', 'admin-runtime.js'),
+});
 await cp(join(root, 'review'), join(out, 'review'), { recursive: true });
 await cp(join(root, 'review', 'index.html'), join(out, 'review.html'));
 await build({
