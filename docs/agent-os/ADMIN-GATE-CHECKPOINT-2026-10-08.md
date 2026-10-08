@@ -58,3 +58,31 @@ Reconnect Supabase KFO before building/testing/applying the Admin RPC proposal.
 5. Apply migration only after rehearsal PASS under the current Admin Gate authorization.
 6. Re-run Security Advisors.
 7. Admin Gate remains preview-only; no Vercel or Production in this round.
+
+
+## Update — 8 Oct 2026
+
+Supabase KFO reconnected and live schema inspected.
+
+Applied migration:
+- 20261008081615_admin_readonly_gate
+
+Admin RPC rehearsal result:
+- CO denied before temporary SA: PASS
+- temporary SA inside Transaction/Rollback: PASS
+- organizations visible: 2
+- memberships/roles rows visible during rehearsal: 5 (includes the temporary SA role row inside the transaction)
+- course versions visible: 1
+- certificates: 0
+- pending/revision evidence: 0
+- audit rows: 18 during rehearsal
+- persistent SA roles after rollback: 0
+
+Security:
+- no new RLS-disabled errors introduced by Admin Gate.
+- public Admin RPCs are SECURITY DEFINER by design, but each requires auth.uid() and private.is_platform_admin().
+- no permanent SA grant was created.
+- no mutation RPCs were added.
+
+Current blocking decision:
+KFO has no persistent active SA assignment. Admin Workspace cannot be used until Saud explicitly approves which existing account should receive SA.
