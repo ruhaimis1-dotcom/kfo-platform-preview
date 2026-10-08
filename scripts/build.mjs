@@ -97,6 +97,11 @@ await build({
   bundle: true, minify: true, format: 'esm', target: ['es2020'],
   outfile: join(out, 'assets', 'admin-runtime.js'),
 });
+await build({
+  entryPoints: [join(root, 'admin', 'admin-live.js')],
+  bundle: true, minify: true, format: 'esm', target: ['es2020'],
+  outfile: join(out, 'assets', 'admin-live.js'),
+});
 await cp(join(root, 'review'), join(out, 'review'), { recursive: true });
 await cp(join(root, 'review', 'index.html'), join(out, 'review.html'));
 await build({
