@@ -88,8 +88,14 @@ async function render() {
       }
     }
     const hasLearning = Boolean(home.profile) || home.enrollments.length > 0 || memberships.some((m) => m.accessible && m.roles.some((r) => r.code === 'EM'));
-    if(companyAdminMemberships.length===1&&!hasLearning){
-      const membership=companyAdminMemberships[0];
+    const hasPlatformAdmin=companyAdminMemberships.some((m)=>m.roles.some((r)=>r.code==='SA'));
+    if(hasPlatformAdmin&&!hasLearning){
+      window.location.replace('/admin/dashboard');
+      return;
+    }
+    const companyOnlyMemberships=companyAdminMemberships.filter((m)=>m.roles.some((r)=>['CO','BM'].includes(r.code)));
+    if(companyOnlyMemberships.length===1&&!hasLearning){
+      const membership=companyOnlyMemberships[0];
       window.location.replace('/business/dashboard?org='+encodeURIComponent(membership.organizationId));
       return;
     }
