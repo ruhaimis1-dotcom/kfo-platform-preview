@@ -138,3 +138,28 @@ body.company-guard-pending .preview-note{visibility:hidden}
   .metrics{grid-template-columns:1fr 1fr}
   .metric{min-height:122px}
 }
+
+
+/* KFO Visual System Lock R01 — decorative surfaces use brand tokens only.
+   Semantic warning/error colors remain reserved for real system states. */
+.tenant-avatar,.metric-symbol,.profile,.state-mark,.initials,
+.initials.lavender,.initials.peach,.initials.sand{
+  background:var(--sage);
+  color:var(--green);
+}
+.progress-track{background:var(--sage)}
+.progress-track span{background:var(--signal)}
+.donut{background:conic-gradient(var(--green) 0 39.58%,var(--signal) 39.58% 83.33%,var(--sage) 83.33% 100%)}
+.dot.completed{background:var(--green)}
+.dot.underway{background:var(--signal)}
+.dot.pending{background:var(--sage)}
+.status.done,.status.learning{color:var(--green);background:var(--sage)}
+.preview-note{background:var(--sage);color:var(--green)}
+.sample-tag{background:var(--sage);color:var(--green)}
+.action.secondary,.scenario select{border-color:var(--line)}
+.metric,.panel,.state-panel{border-color:var(--line);box-shadow:none}
+.page-heading{background:#fff;border-color:var(--line);box-shadow:none}
+.action.primary{box-shadow:none}
+.action.primary:hover{background:var(--green);box-shadow:none;transform:none}
+.action.secondary{box-shadow:none}
+.action.secondary:hover{background:var(--sage);border-color:var(--line);transform:none}
