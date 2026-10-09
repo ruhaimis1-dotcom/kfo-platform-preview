@@ -1,0 +1,74 @@
+/* D2/D3 visual previews extend the approved company shell. */
+.flow-account{font-size:12px;font-weight:700;color:var(--deep);background:var(--sage);border-radius:999px;padding:8px 12px;white-space:nowrap}
+.flow-main{padding-top:37px}
+.flow-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:28px 0 35px}
+.flow-metric{position:relative;overflow:hidden;background:#fff;border:1px solid #d8e5db;border-radius:15px;padding:19px 23px;box-shadow:0 10px 28px #123b320b}
+.flow-metric:before{content:"";position:absolute;right:0;inset-block:0;width:4px;background:#d2e6d3}
+.flow-metric.emphasized{background:#f9fdf9;border-color:#bfdac3}.flow-metric.emphasized:before{background:linear-gradient(#2a7940,#7fc968)}
+.flow-metric span,.flow-metric small{display:block;color:var(--muted);font-size:13px;line-height:1.6}.flow-metric strong{display:block;font:700 30px/1.5 Inter,"IBM Plex Sans Arabic",sans-serif;margin:3px 0;color:var(--ink)}
+.flow-heading-row,.flow-panel-head{display:flex;align-items:center;justify-content:space-between;gap:18px}.flow-heading-row{margin:0 0 17px}
+.flow-heading-row h2,.flow-panel h2{font-size:21px;line-height:1.5;margin:3px 0}.flow-heading-row p,.flow-panel-head p{font-size:13px;color:var(--muted);margin:0;line-height:1.7}
+.flow-button{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:10px;min-height:46px;padding:10px 17px;font-size:14px;font-weight:700;white-space:nowrap;border:1px solid #bed4c2}
+.flow-button .icon{width:18px;height:18px}.flow-button.primary{background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 7px 16px #205e1e24}.flow-button.primary:hover{background:var(--deep)}
+.flow-button.secondary{background:#fff;color:var(--deep)}.flow-button.secondary:hover{background:#f0f7f1}
+.flow-button:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
+.flow-filter-bar{display:grid;grid-template-columns:minmax(240px,1.8fr) minmax(180px,.7fr);gap:14px;padding:17px 20px;border:1px solid #d8e5db;border-radius:13px;background:#f9fbf9;margin-bottom:16px}
+.flow-filter-bar label,.flow-field-group>label,.flow-field-group legend{display:block;font-size:13px;font-weight:600;color:#42584a}
+.flow-filter-bar input,.flow-filter-bar select,.flow-field-group select,.flow-field-group input[type=date]{display:block;width:100%;min-height:46px;margin-top:6px;border:1px solid #cfddd2;border-radius:9px;background:#fff;color:var(--deep);padding:8px 12px;font:400 14px "IBM Plex Sans Arabic",sans-serif}
+.flow-filter-bar input:focus,.flow-filter-bar select:focus,.flow-field-group select:focus,.flow-field-group input[type=date]:focus{outline:3px solid #419b2a23;border-color:var(--signal)}
+.flow-course-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.flow-course{background:#fff;border:1px solid #d8e5db;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px #123b3208;display:flex;flex-direction:column;min-width:0}
+.flow-course[hidden]{display:none}.flow-course-art{height:115px;padding:18px;display:flex;align-items:flex-end;justify-content:space-between;background:#e8f2e9;color:#205e1e;font-weight:700;font-size:15px}
+.flow-course-art .icon{width:34px;height:34px;stroke-width:1.5}.flow-course-art.art-two{background:#eaf0e9}.flow-course-art.art-three{background:#e4f0e8}.flow-course-art.art-owned{background:#eaf2ee;color:#31584b}
+.flow-course-body{padding:19px 20px 16px;display:flex;flex-direction:column;flex:1}
+.flow-tag{align-self:flex-start;color:#286a34;background:#eaf5e9;border-radius:7px;padding:5px 9px;font-size:11px;font-weight:700}.flow-tag.owned{color:#315f57;background:#eaf3f1}
+.flow-course h3{font-size:18px;font-weight:600;line-height:1.5;margin:12px 0 5px}.flow-course p{font-size:13px;line-height:1.7;color:var(--muted);margin:0 0 19px}
+.flow-course-facts{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:auto;font-size:12px;color:var(--muted)}.flow-course-facts strong{font-size:13px;font-weight:600;color:var(--deep)}
+.flow-card-link{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #e7eee8;margin:16px -20px -16px;padding:12px 20px;font-size:13px;font-weight:700;color:var(--green)}.flow-card-link:hover{background:#f5faf6}
+.flow-empty{padding:34px 20px;text-align:center;background:#fff;border:1px dashed #bbd2c0;border-radius:12px;font-size:14px;color:var(--muted)}
+.flow-panel{background:#fff;border:1px solid #d8e5db;border-radius:16px;box-shadow:0 12px 32px #123b320c,0 1px 3px #123b3208;overflow:hidden}
+.flow-seats{margin-top:23px}.flow-panel-head{padding:23px 25px}
+.flow-seat-row{display:grid;grid-template-columns:2fr .7fr .9fr;gap:12px;padding:13px 25px;border-top:1px solid #e9efea;align-items:center;font-size:14px;color:#3b5144}.flow-seat-row.headings{background:#f2f7f3;font-size:13px;color:#526c58;font-weight:700}.flow-seat-row strong{font-weight:600;color:var(--deep)}
+.flow-footnote{font-size:12px;line-height:1.8;color:#718377;margin:0;padding:15px 25px;border-top:1px solid #e9efea}
+.flow-back{font-size:13px;color:var(--green);font-weight:700}.flow-back:hover{text-decoration:underline}
+.flow-steps{display:flex;align-items:center;gap:8px;margin:26px 0 17px}.flow-steps span{display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border:1px solid #d8e5db;background:#fff;border-radius:9px;font-size:13px;font-weight:600;color:#496553}.flow-steps b{width:23px;height:23px;display:grid;place-items:center;border-radius:50%;background:#e9f4e8;color:var(--green)}
+.flow-assignment-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(310px,.85fr);gap:19px;align-items:start}.flow-form{padding-bottom:22px}.flow-form .flow-panel-head{border-bottom:1px solid #e9efea}
+.flow-field-group{margin:20px 25px 0;border:0;padding:0;min-width:0}.flow-field-group small{display:block;color:#718377;font-size:12px;line-height:1.7;margin-top:7px}.flow-field-group legend{padding:0;margin-bottom:9px}
+.flow-choice-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:13px}.flow-choice-row label{padding:10px 13px;border:1px solid #d8e5db;border-radius:9px;background:#f9fbf9;font-size:13px;font-weight:600;cursor:pointer}.flow-choice-row input,.flow-people input{accent-color:var(--green)}
+.flow-people{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.flow-people label{display:flex;align-items:center;gap:8px;min-height:47px;padding:9px 12px;border:1px solid #dae6dc;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer}.flow-people label:has(input:checked){border-color:#9bc7a2;background:#f2faf3}.flow-people small{margin:0 0 0 auto;font-size:11px;white-space:nowrap}
+.flow-review{padding:24px;position:sticky;top:18px}.flow-review h2{margin-bottom:18px}.flow-review-list>div{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border-top:1px solid #edf2ee;padding:13px 0;font-size:13px}.flow-review-list span{color:var(--muted)}.flow-review-list strong{max-width:60%;text-align:left;color:var(--deep);font-weight:600}
+.flow-review-note{font-size:13px;line-height:1.7;background:#eef7ed;color:#235b2d;border:1px solid #d9ebda;border-radius:9px;padding:11px 12px;margin:8px 0 14px}.flow-review-note.warning{background:#fff6e7;border-color:#f2dfb6;color:#875a17}
+.review-action{width:100%}.flow-review .flow-footnote{border:0;padding:11px 0 0}
+.flow-backdrop{position:fixed;inset:0;background:#061e13b8;display:grid;place-items:center;padding:20px;z-index:12}.flow-dialog{width:min(480px,100%);background:#fff;border-radius:17px;padding:27px;box-shadow:0 24px 70px #061e133d}.flow-dialog h2{font-size:24px;margin:6px 0}.flow-dialog p{font-size:14px;line-height:1.8;color:#42584a}.flow-dialog-actions{display:flex;justify-content:flex-end}
+@media(max-width:1100px){.flow-course-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.flow-assignment-layout{grid-template-columns:1fr}.flow-review{position:static}}
+@media(max-width:760px){.flow-account{font-size:10px;padding:7px 9px}.flow-main{padding-top:25px}.flow-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:20px 0 28px}.flow-metric.emphasized{grid-column:1/-1}.flow-metric{padding:15px}.flow-metric strong{font-size:26px}.flow-metric span,.flow-metric small{font-size:12px}.flow-heading-row{align-items:flex-start;flex-direction:column}.flow-heading-row h2,.flow-panel h2{font-size:18px}.flow-button{min-height:43px;font-size:13px}.flow-filter-bar{grid-template-columns:1fr;padding:14px}.flow-course-grid{grid-template-columns:1fr;gap:12px}.flow-course-art{height:92px}.flow-course h3{font-size:17px}.flow-panel-head{padding:17px 16px;align-items:flex-start;flex-wrap:wrap}.flow-seat-row{grid-template-columns:1.6fr .65fr .8fr;padding:12px 15px;font-size:12px}.flow-seat-row.headings{font-size:11px}.flow-footnote{padding:13px 16px}.flow-back{display:block;margin-top:10px}.flow-steps{overflow-x:auto;white-space:nowrap}.flow-steps span{font-size:11px;padding:8px}.flow-field-group{margin:18px 16px 0}.flow-people{grid-template-columns:1fr}.flow-review{padding:19px}}
+
+
+/* Company Portal UI Polish R01 */
+.flow-main{padding-top:30px}
+.flow-back{
+  display:inline-flex;
+  align-items:center;
+  min-height:40px;
+  padding:8px 12px;
+  border:1px solid #d2e0d4;
+  border-radius:9px;
+  background:#fff;
+  color:var(--deep);
+  text-decoration:none;
+}
+.flow-back:hover{background:#f3f8f4;text-decoration:none}
+.flow-steps{margin:20px 0 16px;gap:7px}
+.flow-steps span{border-color:#dce7de;background:#f9fbf9}
+.flow-panel{box-shadow:0 8px 24px #123b3209}
+.flow-review{border-top:3px solid #d7ead9}
+.flow-button{border-radius:10px;min-height:46px}
+.flow-button.primary{background:var(--deep);border-color:var(--deep);box-shadow:0 7px 16px #123b3220}
+.flow-button.primary:hover{background:#0b3228}
+.flow-review-note{background:#f1f7f2;border-color:#d9e8db}
+@media(max-width:760px){
+  .flow-main{padding-top:20px}
+  .flow-back{width:100%;justify-content:center;margin-top:14px}
+  .flow-steps{padding-bottom:4px;margin-top:14px}
+  .flow-review{padding:17px}
+}

@@ -1,7 +1,359 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>كفو — التعلم التشغيلي</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@600;700&display=swap" rel="stylesheet"><style>
-:root{--ink:#04180f;--deep:#123b32;--brand:#267a43;--accent:#419b2a;--lime:#88d768;--mist:#f5f8f6;--line:#dce8e0;--muted:#60736a;--soft:#edf7ef;--shadow:0 18px 45px #04180f14}*{box-sizing:border-box}body{margin:0;background:var(--mist);color:var(--ink);font-family:"IBM Plex Sans Arabic",sans-serif;font-size:16px;line-height:1.7}button{font:inherit;cursor:pointer}.container{width:min(1320px,92%);margin:auto}.top{height:76px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:3}.top-in{height:100%;display:flex;align-items:center;gap:28px}.logo{width:112px;height:48px;object-fit:contain}.nav{display:flex;gap:25px;margin-right:auto}.nav a{color:#4f6259;text-decoration:none;font-size:15px}.actions{display:flex;gap:10px}.btn{border:1px solid transparent;border-radius:8px;padding:11px 18px;font-weight:600}.primary{background:var(--accent);color:#fff}.outline{background:#fff;color:var(--deep);border-color:#bad2c2}.hero{background:#fff;padding:72px 0 80px}.hero-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:70px;align-items:center}.eyebrow{display:inline-flex;align-items:center;gap:7px;color:var(--brand);background:var(--soft);border:1px solid #d7ebd9;border-radius:99px;padding:6px 12px;font-size:14px}.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--accent)}h1,h2,h3{margin-top:0;line-height:1.25;letter-spacing:-.02em}h1{font-size:clamp(38px,5vw,64px);margin:20px 0 18px}.hero p{font-size:19px;color:var(--muted);max-width:560px;line-height:2}.hero-actions{display:flex;gap:12px;margin:28px 0}.proof{display:flex;gap:23px;flex-wrap:wrap;color:var(--muted);font-size:14px}.proof span:before{content:"✓";color:var(--accent);font-weight:700;margin-left:7px}.hero-visual{background:#e9f2eb;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}.hero-visual img{display:block;width:100%;height:auto;aspect-ratio:1900/828;object-fit:contain;border-radius:11px}.visual-footer{display:flex;justify-content:space-between;padding:14px 3px 0;color:var(--muted);font-size:14px}.section{padding:86px 0}.head{text-align:center;max-width:700px;margin:0 auto 35px}.head p,.muted{color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:25px;box-shadow:0 7px 22px #04180f09}.icon{width:46px;height:46px;display:grid;place-items:center;border-radius:11px;background:var(--soft);color:var(--brand);font-weight:700;margin-bottom:19px}.card h3{font-size:20px;margin-bottom:8px}.dark{background:var(--deep);color:#fff;padding:84px 0}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.step{padding:23px;border:1px solid #ffffff2b;border-radius:12px;background:#ffffff0a}.step .num{font:700 25px Inter;color:var(--lime)}.step p{color:#c9d9d0}.cta{margin:70px auto;background:var(--deep);color:#fff;border-radius:15px;padding:30px 36px;display:flex;align-items:center;justify-content:space-between}.footer{background:var(--ink);color:#c8d8d0;padding:28px 0}.footer-in{display:flex;justify-content:space-between;align-items:center}.screen{display:none}.screen.active{display:block}.app{min-height:calc(100vh - 76px);padding:42px 0}.layout{display:grid;grid-template-columns:232px 1fr;gap:22px;direction:ltr}.side{background:var(--deep);border-radius:15px;padding:18px;color:#fff;min-height:690px;direction:rtl}.side .logo{background:#fff;border-radius:7px;width:100%;height:55px;padding:5px;margin-bottom:22px}.item{padding:12px 13px;border-radius:8px;color:#cbe0d5;margin:4px 0}.item.active{background:var(--accent);color:#fff}.content{direction:rtl}.page-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.page-head h1{font-size:30px;margin:0}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.metric strong{display:block;font:700 29px Inter;color:var(--deep);margin:10px 0}.trend{color:var(--brand);font-size:13px}.data{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-top:16px}.row{display:flex;align-items:center;gap:15px;padding:14px 0;border-bottom:1px solid #edf2ee}.grow{flex:1}.bar,.progress{height:8px;background:#e3eee6;border-radius:99px;overflow:hidden;margin-top:8px}.bar span,.progress span{display:block;height:100%;background:var(--accent);border-radius:99px}.status{background:var(--soft);color:var(--brand);padding:4px 9px;border-radius:99px;font-size:12px}.thumb{width:58px;height:46px;border-radius:8px;background:linear-gradient(135deg,var(--deep),var(--accent))}@media(max-width:980px){.nav{display:none}.hero-grid{grid-template-columns:1fr}.steps{grid-template-columns:repeat(2,1fr)}.metrics{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.side{display:none}.data{grid-template-columns:1fr}}@media(max-width:600px){.top .actions{display:none}.hero{padding:48px 0}.hero-actions{flex-direction:column}.cards,.steps,.metrics{grid-template-columns:1fr}.section,.dark{padding:60px 0}.cta{display:block}.footer-in{display:block}.page-head{display:block}.hero-visual{padding:9px}}</style></head><body><header class="top"><div class="container top-in"><img class="logo" src="upload/logo.png" alt="كفو"><nav class="nav"><a href="#home" onclick="show('home')">الرئيسية</a><a href="#catalog" onclick="show('catalog')">المسارات</a><a href="#company" onclick="show('company')">لوحة الشركة</a><a href="#reports" onclick="show('reports')">التقارير</a><a href="#about" onclick="show('about')">عن كفو</a></nav><div class="actions"><button class="btn outline" onclick="show('login')">تسجيل الدخول</button><button class="btn primary" onclick="show('company')">ابدأ الآن</button></div></div></header><main>
-<section id="home" class="screen active"><section class="hero"><div class="container hero-grid"><div><span class="eyebrow"><i></i> تدريب مؤسسي قابل للقياس</span><h1>تعلّم تشغيلي لفريق أكثر جاهزية</h1><p>كفو تساعد المؤسسات على تطوير مهارات فرقها وقياس الجاهزية من خلال تجربة تعلم واضحة، عملية، ومبنية على واقع العمل.</p><div class="hero-actions"><button class="btn primary" onclick="show('company')">استكشف المنصة ←</button><button class="btn outline" onclick="show('contact')">اطلب عرضاً توضيحياً</button></div><div class="proof"><span>نتائج قابلة للقياس</span><span>مسارات مخصصة</span><span>تقارير واضحة</span></div></div><div class="hero-visual"><img src="hero-industrial-v2.png" alt="فريق تشغيلي في بيئة صناعية"><div class="visual-footer"><span>صورة أصلية منفصلة عن النص</span><b>مؤشر الجاهزية 92%</b></div></div></div></section><section class="section"><div class="container"><div class="head"><h2>من التدريب إلى الأثر التشغيلي</h2><p>نظام واحد يربط الاحتياج بالتعلم والقياس.</p></div><div class="cards"><article class="card"><div class="icon">01</div><h3>محتوى تشغيلي عملي</h3><p>دورات مرتبطة ببيئة العمل الفعلية واحتياج الفريق.</p></article><article class="card"><div class="icon">02</div><h3>تجربة تعلم مخصصة</h3><p>مسارات واضحة لكل متدرب مع معرفة الخطوة التالية.</p></article><article class="card"><div class="icon">03</div><h3>قياس الأثر بوضوح</h3><p>مؤشرات وتقارير تساعد الإدارة على اتخاذ القرار.</p></article></div></div></section><section class="dark"><div class="container"><div class="head"><h2>رحلة واضحة من الاحتياج إلى الجاهزية</h2><p>أربع خطوات تجعل التدريب جزءاً من التشغيل.</p></div><div class="steps"><article class="step"><div class="num">01</div><h3>حدد الاحتياج</h3><p>اعرف الفجوات والأولويات.</p></article><article class="step"><div class="num">02</div><h3>أطلق المسار</h3><p>خصص رحلة مناسبة لكل دور.</p></article><article class="step"><div class="num">03</div><h3>تابع التقدم</h3><p>راقب الإنجاز والالتزام.</p></article><article class="step"><div class="num">04</div><h3>قِس الأثر</h3><p>حوّل النتائج إلى قرار.</p></article></div></div></section><div class="container"><section class="cta"><div><h2>جاهزية أعلى تبدأ بخطوة واضحة</h2><p>ابدأ ببناء رحلة تعلم تناسب فريقك.</p></div><button class="btn primary" onclick="show('company')">ابدأ الآن ←</button></section></div><footer class="footer"><div class="container footer-in"><img class="logo" src="upload/logo.png" alt="كفو"><span>تعلّم أفضل. جاهزية أعلى.</span></div></footer></section>
-<section id="company" class="screen"><div class="app"><div class="container layout"><aside class="side"><img class="logo" src="upload/logo.png" alt="كفو"><div class="item active">الرئيسية</div><div class="item">المتدربون</div><div class="item">المسارات</div><div class="item" onclick="show('reports')">التقارير</div><div class="item">الإعدادات</div></aside><div class="content"><div class="page-head"><div><h1>لوحة تحكم الشركة</h1><span class="muted">نظرة تشغيلية على جاهزية فريقك</span></div><button class="btn primary" onclick="show('catalog')">إضافة مسار</button></div><div class="metrics"><div class="panel metric"><small>الموظفون النشطون</small><strong>248</strong><span class="trend">↑ 12% هذا الشهر</span></div><div class="panel metric"><small>نسبة الإكمال</small><strong>87%</strong><span class="trend">↑ 6% عن السابق</span></div><div class="panel metric"><small>الشهادات الصادرة</small><strong>186</strong><span class="trend">+24 هذا الشهر</span></div><div class="panel metric"><small>درجة الجاهزية</small><strong>92%</strong><span class="trend">مؤشر الفريق</span></div></div><div class="data"><div class="panel"><h2>جاهزية الإدارات</h2><div class="row"><div class="grow">العمليات<div class="bar"><span style="width:94%"></span></div></div><b>94%</b></div><div class="row"><div class="grow">المبيعات<div class="bar"><span style="width:89%"></span></div></div><b>89%</b></div><div class="row"><div class="grow">الموارد البشرية<div class="bar"><span style="width:86%"></span></div></div><b>86%</b></div></div><div class="panel"><h2>أحدث المسارات</h2><div class="row"><div class="thumb"></div><div class="grow"><b>السلامة في بيئة العمل</b><small class="muted">38 متدرباً</small></div><span class="status">قيد التنفيذ</span></div><div class="row"><div class="thumb"></div><div class="grow"><b>القيادة التشغيلية</b><small class="muted">24 متدرباً</small></div><span class="status">مكتملة</span></div></div></div></div></div></div></section>
-<section id="catalog" class="screen"><div class="app"><div class="container"><div class="head"><span class="eyebrow">مسارات كفو</span><h1>تعلّم يناسب واقع فريقك</h1><p>مسارات عملية مصممة للفرق التشغيلية والقيادية.</p></div><div class="cards"><article class="card"><div class="icon">01</div><h3>السلامة في بيئة العمل</h3><p>بناء ثقافة سلامة مستمرة وتقليل المخاطر.</p><button class="btn primary" onclick="show('company')">إدارة المسار</button></article><article class="card"><div class="icon">02</div><h3>القيادة التشغيلية</h3><p>مهارات تساعد القادة على إدارة الأداء واتخاذ القرار.</p><button class="btn primary" onclick="show('company')">إدارة المسار</button></article><article class="card"><div class="icon">03</div><h3>التواصل الفعال</h3><p>تطوير التواصل والتعاون داخل فرق العمل.</p><button class="btn primary" onclick="show('company')">إدارة المسار</button></article></div></div></div></section>
-<section id="reports" class="screen"><div class="app"><div class="container"><div class="page-head"><div><span class="eyebrow">تحليلات الأداء</span><h1>تقارير الجاهزية</h1><span class="muted">قراءة واضحة لأثر التعلم على فريقك</span></div><button class="btn outline" onclick="show('company')">العودة للوحة الشركة</button></div><div class="metrics"><div class="panel metric"><small>متوسط الجاهزية</small><strong>92%</strong><span class="trend">↑ 8% هذا الربع</span></div><div class="panel metric"><small>الساعات المكتملة</small><strong>1,284</strong><span class="trend">↑ 18% عن السابق</span></div><div class="panel metric"><small>المسارات النشطة</small><strong>14</strong><span class="trend">3 مسارات جديدة</span></div><div class="panel metric"><small>رضا المتعلمين</small><strong>4.8/5</strong><span class="trend">تقييم ممتاز</span></div></div><div class="data"><div class="panel"><h2>تطور الجاهزية</h2><div class="row"><div class="grow">الربع الأول<div class="bar"><span style="width:72%"></span></div></div><b>72%</b></div><div class="row"><div class="grow">الربع الثاني<div class="bar"><span style="width:84%"></span></div></div><b>84%</b></div><div class="row"><div class="grow">الربع الثالث<div class="bar"><span style="width:92%"></span></div></div><b>92%</b></div></div><div class="panel"><h2>توصيات كفو</h2><p class="muted">ركز على مسارات القيادة والتواصل للإدارات ذات النمو الأسرع.</p><button class="btn primary" onclick="show('catalog')">استكشاف المسارات</button></div></div></div></div></section>
-<section id="login" class="screen"><div class="app"><div class="container"><div class="panel" style="max-width:440px;margin:40px auto;text-align:center"><img class="logo" src="upload/logo.png" alt="كفو"><h1 style="font-size:32px">مرحباً بك في كفو</h1><p class="muted">اختر طريقة الدخول للمتابعة</p><button class="btn primary" style="width:100%;margin:5px 0" onclick="show('company')">دخول كمسؤول شركة</button><button class="btn outline" style="width:100%;margin:5px 0" onclick="show('company')">دخول كمتعلم</button></div></div></div></section></main><script>function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));history.replaceState(null,'','#'+id);scrollTo({top:0,behavior:'smooth'})}addEventListener('DOMContentLoaded',()=>{const id=location.hash.slice(1);if(id&&document.getElementById(id))show(id)})</script></body></html>
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>كفو — تطوير الموظفين وقياس أثر التعلم</title>
+<meta name="description" content="كفو منصة تساعد الشركات على تدريب فرقها، متابعة التقدم، وقياس الجاهزية والنتائج من خلال مسارات واضحة وتقارير عملية.">
+<link rel="stylesheet" href="/assets/fonts.css">
+<style>
+:root{
+  --ink:#04180F;--deep:#123B32;--brand:#205E1E;--accent:#419B2A;
+  --mist:#F4F6F8;--line:#D9E2DD;--muted:#60706A;--soft:#E7EEE9;--white:#fff;
+  --shadow:none;--shadow-soft:none
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--mist);color:var(--ink);font-family:"IBM Plex Sans Arabic",sans-serif;font-size:16px;line-height:1.75}
+a{text-decoration:none;color:inherit}
+button{font:inherit}
+.container{width:min(1240px,92%);margin:auto}
+.top{height:76px;background:#fffffff2;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;backdrop-filter:blur(12px)}
+.top-in{height:100%;display:flex;align-items:center;gap:28px}
+.logo{width:108px;height:46px;object-fit:contain}
+.nav{display:flex;gap:24px;margin-right:auto}
+.nav a{color:#4f6259;font-size:14px;font-weight:500}
+.nav a:hover{color:var(--deep)}
+.actions{display:flex;gap:9px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid transparent;border-radius:9px;padding:10px 17px;font-weight:700;font-size:14px;transition:.15s}
+.primary{background:var(--deep);color:#fff}
+.primary:hover{background:#0b3027}
+.outline{background:#fff;color:var(--deep);border-color:#bfd3c5}
+.outline:hover{background:#f7faf7}
+.hero{background:#fff;padding:72px 0 78px;border-bottom:1px solid var(--line)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(420px,.95fr);gap:72px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--brand);background:var(--soft);border:1px solid #d7ebd9;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+h1,h2,h3{margin-top:0;line-height:1.3;letter-spacing:-.02em}
+h1{font-size:clamp(38px,5.2vw,66px);margin:19px 0 18px;max-width:760px}
+.hero-copy>p{font-size:18px;color:var(--muted);max-width:650px;line-height:1.95;margin:0}
+.hero-actions{display:flex;gap:10px;margin:28px 0 20px}
+.proof{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+.proof span{display:flex;align-items:center;gap:7px}
+.proof span:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.product-frame{background:var(--sage, #E7EEE9);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:none}
+.product-window{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.product-top{height:48px;border-bottom:1px solid #edf2ee;display:flex;align-items:center;justify-content:space-between;padding:0 16px}
+.product-top strong{font-size:12px;color:var(--deep)}
+.product-dots{display:flex;gap:5px}.product-dots i{width:7px;height:7px;border-radius:50%;background:#d7e2da}
+.product-body{display:grid;grid-template-columns:116px 1fr;min-height:330px}
+.product-side{background:var(--deep);padding:18px 12px}
+.product-side .mini-logo{width:58px;height:24px;background:#fff;border-radius:5px;margin-bottom:20px;opacity:.94}
+.product-side span{display:block;height:9px;border-radius:8px;background:#ffffff22;margin:12px 0}
+.product-side span.active{background:#ffffffd9}
+.product-main{padding:22px}
+.product-title{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:20px}
+.product-title div:first-child{width:42%;height:16px;border-radius:8px;background:#173d3320}
+.product-title div:last-child{width:78px;height:32px;border-radius:8px;background:#123b32}
+.mock-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mock-card{border:1px solid var(--line);border-radius:8px;padding:13px;background:#fff}
+.mock-card b{display:block;width:54%;height:11px;border-radius:6px;background:#173d3324;margin-bottom:14px}
+.mock-card span{display:block;width:76%;height:22px;border-radius:7px;background:#eaf4ec}
+.mock-panel{margin-top:12px;border:1px solid var(--line);border-radius:8px;padding:14px}
+.mock-line{display:flex;align-items:center;gap:10px;margin:13px 0}
+.mock-line i{width:32px;height:32px;border-radius:9px;background:#edf6ef}
+.mock-line span{height:9px;border-radius:6px;background:#dbe8de}
+.mock-line span:nth-child(2){width:34%}.mock-line span:nth-child(3){width:24%;margin-right:auto}
+.section{padding:84px 0}
+.section.white{background:#fff}
+.section-head{max-width:720px;margin:0 auto 36px;text-align:center}
+.section-head .eyebrow{margin-bottom:13px}
+.section-head h2{font-size:clamp(28px,3.8vw,44px);margin-bottom:10px}
+.section-head p{margin:0;color:var(--muted);font-size:16px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px;box-shadow:none}
+.card .num{width:42px;height:42px;display:grid;place-items:center;border-radius:10px;background:var(--soft);color:var(--brand);font:700 13px Inter;margin-bottom:18px}
+.card h3{font-size:18px;margin-bottom:8px}
+.card p{margin:0;color:var(--muted);font-size:14px;line-height:1.8}
+.problem-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:48px;align-items:start}
+.problem-copy h2{font-size:clamp(30px,4vw,46px);margin-bottom:14px}
+.problem-copy p{color:var(--muted);font-size:17px;margin:0}
+.problem-list{display:grid;gap:12px}
+.problem-item{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.problem-item strong{display:block;font-size:16px;margin-bottom:4px}.problem-item p{margin:0;color:var(--muted);font-size:13px}
+.dark{background:var(--deep);color:#fff;padding:86px 0}
+.dark .section-head p{color:#c7d8cf}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.step{padding:21px;border:1px solid #ffffff25;border-radius:13px;background:#ffffff08}
+.step .num{font:700 22px Inter;color:var(--lime);margin-bottom:13px}
+.step h3{font-size:17px;margin-bottom:7px}.step p{margin:0;color:#c7d8cf;font-size:13px}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feature{background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px}
+.feature h3{font-size:18px;margin-bottom:7px}.feature p{margin:0;color:var(--muted);font-size:14px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center}
+.employee-ui{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;box-shadow:none}
+.employee-ui .bar{height:46px;border-bottom:1px solid #edf2ee;margin:-18px -18px 18px;padding:14px 18px;font-size:12px;font-weight:700;color:var(--deep)}
+.employee-row{display:flex;gap:12px;align-items:center;padding:14px 0;border-bottom:1px solid #edf2ee}
+.employee-row:last-child{border-bottom:0}.employee-row i{width:38px;height:38px;border-radius:10px;background:var(--soft)}
+.employee-row div{flex:1}.employee-row strong{display:block;font-size:13px}.employee-row span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.checklist{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.check{border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px 13px;font-size:13px;font-weight:600}
+.activity-tags{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}
+.activity-tags span{border:1px solid #cfe0d2;background:#fff;border-radius:999px;padding:8px 12px;font-size:12px;color:#476052}
+.measure-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.measure{background:#fff;border:1px solid var(--line);border-radius:10px;padding:22px}
+.measure strong{display:block;font-size:16px;margin-bottom:6px}.measure p{margin:0;color:var(--muted);font-size:13px}
+.scale{display:flex;justify-content:space-between;gap:16px;align-items:center;background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:24px 28px}
+.scale h2{margin:0;font-size:26px}.scale p{margin:5px 0 0;color:var(--muted)}
+.course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.course{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.course-visual{height:128px;background:var(--deep)}
+.course:nth-child(2) .course-visual{background:var(--green)}
+.course:nth-child(3) .course-visual{background:var(--accent)}
+.course-body{padding:20px}.course-body h3{font-size:18px;margin-bottom:7px}.course-body p{margin:0;color:var(--muted);font-size:13px}
+.cert{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.cert-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:30px;box-shadow:none;min-height:240px;display:flex;flex-direction:column;justify-content:space-between}
+.cert-card .seal{width:58px;height:58px;border-radius:50%;background:var(--soft);display:grid;place-items:center;color:var(--brand);font-weight:700}
+.cert-card h3{font-size:23px;margin:18px 0 7px}.cert-card p{margin:0;color:var(--muted);font-size:13px}
+.cta{margin:0 auto 74px;background:var(--deep);color:#fff;border-radius:12px;padding:34px 38px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.cta h2{font-size:30px;margin-bottom:7px}.cta p{margin:0;color:#c9d9d0}
+.cta .actions{flex-shrink:0}
+.footer{background:var(--ink);color:#c8d8d0;padding:40px 0 24px}
+.footer-top{display:flex;justify-content:space-between;gap:40px;align-items:flex-start;padding-bottom:28px;border-bottom:1px solid #ffffff12}
+.footer-copy{max-width:460px}.footer-copy p{color:#a9bcb1;font-size:13px;margin:10px 0 0}
+.footer-links{display:flex;gap:22px;flex-wrap:wrap;font-size:13px}
+.footer-bottom{padding-top:20px;font-size:12px;color:#8fa59a}
+@media(max-width:1020px){
+  .nav{display:none}.hero-grid,.problem-grid,.split,.cert{grid-template-columns:1fr}.hero-grid{gap:42px}.cards{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:repeat(2,1fr)}.feature-grid,.measure-grid{grid-template-columns:repeat(2,1fr)}.hero-visual{max-width:720px}.product-body{min-height:300px}
+}
+@media(max-width:640px){
+  .top{height:68px}.top-in{gap:10px}.logo{width:94px}.actions{margin-right:auto}.actions .primary{display:none}.btn{min-height:40px;padding:8px 12px;font-size:13px}
+  .hero{padding:46px 0 54px}.hero-grid{display:flex;flex-direction:column;gap:34px}.hero-copy{width:100%}h1{font-size:39px}.hero-copy>p{font-size:16px}.hero-actions{flex-direction:column}.proof{gap:9px 15px}
+  .product-frame{width:100%;padding:9px}.product-body{grid-template-columns:80px 1fr;min-height:260px}.product-main{padding:14px}.mock-cards{grid-template-columns:1fr}.mock-card:nth-child(2),.mock-card:nth-child(3){display:none}
+  .section,.dark{padding:58px 0}.cards,.steps,.feature-grid,.measure-grid,.course-grid{grid-template-columns:1fr}.section-head{text-align:right;margin-bottom:26px}.checklist{grid-template-columns:1fr}.scale,.cta,.footer-top{display:block}.cta{margin-bottom:50px;padding:28px 22px}.cta .actions{margin-top:20px;display:grid}.footer-links{margin-top:22px}.cert-card{padding:22px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="container top-in">
+    <a href="/" aria-label="كفو"><img class="logo" src="/upload/logo.png" alt="كفو"></a>
+    <nav class="nav" aria-label="التنقل الرئيسي">
+      <a href="#how">كيف تعمل كفو</a>
+      <a href="#companies">للشركات</a>
+      <a href="#learning">تجربة التعلم</a>
+      <a href="/catalog">الدورات</a>
+      <a href="#reports">التقارير</a>
+      <a href="#about">عن كفو</a>
+    </nav>
+    <div class="actions">
+      <a class="btn outline" href="/login">تسجيل الدخول</a>
+      <a class="btn primary" href="/login">ابدأ الآن</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow"><i></i> تطوير الموظفين في مكان واحد</span>
+      <h1>طوّر موظفيك وراقب أثر التعلّم على العمل</h1>
+      <p>كفو منصة تساعد الشركات على تدريب فرقها، متابعة تقدمهم، وقياس الجاهزية والنتائج من خلال مسارات واضحة وتقارير عملية.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="/login">ابدأ الآن</a>
+        <a class="btn outline" href="#contact">اطلب عرضًا توضيحيًا</a>
+      </div>
+      <div class="proof">
+        <span>مسارات تدريب واضحة</span>
+        <span>متابعة تقدم الموظفين</span>
+        <span>تقارير للإدارة</span>
+      </div>
+    </div>
+
+    <div class="product-frame" aria-label="معاينة توضيحية لواجهة كفو">
+      <div class="product-window">
+        <div class="product-top"><strong>مساحة الشركة</strong><div class="product-dots"><i></i><i></i><i></i></div></div>
+        <div class="product-body">
+          <aside class="product-side"><div class="mini-logo"></div><span class="active"></span><span></span><span></span><span></span><span></span></aside>
+          <div class="product-main">
+            <div class="product-title"><div></div><div></div></div>
+            <div class="mock-cards"><div class="mock-card"><b></b><span></span></div><div class="mock-card"><b></b><span></span></div><div class="mock-card"><b></b><span></span></div></div>
+            <div class="mock-panel">
+              <div class="mock-line"><i></i><span></span><span></span></div>
+              <div class="mock-line"><i></i><span></span><span></span></div>
+              <div class="mock-line"><i></i><span></span><span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="container problem-grid">
+    <div class="problem-copy">
+      <span class="eyebrow"><i></i> لماذا كفو؟</span>
+      <h2>التدريب لا يكفي إذا ما عرفت أثره</h2>
+      <p>كثير من برامج التدريب تنتهي عند مشاهدة المحتوى أو إكمال الدورة. كفو يربط التعلم بما يحدث بعده: هل فهم الموظف؟ هل طبق المهارة؟ وهل ظهر أثرها على العمل؟</p>
+    </div>
+    <div class="problem-list">
+      <article class="problem-item"><strong>تعلم منظم</strong><p>مسارات واضحة ومحتوى تدريبي يمكن متابعته من البداية حتى الإكمال.</p></article>
+      <article class="problem-item"><strong>تقييم فعلي</strong><p>أنشطة واختبارات تقيس الفهم والتطبيق، وليس مجرد الحضور.</p></article>
+      <article class="problem-item"><strong>متابعة مستمرة</strong><p>تعرف من بدأ، من تأخر، ومن يحتاج دعمًا أو متابعة إضافية.</p></article>
+      <article class="problem-item"><strong>أثر قابل للمتابعة</strong><p>قياس تطور المهارات وربط نتائج التدريب بأداء الموظف وفريقه.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="dark" id="how">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><i></i> رحلة التطوير</span>
+      <h2>من تحديد الاحتياج إلى قياس الأثر</h2>
+      <p>رحلة واضحة تجعل التدريب جزءًا من العمل، لا نشاطًا منفصلًا عنه.</p>
+    </div>
+    <div class="steps">
+      <article class="step"><div class="num">01</div><h3>حدّد ما يحتاجه فريقك</h3><p>اختر المهارات أو المسارات التدريبية المناسبة لكل موظف أو مجموعة.</p></article>
+      <article class="step"><div class="num">02</div><h3>أسند التدريب</h3><p>أرسل الدورات والأنشطة للموظفين مع مواعيد واضحة للإنجاز.</p></article>
+      <article class="step"><div class="num">03</div><h3>تابع التقدم</h3><p>راقب الإنجاز ونتائج التقييم والأنشطة العملية وحالة كل موظف.</p></article>
+      <article class="step"><div class="num">04</div><h3>راجع التطبيق</h3><p>قيّم الأدلة والمهام التي تثبت انتقال التعلم إلى واقع العمل.</p></article>
+      <article class="step"><div class="num">05</div><h3>قِس الأثر</h3><p>تابع تطور الموظف من خلال تقارير ومؤشرات واضحة.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section white" id="companies">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><i></i> للشركات</span>
+      <h2>كل ما تحتاجه لإدارة تطوير فريقك</h2>
+      <p>من لوحة واحدة، تستطيع إدارة الموظفين، إسناد التدريب، متابعة الإنجاز، مراجعة النتائج، والاطلاع على الشهادات والتقارير.</p>
+    </div>
+    <div class="feature-grid">
+      <article class="feature"><h3>إدارة الموظفين والفرق</h3><p>تنظيم الموظفين حسب الشركة، الفرع، أو القسم.</p></article>
+      <article class="feature"><h3>إسناد الدورات</h3><p>تكليف موظف واحد أو مجموعة كاملة بمسار تدريبي.</p></article>
+      <article class="feature"><h3>متابعة الأداء</h3><p>رؤية حالة التدريب والتقدم والإنجاز لكل موظف.</p></article>
+      <article class="feature"><h3>التقارير</h3><p>قراءة أوضح لمستوى المشاركة والإنجاز والمهارات.</p></article>
+      <article class="feature"><h3>الشهادات</h3><p>متابعة الشهادات الصادرة والتحقق من حالة كل شهادة.</p></article>
+      <article class="feature"><h3>مراجعات الأدلة</h3><p>اعتماد الأنشطة العملية التي تحتاج تقييمًا بشريًا.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="learning">
+  <div class="container split">
+    <div>
+      <span class="eyebrow"><i></i> تجربة الموظف</span>
+      <h2>تجربة تعلم بسيطة وواضحة للموظف</h2>
+      <p class="muted">الموظف يدخل إلى مساحة تعلم واحدة يرى فيها دوراته، تقدمه، الإشعارات، المهام، والشهادات، بدون تعقيد أو تنقل بين أنظمة مختلفة.</p>
+      <div class="checklist">
+        <div class="check">دوراتي الموكلة</div>
+        <div class="check">الدورات المجانية</div>
+        <div class="check">التقدم والإنجاز</div>
+        <div class="check">الأنشطة والتقييمات</div>
+        <div class="check">الشهادات</div>
+        <div class="check">الإشعارات</div>
+      </div>
+    </div>
+    <div class="employee-ui">
+      <div class="bar">بوابة التعلم</div>
+      <div class="employee-row"><i></i><div><strong>دوراتي</strong><span>المسارات والمهام الموكلة لك</span></div></div>
+      <div class="employee-row"><i></i><div><strong>تقدمي</strong><span>ما أنجزته وما ينتظرك</span></div></div>
+      <div class="employee-row"><i></i><div><strong>شهاداتي</strong><span>الشهادات التي استوفيت متطلباتها</span></div></div>
+      <div class="employee-row"><i></i><div><strong>إشعاراتي</strong><span>التحديثات والمواعيد المهمة</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section white">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><i></i> قياس الفهم والتطبيق</span>
+      <h2>كفو لا يقيس المشاهدة فقط</h2>
+      <p>إكمال الفيديو أو قراءة المحتوى لا يعني بالضرورة اكتساب المهارة. لذلك تدعم كفو أنشطة تساعد على قياس الفهم والتطبيق.</p>
+    </div>
+    <div class="activity-tags">
+      <span>سيناريوهات عملية</span><span>أسئلة قصيرة</span><span>ترتيب خطوات</span><span>اكتشاف الأخطاء</span><span>مهام عملية</span><span>رفع أدلة</span><span>تقييم رسمي</span><span>انعكاس على تجربة العمل</span>
+    </div>
+    <p class="muted" style="text-align:center;margin:24px auto 0;max-width:720px">الهدف ليس أن ينهي الموظف الدورة فقط، بل أن يظهر أنه فهم وطبق.</p>
+  </div>
+</section>
+
+<section class="section" id="reports">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><i></i> القياس والمتابعة</span>
+      <h2>اعرف أين يقف فريقك الآن</h2>
+      <p>توفر كفو رؤية أوضح لحالة التعلم داخل الشركة: من بدأ، من أكمل، من يحتاج متابعة، وما المهارات التي تطورت.</p>
+    </div>
+    <div class="measure-grid">
+      <article class="measure"><strong>الإنجاز</strong><p>متابعة حالة الدورات والمهام المطلوبة.</p></article>
+      <article class="measure"><strong>نتائج التقييم</strong><p>قراءة نتائج الاختبارات والأنشطة العملية.</p></article>
+      <article class="measure"><strong>المتابعة</strong><p>معرفة من يحتاج تدخلًا أو دعمًا إضافيًا.</p></article>
+      <article class="measure"><strong>الشهادات</strong><p>متابعة الشهادات الصادرة وحالتها.</p></article>
+      <article class="measure"><strong>مراجعات الأدلة</strong><p>رؤية الأنشطة التي تنتظر تقييمًا بشريًا.</p></article>
+      <article class="measure"><strong>تقدم المهارات</strong><p>متابعة تطور المهارات ضمن المسار التدريبي.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section white">
+  <div class="container">
+    <div class="scale">
+      <div><h2>ابدأ بفريق صغير وتوسع مع نموك</h2><p>كفو مصمم للشركات التي تريد تنظيم تطوير موظفيها اليوم، مع بنية تسمح بالتوسع إلى فروع وأقسام وفرق أكبر لاحقًا.</p></div>
+      <div class="proof"><span>صلاحيات حسب الدور</span><span>فروع وأقسام</span><span>عزل بيانات الشركات</span><span>تقارير حسب نطاق المسؤولية</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow"><i></i> تعلم مجاني</span>
+      <h2>ابدأ التعلم مباشرة</h2>
+      <p>مجموعة من الدورات المجانية التي تساعد الموظفين على تطوير مهارات أساسية في بيئة العمل.</p>
+    </div>
+    <div class="course-grid">
+      <article class="course"><div class="course-visual"></div><div class="course-body"><h3>تنظيم العمل والأولويات</h3><p>أساسيات تساعد على ترتيب المهام والتركيز على ما يحقق أثرًا أكبر.</p></div></article>
+      <article class="course"><div class="course-visual"></div><div class="course-body"><h3>التواصل المهني الواضح</h3><p>تطوير التواصل اليومي داخل بيئة العمل بصورة أوضح وأكثر فاعلية.</p></div></article>
+      <article class="course"><div class="course-visual"></div><div class="course-body"><h3>أساسيات خدمة العملاء</h3><p>فهم احتياج العميل والتعامل مع المواقف الأساسية بصورة عملية.</p></div></article>
+    </div>
+    <div style="text-align:center;margin-top:24px"><a class="btn outline" href="/catalog">استعرض الدورات المجانية</a></div>
+  </div>
+</section>
+
+<section class="section white">
+  <div class="container cert">
+    <div>
+      <span class="eyebrow"><i></i> الشهادات</span>
+      <h2>شهادة بعد استيفاء المتطلبات، لا بمجرد المشاهدة</h2>
+      <p class="muted">تصدر الشهادة عند استيفاء متطلبات الدورة المعتمدة، والتي قد تشمل التقييم والأنشطة العملية والأدلة المطلوبة بحسب نوع المسار.</p>
+    </div>
+    <div class="cert-card">
+      <div class="seal">كفو</div>
+      <div><h3>شهادة إتمام</h3><p>تظهر بعد تحقق متطلبات المسار المعتمدة.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="container" id="contact">
+  <div class="cta">
+    <div><h2>ابدأ تطوير فريقك بطريقة أوضح</h2><p>اجمع التدريب، المتابعة، التقييم والتقارير في مساحة واحدة، وابدأ بناء مسارات تطوير يمكن متابعتها وقياسها.</p></div>
+    <div class="actions"><a class="btn primary" style="background:var(--accent)" href="/login">ابدأ مع كفو</a><span class="btn outline" aria-disabled="true">اطلب عرضًا توضيحيًا</span></div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-copy"><img class="logo" src="/upload/logo-white.png" alt="كفو"><p>كفو منصة لتطوير الموظفين ومتابعة التعلم وقياس أثره داخل بيئة العمل.</p></div>
+      <div class="footer-links"><a href="/">الرئيسية</a><a href="#how">كيف تعمل كفو</a><a href="#companies">للشركات</a><a href="/catalog">الدورات المجانية</a><a href="#reports">التقارير</a><a href="/login">تسجيل الدخول</a></div>
+    </div>
+    <div class="footer-bottom">© كفو — جميع الحقوق محفوظة</div>
+  </div>
+</footer>
+</body>
+</html>

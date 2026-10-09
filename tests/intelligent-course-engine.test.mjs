@@ -1,0 +1,9 @@
+import test from'node:test';import assert from'node:assert/strict';import{readFile}from'node:fs/promises';
+const sql=await readFile(new URL('../supabase/proposals/intelligent_course_engine.sql',import.meta.url),'utf8');
+const spec=await readFile(new URL('../docs/agent-os/INTELLIGENT-COURSE-ENGINE-MVP-2026-10-05.md',import.meta.url),'utf8');
+test('course engine supports active learning beyond passive media',()=>{for(const type of ['quick_check','scenario','ordering','error_spotting','reflection','practical_task','file_evidence','simulation','assessment'])assert.ok(sql.includes("'"+type+"'"))});
+test('activity completion cannot stand in for skill measurement',()=>{assert.match(sql,/course_activity_skills/);assert.match(sql,/skill_measurements/);assert.match(spec,/Completion time or media consumption alone never proves competence/)});
+test('uploaded evidence starts pending rather than passed',()=>{assert.match(sql,/review_status text not null default 'pending'/);assert.match(spec,/must never be treated as passed only because it was uploaded/)});
+test('rubric and review model distinguishes AI assist from human review',()=>{assert.match(sql,/reviewer_type in \('human','deterministic','ai_assist'\)/);assert.match(sql,/reviewer_type<>'human' or reviewer_user_id is not null/);assert.match(spec,/AI alone cannot issue formal completion\/certification/)});
+test('impact model supports post-training checkpoints',()=>{assert.match(sql,/checkpoint_days in \(30,60,90\)/);assert.match(sql,/learner_score/);assert.match(sql,/manager_score/)});
+test('evidence and impact writes are not directly available to learners',()=>{for(const table of ['learning_evidence','evidence_reviews','skill_measurements','impact_checkpoints'])assert.match(sql,new RegExp('revoke insert,update,delete on public\\.'+table+' from authenticated'))});

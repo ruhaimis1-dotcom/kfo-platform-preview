@@ -1,0 +1,176 @@
+import { createClient } from '@supabase/supabase-js';
+import { authErrorMessage } from '../auth/validation.mjs';
+import { KFO_URL, KFO_KEY, FIXTURES, runInvitationChecks, runAnonymousCheck } from './invitation-checks.mjs';
+import { runRoleContextChecks } from './role-context-checks.mjs';
+import { runSettingsPermissionChecks } from './settings-permission-checks.mjs';
+import { runPrivateAssetChecks } from './private-assets-checks.mjs';
+
+const client = createClient(KFO_URL, KFO_KEY, { auth: { detectSessionInUrl: false, persistSession: true },
+  global: { fetch: (input, init) => fetch(input, { ...init, cache: 'no-store' }) } });
+const form = document.getElementById('qa-login');
+const sessionPanel = document.getElementById('session');
+const message = document.getElementById('message');
+const run = document.getElementById('run');
+const signout = document.getElementById('signout');
+const results = document.getElementById('results');
+const roles = document.getElementById('roles');
+const settingsDenial = document.getElementById('settings-denial');
+const assetButtons = ['prepare', 'verify', 'cleanup'].map((action) => document.getElementById(`asset-${action}`));
+function assetAvailability(busy = false) {
+  const role = identity && FIXTURES[identity]?.role;
+  settingsDenial.disabled = busy || !['BM', 'EM'].includes(role);
+  assetButtons.forEach((button) => { button.disabled = busy || !['CO', 'EM'].includes(role); });
+}
+let identity = null;
+let identityGeneration = 0;
+function status(kind, text) { message.dataset.kind = kind; message.textContent = text; }
+async function refreshIdentity() {
+  const generation = ++identityGeneration;
+  run.disabled = true;
+  roles.disabled = true;
+  identity = null;
+  assetAvailability();
+  const { data, error } = await client.auth.getUser();
+  if (generation !== identityGeneration) return;
+  const user = !error && data?.user;
+  form.classList.toggle('hidden', Boolean(user));
+  sessionPanel.classList.toggle('hidden', !user);
+  if (!user) return status('info', 'سجّل الدخول بحساب الاختبار للبدء.');
+  document.getElementById('identity').textContent = `الحساب: ${user.email}`;
+  const fixture = Object.hasOwn(FIXTURES, user.id) ? FIXTURES[user.id] : null;
+  if (!fixture) return status('error', 'هذا الحساب خارج مجموعة الاختبار. يمكنك تسجيل الخروج وتجربة حساب الاختبار.');
+  identity = user.id;
+  run.disabled = false;
+  roles.disabled = false;
+  assetAvailability();
+  status('info', `تم التحقق من الدخول. دور الاختبار المتوقع: ${fixture.label}. الصلاحيات ستُختبر بطلبات حقيقية.`);
+}
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  if (!form.reportValidity()) return;
+  const button = form.querySelector('button');
+  button.disabled = true;
+  status('info', 'جارٍ التحقق من بيانات الدخول…');
+  try {
+    const { error } = await client.auth.signInWithPassword({ email: form.elements.email.value.trim(), password: form.elements.password.value });
+    form.elements.password.value = '';
+    if (error) throw error;
+    await refreshIdentity();
+  } catch (error) { status('error', authErrorMessage(error, 'login')); }
+  finally { form.elements.password.value = ''; button.disabled = false; }
+});
+run.addEventListener('click', async () => {
+  run.disabled = true;
+  roles.disabled = true;
+  assetAvailability(true);
+  signout.disabled = true;
+  results.replaceChildren();
+  status('info', 'جارٍ الفحص. ستظهر كل نتيجة بعد وصول استجابة كفو…');
+  try {
+    const { data, error } = await client.auth.getSession();
+    if (error || !data?.session?.access_token) throw new Error('انتهت الجلسة. سجّل الدخول مجددًا.');
+    const report = await runInvitationChecks({ userId: identity, accessToken: data.session.access_token, onResult: (row) => {
+      const li = document.createElement('li');
+      li.dataset.passed = String(row.passed);
+      li.textContent = `${row.passed ? 'نجح' : 'لم ينجح'} — ${row.label} (HTTP ${row.status})`;
+      results.append(li);
+    } });
+    status('success', `اكتملت ${report.results.length} فحوص HTTP لهذا الحساب. ${report.initialStatus === 'invited' ? 'قُبلت الدعوة وأصبحت العضوية نشطة.' : 'كانت العضوية نشطة؛ اختُبرت إعادة الطلب فقط.'} يلزم الآن فحص سجل التدقيق في قاعدة البيانات.`);
+  } catch (error) {
+    status('error', error instanceof TypeError || error?.name === 'TimeoutError'
+      ? 'تعذر الوصول إلى خدمة كفو. قد يكون طلب سابق اكتمل؛ أعد الفحص للتحقق من الحالة.'
+      : error.message || 'توقف الفحص. النتائج المكتملة أعلاه لا تعني اكتمال البوابة.');
+  } finally { run.disabled = !identity; roles.disabled = !identity; signout.disabled = false; assetAvailability(); }
+});
+roles.addEventListener('click', async () => {
+  roles.disabled = true; run.disabled = true; signout.disabled = true;
+  assetAvailability(true);
+  results.replaceChildren();
+  status('info', 'جارٍ التحقق من الأدوار والصلاحيات…');
+  try {
+    const { data, error } = await client.auth.getSession();
+    if (error || !data?.session?.access_token) throw new Error('انتهت الجلسة. أعد تسجيل الدخول.');
+    const report = await runRoleContextChecks({ userId: identity, accessToken: data.session.access_token,
+      onResult: (row) => {
+        const li = document.createElement('li'); li.dataset.passed = String(row.passed);
+        li.textContent = `${row.passed ? 'نجح' : 'لم ينجح'} — ${row.label} (HTTP ${row.status})`;
+        results.append(li);
+      } });
+    status('success', `اكتملت ${report.results.length} فحوص لقراءة الأدوار. فحص عزل الملفات مستقل.`);
+  } catch { status('error', 'توقف فحص الأدوار؛ النتائج الجزئية لا تغلق البوابة.'); }
+  finally { roles.disabled = !identity; run.disabled = !identity; signout.disabled = false; assetAvailability(); }
+});
+settingsDenial.addEventListener('click', async () => {
+  const userId = identity;
+  const generation = identityGeneration;
+  roles.disabled = true; run.disabled = true; signout.disabled = true; assetAvailability(true);
+  results.replaceChildren();
+  status('info', 'جارٍ فحص رفض الإعدادات بطلب لا يغيّر اسم الشركة…');
+  try {
+    const { data, error } = await client.auth.getSession();
+    if (error || !data?.session?.access_token || generation !== identityGeneration) throw new Error();
+    const report = await runSettingsPermissionChecks({ userId, accessToken: data.session.access_token,
+      onResult: (row) => {
+        if (generation !== identityGeneration) return;
+        const li = document.createElement('li'); li.dataset.passed = String(row.passed);
+        li.textContent = `${row.passed ? 'نجح' : 'لم ينجح'} — ${row.label} (HTTP ${row.status})`;
+        results.append(li);
+      } });
+    if (generation === identityGeneration) status('success', `اكتملت ${report.results.length} فحوص. رفض الخادم صلاحية حفظ الإعدادات؛ اسم الشركة لم يتغير.`);
+  } catch {
+    if (generation === identityGeneration) status('error', 'لم يثبت رفض الإعدادات المتوقع. النتائج الجزئية لا تغلق البوابة.');
+  } finally { roles.disabled = !identity; run.disabled = !identity; signout.disabled = false; assetAvailability(); }
+});
+for (const action of ['prepare', 'verify', 'cleanup']) {
+  document.getElementById(`asset-${action}`).addEventListener('click', async () => {
+    roles.disabled = true; run.disabled = true; signout.disabled = true; assetAvailability(true);
+    results.replaceChildren(); status('info', 'جارٍ تنفيذ إجراء ملفات الاختبار…');
+    try {
+      const report = await runPrivateAssetChecks({ client, action, onResult: (row) => {
+        const li = document.createElement('li'); li.dataset.passed = String(row.passed);
+        li.textContent = `${row.passed ? 'نجح' : 'لم ينجح'} — ${row.label}${row.status ? ` (HTTP ${row.status})` : ''}`; results.append(li);
+      } });
+      status('success', report.requiresBothPrepareEvidence
+        ? 'اكتمل فحص هذا الحساب. لا تُغلق بوابة الملفات حتى توثيق تحضير الملفين وفحص الحساب الآخر ثم التنظيف.'
+        : action === 'prepare' ? 'تم رفع ملف شركتك وقراءة محتواه. حضّر ملف الشركة الأخرى قبل اختبار العزل.' : 'تم تنظيف ملف اختبار شركتك والتحقق من زواله.');
+    } catch (error) { status('error', error.message || 'توقف فحص الملفات؛ البوابة لم تكتمل.'); }
+    finally { roles.disabled = !identity; run.disabled = !identity; signout.disabled = false; assetAvailability(); }
+  });
+}
+signout.addEventListener('click', async () => {
+  signout.disabled = true;
+  try {
+    const { error } = await client.auth.signOut({ scope: 'local' });
+    if (error) throw error;
+    results.replaceChildren();
+    await refreshIdentity();
+  } catch { status('error', 'تعذر تسجيل الخروج. حاول مجددًا.'); }
+  finally { signout.disabled = false; }
+});
+client.auth.onAuthStateChange((event) => {
+  if (event !== 'SIGNED_OUT') return;
+  ++identityGeneration; identity = null;
+  run.disabled = true; roles.disabled = true; assetAvailability();
+  results.replaceChildren();
+  document.getElementById('identity').textContent = '';
+  form.classList.remove('hidden'); sessionPanel.classList.add('hidden');
+  status('info', 'انتهت الجلسة. سجّل الدخول لإكمال الفحص.');
+});
+refreshIdentity().catch(() => status('error', 'تعذر التحقق من الجلسة. حاول تحديث الصفحة.'));
+document.getElementById('anonymous').addEventListener('click', async (event) => {
+  const button = event.currentTarget;
+  const connection = document.getElementById('connection');
+  button.disabled = true;
+  connection.dataset.kind = 'info';
+  connection.textContent = 'جارٍ التحقق من الاتصال…';
+  try {
+    const result = await runAnonymousCheck();
+    connection.dataset.kind = result.passed ? 'success' : 'error';
+    connection.textContent = result.passed
+      ? `وصل الطلب إلى كفو ورُفض الوصول دون دخول (HTTP ${result.status} / 42501). فحص الجلسة والدعوة لم يُنفّذ بعد.`
+      : `لم يتحقق الرفض المتوقع (HTTP ${result.status}). لا يُعد الفحص ناجحًا.`;
+  } catch {
+    connection.dataset.kind = 'error';
+    connection.textContent = 'تعذر الوصول إلى كفو. حاول مجددًا بعد قليل.';
+  } finally { button.disabled = false; }
+});

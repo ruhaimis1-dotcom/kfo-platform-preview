@@ -1,0 +1,5 @@
+import test from'node:test';import assert from'node:assert/strict';import{readFile}from'node:fs/promises';
+const sql=await readFile(new URL('../supabase/proposals/intelligent_course_engine.sql',import.meta.url),'utf8');
+test('file evidence finalization requires actual private storage object',()=>{const fn=sql.slice(sql.indexOf('finalize_verified_file_evidence'));assert.match(fn,/from storage\.objects/);assert.match(fn,/bucket_id='kfo-learning-evidence'/);assert.match(fn,/uploaded object unavailable/)});
+test('file evidence verifies size and mime metadata before evidence insert',()=>{const fn=sql.slice(sql.indexOf('finalize_verified_file_evidence'));const verify=fn.indexOf('metadata mismatch');const evidence=fn.indexOf('submit_my_learning_evidence');assert.ok(verify>0&&verify<evidence);assert.match(fn,/p_expected_size/);assert.match(fn,/p_expected_mime/)});
+test('skill measurement query is enrollment and authenticated-user scoped',()=>{const fn=sql.slice(sql.indexOf('my_skill_measurements'));assert.match(fn,/m\.enrollment_id=p_enrollment_id/);assert.match(fn,/m\.user_id=auth\.uid\(\)/);assert.match(fn,/e\.user_id=auth\.uid\(\)/)});
