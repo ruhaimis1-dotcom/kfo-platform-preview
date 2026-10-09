@@ -4,21 +4,21 @@ header{background:var(--deep);padding:18px 6%;display:flex;justify-content:space
 .company-head{margin-top:24px}
 .company-admin-grid{grid-template-columns:1fr}
 .company-admin-card{
-  border-color:#cfe0d2;
-  background:linear-gradient(135deg,#fff 0%,#f6faf7 100%);
-  box-shadow:0 12px 30px #123b320d;
+  border-color:var(--line);
+  background:#fff;
+  box-shadow:none;
   padding:26px;
 }
 .company-card-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:8px}
 .company-card-head h3{font-size:22px;margin:0}
-.company-role{display:inline-flex;align-items:center;min-height:30px;padding:5px 10px;border-radius:999px;background:#e8f3ea;color:#205e1e;font-size:12px;font-weight:700}
+.company-role{display:inline-flex;align-items:center;min-height:30px;padding:5px 10px;border-radius:999px;background:var(--sage);color:var(--green);font-size:12px;font-weight:700}
 .company-admin-card>p{font-size:14px;line-height:1.8;margin:0 0 18px}
 .company-actions{display:flex;flex-wrap:wrap;gap:9px}
 .company-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:9px 13px;border-radius:9px;text-decoration:none;font-size:13px;font-weight:700}
-.company-primary{background:var(--deep);color:#fff;box-shadow:0 7px 16px #123b3220}
-.company-primary:hover{background:#0b3228}
-.company-link{background:#fff;color:var(--deep);border:1px solid #cbdace}
-.company-link:hover{background:#f2f8f3}
+.company-primary{background:var(--deep);color:#fff;box-shadow:none}
+.company-primary:hover{background:var(--green)}
+.company-link{background:#fff;color:var(--deep);border:1px solid var(--line)}
+.company-link:hover{background:var(--sage)}
 #company-workspace + #learner{margin-top:42px;padding-top:6px;border-top:1px solid var(--line)}
 @media(max-width:680px){
   .company-admin-card{padding:19px}
