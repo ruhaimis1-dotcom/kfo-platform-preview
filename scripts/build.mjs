@@ -17,8 +17,11 @@ await cp(join(root, 'learning', 'course.js'), join(out, 'assets', 'course.js'));
 await cp(join(root, 'learning', 'intelligent-player.css'), join(out, 'assets', 'intelligent-player.css'));
 await mkdir(join(out, 'learn'), { recursive: true });
 await cp(join(root, 'learning', 'player.html'), join(out, 'learn', 'index.html'));
+await mkdir(join(out, 'qa'), { recursive: true });
+await cp(join(root, 'learning', 'player.html'), join(out, 'qa', 'files.html'));
 await mkdir(join(out, 'assets', 'reference'), { recursive: true });
 await cp(join(root, 'content', 'reference', 'customer-service-reference.json'), join(out, 'assets', 'reference', 'customer-service-reference.json'));
+await cp(join(root, 'content', 'reference', 'qa-private-file.json'), join(out, 'assets', 'reference', 'qa-private-file.json'));
 await cp(join(root, 'content', 'reference', 'customer-service-assessment.json'), join(out, 'assets', 'reference', 'customer-service-assessment.json'));
 await cp(join(root, 'learning', 'images'), join(out, 'assets', 'course-images'), { recursive: true });
 for (const name of ['index.html', 'hero-industrial-v2.png', 'home-preview.png', 'logo-approved.png', 'screens-preview.png']) {

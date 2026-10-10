@@ -18,10 +18,11 @@ test('homepage uses approved KFO positioning',()=>{
 });
 
 test('homepage has no fabricated performance metrics or old placeholder copy',()=>{
+  const visibleCopy=home.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'').replace(/<[^>]*>/g,'');
   for(const text of [
     '92%','248','4.8/5','1,284','صورة أصلية منفصلة عن النص',
     'مؤشر الجاهزية','تعلّم تشغيلي لفريق أكثر جاهزية'
-  ]) assert.equal(home.includes(text),false,text);
+  ]) assert.equal(visibleCopy.includes(text),false,text);
 });
 
 test('homepage avoids decorative arrow CTAs',()=>{

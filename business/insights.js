@@ -66,6 +66,15 @@ if (document.querySelector('[data-page=reports]')) {
     if(metrics[0])metrics[0].textContent=total.toLocaleString('ar-SA');
     if(metrics[1])metrics[1].textContent=completed.toLocaleString('ar-SA');
     if(metrics[2])metrics[2].textContent=activeCerts.toLocaleString('ar-SA');
+    document.querySelector('.insight-metrics')?.setAttribute('aria-label','مؤشرات تدريب الشركة');
+    const captions=[...document.querySelectorAll('.insight-metrics .flow-metric small')];
+    if(captions[0])captions[0].textContent='تكليفات الشركة ضمن نطاق إدارتك';
+    if(captions[1])captions[1].textContent='من أصل '+total.toLocaleString('ar-SA')+' تكليفًا';
+    if(captions[2])captions[2].textContent='شهادات سارية ضمن نطاق إدارتك';
+    const badge=document.querySelector('.insight-badge');
+    if(badge)badge.textContent=certificates.length.toLocaleString('ar-SA')+' شهادة في السجل';
+    const foot=document.querySelector('[aria-labelledby="course-report-title"] .flow-footnote');
+    if(foot)foot.textContent='هذه المؤشرات مبنية على تكليفات الشركة، وتستبعد التعلم الشخصي.';
 
     const certHost=document.querySelector('.insight-cert-list');
     certHost.replaceChildren();

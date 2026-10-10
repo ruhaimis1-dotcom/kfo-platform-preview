@@ -26,7 +26,7 @@ test('live company payloads survive script ordering and hydrate pages',()=>{
 test('employee live mode uses membership ids and removes fake contact dependency',()=>{
   assert.match(employees,/membershipId:member\.membership_id/);
   assert.match(employees,/عضوية شركة/);
-  assert.match(employees,/قائمة الأعضاء مرتبطة بسياق الشركة الحالي/);
+  assert.match(employees,/قائمة الأعضاء محدثة حسب نطاق إدارتك/);
 });
 
 test('assignment live mode uses membership ids and only approved reference course',()=>{

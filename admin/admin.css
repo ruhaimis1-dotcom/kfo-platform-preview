@@ -2,6 +2,7 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif}a{color:inherit;text-decoration:none}button,input,select{font:inherit}
 body.admin-guard-pending .admin-shell{visibility:hidden}
 .admin-shell{min-height:100vh;display:grid;grid-template-columns:260px minmax(0,1fr)}
+.admin-shell[hidden]{display:none!important}
 .admin-sidebar{background:var(--deep);color:#fff;padding:22px 16px;display:flex;flex-direction:column;gap:18px}
 .admin-brand{display:flex;align-items:center;gap:11px;padding:0 8px 12px}.admin-brand img{width:92px;height:42px;object-fit:contain}.admin-brand span{font-size:12px;color:#cfe1d5}
 .admin-profile{padding:14px;border:1px solid #ffffff1e;background:#ffffff0b;border-radius:12px}.admin-profile strong,.admin-profile small{display:block}.admin-profile small{color:#c8dacd;margin-top:4px;font-size:11px;overflow-wrap:anywhere}
@@ -19,3 +20,5 @@ body.admin-guard-pending .admin-shell{visibility:hidden}
 .admin-menu{display:none}
 @media(max-width:900px){.admin-shell{grid-template-columns:1fr}.admin-sidebar{position:fixed;right:0;top:0;bottom:0;width:min(290px,88vw);z-index:6;transform:translateX(100%);transition:transform .2s}.admin-sidebar.open{transform:translateX(0)}.admin-menu{display:block;border:1px solid var(--line);background:#fff;border-radius:8px;min-width:42px;min-height:42px}.admin-grid{grid-template-columns:1fr 1fr}.admin-content{padding:22px 16px 44px}.admin-heading{padding:22px 18px}.admin-heading h1{font-size:25px}}
 @media(max-width:620px){.admin-grid{grid-template-columns:1fr}.admin-heading{display:block}.admin-table thead{display:none}.admin-table,.admin-table tbody,.admin-table tr,.admin-table td{display:block;width:100%}.admin-table tr{padding:10px 14px;border-bottom:1px solid var(--line)}.admin-table td{border:0;padding:5px 0}.admin-table td:before{content:attr(data-label);display:block;color:var(--muted);font-size:11px;margin-bottom:2px}}
+
+.review-detail:empty{display:none}.review-detail{padding:22px}.review-detail h2{margin-top:0}.review-detail p{line-height:1.8}.review-answer{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;background:var(--mist);padding:16px;border-radius:8px;max-height:360px;overflow:auto}.review-detail form{display:grid;gap:16px;max-width:640px}.review-detail label{display:grid;gap:7px}.review-detail input,.review-detail select,.review-detail textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px;background:#fff;color:var(--ink);font:inherit}.review-detail textarea{min-height:120px;resize:vertical}.admin-button:disabled{opacity:.6;cursor:wait}

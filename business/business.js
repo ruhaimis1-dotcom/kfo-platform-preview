@@ -72,6 +72,7 @@ showScenario(scenario.value);
 const hydrateDashboard=event=>{
   const data=event.detail?.data||{};
   const metrics=[...document.querySelectorAll('.metrics .metric')];
+  document.querySelector('.metrics')?.setAttribute('aria-label','مؤشرات تدريب الشركة');
   const n=value=>Number(value||0).toLocaleString('ar-SA');
   if(metrics[0]){metrics[0].querySelector('strong').textContent=n(data.active_members);metrics[0].querySelector('small').textContent='عضو نشط في نطاق إدارتك'}
   if(metrics[1]){metrics[1].querySelector('strong').textContent=n(data.assignments);metrics[1].querySelector('small').textContent='تكليف تدريبي للفريق'}
@@ -105,6 +106,8 @@ const hydrateDashboard=event=>{
   }
   const assignments=document.querySelector('.assignments');
   if(assignments){
+    const count=assignments.querySelector('.quiet');
+    if(count)count.textContent=n(data.assignments)+' تكليفًا مؤسسيًا';
     assignments.querySelector('.table-scroll')?.setAttribute('hidden','');
     const foot=assignments.querySelector('.table-foot');
     if(foot)foot.textContent='سيظهر سجل التكليفات هنا عند توفر بياناته التفصيلية.';

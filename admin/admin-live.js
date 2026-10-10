@@ -3,6 +3,7 @@ import {
   loadAdminOverview,loadAdminOrganizations,loadAdminMemberships,loadAdminCourses,
   loadAdminCertificates,loadAdminReviewQueue,loadAdminActivity
 } from './admin-data.mjs';
+import {mountReviewQueue} from './review-ui.mjs';
 
 const client=createClient(
   'https://ktkdcfxeaicbykdurlfg.supabase.co',
@@ -70,9 +71,12 @@ async function start(){
       ]);
     }else if(page==='reviews'){
       const rows=await loadAdminReviewQueue(client);
-      renderRows(document.querySelector('#admin-reviews'),rows,[
-        ['المتعلم','display_name'],['الدورة','course_slug'],['النشاط','activity_key'],['الحالة','review_status']
-      ]);
+      mountReviewQueue({document,client,tbody:document.querySelector('#admin-reviews'),rows,
+        detailHost:document.querySelector('#admin-review-detail'),reload:start,
+        download:async({blob,name})=>{
+          const url=URL.createObjectURL(blob),a=document.createElement('a');
+          a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+        }});
     }else if(page==='activity'){
       const rows=await loadAdminActivity(client);
       renderRows(document.querySelector('#admin-activity'),rows,[

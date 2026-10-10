@@ -34,6 +34,24 @@ function hydrateMembers(payload){
   const members=payload?.data;
   if(!Array.isArray(members))return;
   liveMode=true;
+  const summary=document.querySelector('.d1-overview');
+  summary?.setAttribute('aria-label','ملخص عضويات الشركة ضمن صلاحيتك');
+  const metrics=[...document.querySelectorAll('.d1-overview .d1-stat')];
+  if(metrics[0]){
+    metrics[0].querySelector('span').textContent='أعضاء نشطون';
+    metrics[0].querySelector('strong').textContent=members.filter(m=>m.membership_status==='active').length.toLocaleString('ar-SA');
+    metrics[0].querySelector('small').textContent='ضمن نطاق إدارتك';
+  }
+  for(const index of [1,2])if(metrics[index]){
+    metrics[index].querySelector('strong').textContent='—';
+    metrics[index].querySelector('small').textContent=index===1?'سجل الدعوات قيد التجهيز':'دليل الفرق قيد التجهيز';
+  }
+  const foot=document.querySelector('.d1-footnote');
+  if(foot)foot.textContent='تعرض القائمة عضويات الشركة ضمن نطاق إدارتك.';
+  const teamCount=document.querySelector('#teams-panel .d1-count');
+  if(teamCount)teamCount.textContent='دليل الفرق قيد التجهيز';
+  const teamCopy=document.querySelector('#teams-panel .d1-panel-head p');
+  if(teamCopy)teamCopy.textContent='سيظهر هيكل الفرق عند اكتمال ربط الفروع والأقسام.';
   people=members.map(member=>{
     const name=(member.display_name||'عضو الشركة').trim();
     return {

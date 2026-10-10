@@ -1,0 +1,4 @@
+{
+ "slug":"qa-private-file-20261010","version":1,"title":"اختبار رفع ملف خاص — بيانات مؤقتة",
+ "skills":[],"activities":[{"key":"qa-file","type":"file_evidence","title":"رفع ملف الاختبار","sequence":1,"required":true,"instructions":"هذا نشاط اختبار مؤقت. ارفع ملف الاختبار المخصص فقط؛ لا ترفع بيانات شخصية أو ملفات عمل."}]
+}

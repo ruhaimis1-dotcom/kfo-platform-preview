@@ -5,7 +5,7 @@ case'quick_check':case'scenario':case'error_spotting':return title+'<p>'+esc(a.p
 case'ordering':return title+'<p>'+esc(a.prompt)+'</p><ol class="ordering">'+(a.items||[]).map(i=>'<li>'+esc(i)+'</li>').join('')+'</ol>';
 case'reflection':return title+'<p>'+esc(a.prompt)+'</p><textarea data-evidence="text" rows="6"></textarea>';
 case'practical_task':return title+'<p>'+esc(a.instructions)+'</p><textarea data-evidence="structured" rows="8"></textarea>';
-case'file_evidence':return title+'<p>'+esc(a.instructions)+'</p><input type="file" data-evidence="file">';
+case'file_evidence':return title+'<p>'+esc(a.instructions)+'</p><input type="file" data-evidence="file" accept=".pdf,.xlsx,.csv,.png,.jpg,.jpeg"><p>اختر ملف PDF أو Excel أو CSV أو صورة PNG أو JPEG، بحد أقصى 10 ميجابايت. يُحفظ الملف بشكل خاص ويظل التطبيق بانتظار المراجعة.</p>';
 case'simulation':return title+'<p>'+esc(a.prompt)+'</p><div data-simulation></div>';
 case'assessment':return title+'<p>'+esc(a.instructions||'أكمل التقييم لقياس إتقانك للمهارات المستهدفة.')+'</p><div data-official-assessment></div>';
 default:throw new Error('unsupported activity')}}
