@@ -28,13 +28,27 @@ function showError(message){
   }
 }
 function n(value){return Number(value||0).toLocaleString('ar-SA')}
+const roleNames={SA:'مسؤول المنصة',CO:'مسؤول الشركة',BM:'مدير الفرع',EM:'موظف'};
+const membershipNames={active:'نشطة',invited:'بانتظار قبول الدعوة',suspended:'موقوفة',revoked:'ملغاة',inactive:'غير نشطة'};
 function fillOverview(data){
   const keys=['organizations','memberships','courses','certificates','pending_reviews','audit_events'];
   const cards=[...document.querySelectorAll('[data-admin-metric]')];
   cards.forEach((card,i)=>{const key=keys[i];if(key)card.textContent=n(data?.[key])});
+  const attention=document.querySelector('#admin-attention');
+  if(attention){
+    attention.replaceChildren();
+    const count=Number(data?.pending_reviews||0),text=document.createElement('p');
+    text.textContent=count>0?'لديك '+n(count)+' مهمة بانتظار المراجعة.':'لا توجد مهام بانتظار المراجعة.';
+    attention.append(text);
+    if(count>0){const link=document.createElement('a');link.href='/admin/reviews';link.textContent='فتح مراجعات الأدلة';attention.append(link)}
+  }
 }
 function renderRows(tbody,rows,cells){
   tbody.replaceChildren();
+  if(rows.length===0){
+    const tr=document.createElement('tr'),td=document.createElement('td');
+    td.colSpan=cells.length;td.textContent='لا توجد سجلات لعرضها حاليًا.';tr.append(td);tbody.append(tr);return;
+  }
   for(const row of rows){
     const tr=document.createElement('tr');
     for(const [label,field,format] of cells){
@@ -58,7 +72,7 @@ async function start(){
     }else if(page==='users'){
       const rows=await loadAdminMemberships(client);
       renderRows(document.querySelector('#admin-users'),rows,[
-        ['الشركة','organization_name'],['المستخدم','display_name'],['الدور','role_code'],['الحالة','membership_status']
+        ['الشركة','organization_name'],['المستخدم','display_name'],['الدور','role_code',v=>roleNames[v]||'دور غير معروف'],['الحالة','membership_status',v=>membershipNames[v]||'حالة غير معروفة']
       ]);
     }else if(page==='content'){
       const rows=await loadAdminCourses(client);

@@ -1,6 +1,7 @@
 import {createClient} from '@supabase/supabase-js';
 import {loadWorkspace} from '../auth/workspace-data.mjs';
 import {loadAccessContext,attachAccessContext} from '../auth/access-context.mjs';
+import {canManageSettings} from '../company/settings-data.mjs';
 
 const client=createClient(
   'https://ktkdcfxeaicbykdurlfg.supabase.co',
@@ -29,6 +30,8 @@ function showCompany(membership){
   document.body.dataset.organizationId=membership.organizationId;
   document.body.dataset.membershipId=membership.id;
   document.body.dataset.companyRole=[...roleCodes(membership)].join(',');
+  document.body.dataset.companyName=membership.name;
+  document.body.dataset.companySettingsManage=String(canManageSettings(membership));
   document.querySelectorAll('.tenant strong').forEach(el=>el.textContent=membership.name);
   const avatar=document.querySelector('.tenant-avatar');
   if(avatar) avatar.textContent=(membership.name||'ش').trim().charAt(0)||'ش';
@@ -42,6 +45,7 @@ function showCompany(membership){
     organizationId:membership.organizationId,
     membershipId:membership.id,
     name:membership.name,
+    canManageSettings:canManageSettings(membership),
     roles:[...roleCodes(membership)]
   }}));
 }

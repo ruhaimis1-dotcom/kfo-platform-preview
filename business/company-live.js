@@ -59,7 +59,9 @@ async function start(context){
     else {
       document.body.dataset.companyDataState='partial';
       document.querySelectorAll('.preview-note').forEach(note=>{
-        note.textContent='هذا القسم قيد التجهيز، والإعدادات الظاهرة فيه للمعاينة فقط.';
+        note.textContent=normalized==='settings'
+          ? 'اسم الشركة مرتبط بحسابك. بقية الإعدادات المعروضة قيد التجهيز ولا تُحفظ.'
+          : 'هذا القسم قيد التجهيز، والإعدادات الظاهرة فيه للمعاينة فقط.';
       });
     }
   }catch(error){

@@ -16,6 +16,24 @@ function selectSection(){
 }
 window.addEventListener('hashchange',selectSection);selectSection();
 
+function showCompanyProfile(context){
+  const name=document.querySelector('#settings-company-name');
+  const edit=document.querySelector('#settings-edit-name');
+  if(!context?.organizationId||!name||!edit)return;
+  name.textContent=context.name||'اسم الشركة غير متاح';
+  edit.hidden=true;edit.removeAttribute('href');
+  if(context.canManageSettings===true){
+    edit.href='/company/settings?organization='+encodeURIComponent(context.organizationId);
+    edit.hidden=false;
+  }
+}
+window.addEventListener('kfo:company-context',event=>showCompanyProfile(event.detail));
+if(document.body.dataset.organizationId)showCompanyProfile({
+  organizationId:document.body.dataset.organizationId,
+  name:document.body.dataset.companyName,
+  canManageSettings:document.body.dataset.companySettingsManage==='true'
+});
+
 const nameInput=document.querySelector('#portal-name');
 const welcomeInput=document.querySelector('#welcome-copy');
 const previewName=document.querySelector('#portal-preview-name');
