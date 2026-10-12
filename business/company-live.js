@@ -1,4 +1,5 @@
 import {createClient} from '@supabase/supabase-js';
+import {referenceCourseSummary} from './course-library-data.mjs';
 import {
   loadCompanyDashboard,loadCompanyMembers,loadCompanyTrainingReport,
   loadCompanyCertificates,assignCompanyCourse
@@ -53,7 +54,14 @@ async function start(context){
       ]);
       emit('kfo:company-report',{report,certificates,context});
     }
-    const supported=['dashboard','employees','assignments','reports'];
+    if(page==='courses'){
+      const summary=referenceCourseSummary(await loadCompanyTrainingReport(client,context.organizationId));
+      for(const key of ['total','active','completed']){
+        const metric=document.querySelector('[data-course-count="'+key+'"]');
+        if(metric)metric.textContent=summary[key].toLocaleString('ar-SA');
+      }
+    }
+    const supported=['dashboard','employees','assignments','reports','courses'];
     const normalized=location.pathname.split('/').pop()||page;
     if(supported.includes(page)||supported.includes(normalized)) setLiveState('ready');
     else {
