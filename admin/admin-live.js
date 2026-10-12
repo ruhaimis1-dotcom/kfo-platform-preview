@@ -4,6 +4,7 @@ import {
   loadAdminCertificates,loadAdminReviewQueue,loadAdminActivity
 } from './admin-data.mjs';
 import {mountReviewQueue} from './review-ui.mjs';
+import {mountSavedEvidenceFile} from './saved-file-ui.mjs';
 
 const client=createClient(
   'https://ktkdcfxeaicbykdurlfg.supabase.co',
@@ -70,13 +71,20 @@ async function start(){
         ['الرمز','certificate_code'],['المتعلم','display_name'],['الدورة','course_slug'],['الحالة','revoked_at',v=>v?'ملغاة':'سارية']
       ]);
     }else if(page==='reviews'){
+      const download=async({blob,name})=>{
+        const url=URL.createObjectURL(blob),a=document.createElement('a');
+        a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+      };
       const rows=await loadAdminReviewQueue(client);
       mountReviewQueue({document,client,tbody:document.querySelector('#admin-reviews'),rows,
         detailHost:document.querySelector('#admin-review-detail'),reload:start,
-        download:async({blob,name})=>{
-          const url=URL.createObjectURL(blob),a=document.createElement('a');
-          a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
-        }});
+        download});
+      const evidenceId=new URLSearchParams(location.search).get('file');
+      if(evidenceId){
+        let host=document.querySelector('#admin-saved-file');
+        if(!host){host=document.createElement('section');host.id='admin-saved-file';host.className='admin-section review-detail';document.querySelector('.admin-content').append(host)}
+        await mountSavedEvidenceFile({document,client,host,evidenceId,download});
+      }
     }else if(page==='activity'){
       const rows=await loadAdminActivity(client);
       renderRows(document.querySelector('#admin-activity'),rows,[
