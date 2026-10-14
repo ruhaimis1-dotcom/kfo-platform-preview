@@ -7,7 +7,7 @@ export async function loadActivityRecords(client,session,course){
  const{data:progress,error:perr}=await client.from('enrollment_progress').select('lesson_id,completed_at').eq('enrollment_id',session.enrollment.id).eq('user_id',session.userId).not('completed_at','is',null);
  if(perr||!Array.isArray(progress))throw new Error('تعذر تحميل تقدم الدورة.');
  for(const row of progress){
-  if(course.activities.some(a=>a.key===row.lesson_id))latest.set(row.lesson_id,{activity_key:row.lesson_id,completed_at:row.completed_at});
+  if(course.activities.some(a=>a.key===row.lesson_id&&!['reflection','practical_task','file_evidence','assessment'].includes(a.type)))latest.set(row.lesson_id,{activity_key:row.lesson_id,completed_at:row.completed_at});
  }
  if(ids.length){
   const{data:evidence,error:eerr}=await client.from('learning_evidence').select('id,activity_id,review_status,submitted_at').eq('enrollment_id',session.enrollment.id).eq('user_id',session.userId).in('activity_id',ids).order('submitted_at',{ascending:false});

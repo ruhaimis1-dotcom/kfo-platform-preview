@@ -1,3 +1,4 @@
+import {mountContentEditor} from './content-editor.mjs';
 import {createClient} from '@supabase/supabase-js';
 import {
   loadAdminOverview,loadAdminOrganizations,loadAdminMemberships,loadAdminCourses,
@@ -78,6 +79,7 @@ async function start(){
       ]);
     }else if(page==='content'){
       const rows=await loadAdminCourses(client);
+      await mountContentEditor({document,client});
       renderRows(document.querySelector('#admin-courses'),rows,[
         ['الدورة','course_slug'],['الإصدار','course_version',n],['الأنشطة','activity_count',n],['المهارات','skill_count',n]
       ]);
