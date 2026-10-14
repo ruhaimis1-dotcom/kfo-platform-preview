@@ -3,6 +3,7 @@ import {
   loadAdminOverview,loadAdminOrganizations,loadAdminMemberships,loadAdminCourses,
   loadAdminCertificates,loadAdminReviewQueue,loadAdminActivity
 } from './admin-data.mjs';
+import {mountOrganizationForm} from './organization-actions.mjs';
 import {mountReviewQueue} from './review-ui.mjs';
 import {mountSavedEvidenceFile} from './saved-file-ui.mjs';
 
@@ -66,6 +67,7 @@ async function start(){
       fillOverview(await loadAdminOverview(client));
     }else if(page==='organizations'){
       const rows=await loadAdminOrganizations(client);
+      mountOrganizationForm({document,client,reload:start});
       renderRows(document.querySelector('#admin-organizations'),rows,[
         ['الشركة','display_name'],['الحالة','tenant_access_enabled',v=>v?'نشطة':'متوقفة'],['العضويات','member_count',n]
       ]);
