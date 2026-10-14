@@ -5,39 +5,6 @@ menu.addEventListener('click',()=>{const open=!sidebar.classList.contains('open'
 document.addEventListener('click',event=>{if(sidebar.classList.contains('open')&&!sidebar.contains(event.target)&&!menu.contains(event.target))closeMenu()});
 document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu()});
 
-const sections=[...document.querySelectorAll('.settings-panel')];
-const links=[...document.querySelectorAll('.settings-nav a')];
-function selectSection(){
-  const id=decodeURIComponent(location.hash.slice(1));
-  const selected=sections.find(section=>section.id===id)||sections[0];
-  sections.forEach(section=>{section.hidden=section!==selected});
-  links.forEach(link=>{if(link.getAttribute('href')===`#${selected.id}`)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current')});
-  document.title=`${selected.dataset.title} — إعدادات الشركة — كفو`;
-}
-window.addEventListener('hashchange',selectSection);selectSection();
-
-function showCompanyProfile(context){
-  const name=document.querySelector('#settings-company-name');
-  const edit=document.querySelector('#settings-edit-name');
-  if(!context?.organizationId||!name||!edit)return;
-  name.textContent=context.name||'اسم الشركة غير متاح';
-  edit.hidden=true;edit.removeAttribute('href');
-  if(context.canManageSettings===true){
-    edit.href='/company/settings?organization='+encodeURIComponent(context.organizationId);
-    edit.hidden=false;
-  }
-}
+function showCompanyProfile(context){const name=document.querySelector('#settings-company-name'),edit=document.querySelector('#settings-edit-name');if(!context?.organizationId)return;name.textContent=context.name||'اسم الشركة غير متاح';edit.hidden=true;edit.removeAttribute('href');if(context.canManageSettings){edit.href='/company/settings?organization='+encodeURIComponent(context.organizationId);edit.hidden=false}}
 window.addEventListener('kfo:company-context',event=>showCompanyProfile(event.detail));
-if(document.body.dataset.organizationId)showCompanyProfile({
-  organizationId:document.body.dataset.organizationId,
-  name:document.body.dataset.companyName,
-  canManageSettings:document.body.dataset.companySettingsManage==='true'
-});
-
-const nameInput=document.querySelector('#portal-name');
-const welcomeInput=document.querySelector('#welcome-copy');
-const previewName=document.querySelector('#portal-preview-name');
-const previewCopy=document.querySelector('#portal-preview-copy');
-function updatePreview(){previewName.textContent=nameInput.value.trim()||'أكاديمية الشركة';previewCopy.textContent=welcomeInput.value.trim()||'مرحبًا بك في مساحة التعلم الخاصة بالشركة.'}
-[nameInput,welcomeInput].forEach(input=>input.addEventListener('input',updatePreview));
-document.querySelector('#reset-brand').addEventListener('click',()=>{nameInput.value='أكاديمية الشركة';welcomeInput.value='مرحبًا بك في مساحة التعلم الخاصة بالشركة.';updatePreview();nameInput.focus()});
+if(document.body.dataset.organizationId)showCompanyProfile({organizationId:document.body.dataset.organizationId,name:document.body.dataset.companyName,canManageSettings:document.body.dataset.companySettingsManage==='true'});

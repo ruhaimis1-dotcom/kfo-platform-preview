@@ -1,3 +1,4 @@
+import {mountCompanySettings} from '../company/settings-live.mjs';
 import {mountCourseOrders} from '../commerce/course-orders.mjs';
 import {createClient} from '@supabase/supabase-js';
 import {referenceCourseSummary} from './course-library-data.mjs';
@@ -63,7 +64,8 @@ async function start(context){
       }
     }
     if(page==='orders'){if(!context.canManageSettings)throw new Error('طلبات الشركة متاحة لمسؤول الشركة فقط.');const {data,error}=await client.auth.getUser();if(error||!data?.user)throw new Error('تعذر التحقق من الحساب.');await mountCourseOrders({document,client,userId:data.user.id,organizationId:context.organizationId,storage:sessionStorage,generate:()=>crypto.randomUUID()})}
-    const supported=['orders','dashboard','employees','assignments','reports','courses'];
+    if(page==='settings')await mountCompanySettings({document,client,context});
+    const supported=['settings','orders','dashboard','employees','assignments','reports','courses'];
     const normalized=location.pathname.split('/').pop()||page;
     if(supported.includes(page)||supported.includes(normalized)) setLiveState('ready');
     else {
@@ -83,6 +85,8 @@ if(document.body.dataset.organizationId){
   start({
     organizationId:document.body.dataset.organizationId,
     membershipId:document.body.dataset.membershipId,
+    name:document.body.dataset.companyName,
+    canManageSettings:document.body.dataset.companySettingsManage==='true',
     roles:(document.body.dataset.companyRole||'').split(',').filter(Boolean)
   });
 }
