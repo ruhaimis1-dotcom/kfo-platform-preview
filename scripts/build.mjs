@@ -126,3 +126,7 @@ await build({
   bundle: true, minify: true, format: 'esm', target: ['es2020'],
   outfile: join(out, 'assets', 'workspace.js'),
 });
+
+await cp(join(root,'commerce','personal-orders.html'),join(out,'orders.html'));
+await cp(join(root,'commerce','orders.css'),join(out,'assets','orders.css'));
+await build({entryPoints:[join(root,'commerce','personal-orders.js')],bundle:true,minify:true,format:'esm',target:['es2020'],outfile:join(out,'assets','personal-orders.js')});

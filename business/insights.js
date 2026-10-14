@@ -103,7 +103,7 @@ if (document.querySelector('[data-page=reports]')) {
   window.addEventListener('kfo:company-report',event=>hydrateReport(event.detail));
   if(window.kfoCompanyLive?.['kfo:company-report'])hydrateReport(window.kfoCompanyLive['kfo:company-report']);
 }
-if (document.querySelector('[data-page=orders]')) {
+if (document.querySelector('[data-page=orders]')&&document.querySelector('#order-dialog')) {
   const tabs = [...document.querySelectorAll('.insight-tabs button')];
   const rows = [...document.querySelectorAll('#order-rows tr')];
   tabs.forEach(tab => tab.addEventListener('click', () => {
