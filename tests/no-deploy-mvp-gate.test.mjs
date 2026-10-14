@@ -11,7 +11,8 @@ test('learner migrations stay within the recorded integration gate scope',async(
   '20261007165647_intelligent_course_engine.sql',
   '20261007165652_reference_course_seed.sql',
   '20261007165825_learner_company_security_hardening.sql',
-  '20261010110658_private_evidence_storage_gate.sql'
+  '20261010110658_private_evidence_storage_gate.sql',
+  '20261014223935_course_learning_design_drafts.sql'
  ]);
  for(const name of names){
   const sql=await readFile(new URL('../supabase/migrations/'+name,import.meta.url),'utf8');
@@ -27,3 +28,5 @@ test('database integration does not authorize production deployment',async()=>{
  const build=await readFile(new URL('../scripts/build.mjs',import.meta.url),'utf8');
  assert.doesNotMatch(build,/child_process|\bfetch\s*\(|\bexec(?:Sync|File)?\s*\(|\bspawn\s*\(/);
 });
+
+test('authoring design migration stays draft-only and preserves prepared snapshots',async()=>{const sql=await readFile(new URL('../supabase/migrations/20261014223935_course_learning_design_drafts.sql',import.meta.url),'utf8');assert.doesNotMatch(sql,/(?:insert into|update|delete from) public\.(?:course_activities|course_skills|course_rubrics|learning_enrollments|learner_certificates)\b/i);assert.doesNotMatch(sql,/set runtime_ready\s*=/i);assert.match(sql,/on conflict do nothing/);assert.match(sql,/validate_course_learning_design\(a.learning_design,p_activities\)/);assert.match(sql,/security invoker set search_path=''/);});
