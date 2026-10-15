@@ -161,3 +161,10 @@
 - Saved evidence, reuse distinctions and design decisions in docs/KFO-course-benchmark-20261015.md. Free access is not treated as permission to copy/rebrand; no third-party course content/media imported.
 - Implemented first KFO lesson layout: exact authored grammar becomes objective/explanation/example/practice sections. All text escaped, legacy/incomplete labels fall back to paragraphs, linebreaks/formulas retained. Existing brand colors; no logo/font changes or scoring mutations.
 - Build +291 tests pass. No browser visual verification, database changes or deployment. Full instructional interaction/feedback, program screenshots and real application QA remain open.
+
+## Formative Excel and Power BI labs — 2026-10-15
+- Added Excel quantity/discount prediction exercise on unit2 and PowerBI branch-filter prediction exercise on unit6. Explanations show calculation, discount, row count and average; stale feedback clears on changed input and reset restores baseline.
+- Explicit educational simulation, not actual Office/PBIX runtime. No grade, evidence, progress or certification writes. Official assessments untouched. Arabic/Persian digits supported; malformed/range-invalid values rejected.
+- Public synthetic branch aggregates derived from reviewed CSV and checked against it (all29828/24; Riyadh9028/8/1128.50). Fixed course/version/activity allowlist; safe DOM labels and feedback.
+- Build and295 local tests passed. Visual token check caught a disallowed green; changed to existing approved #205E1E. No browser visual QA, database change or deployment.
+- Catalog clarification to user: five main courses (three original public self-study + two unpublished data-skills drafts), plus separate reference customer-service runtime course used for engine QA. Do not count the reference as an additional launch product without catalog review.
