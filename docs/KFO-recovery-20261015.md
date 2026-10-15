@@ -141,3 +141,10 @@
 - Checked Microsoft sources for XLOOKUP compatibility, PivotTable refresh, star schema/relationships, COUNTROWS granularity and DIVIDE. references.json records official URLs/check date. Training data claims remain verified by local CSV checks.
 - No claim of final 6–9-hour duration, Excel recalculation, PBIX execution, visual QA, database import, deployment, learner progress or certificate activation. These are unpublished local authoring drafts; application and pedagogical review remain required.
 - Validation result: build and286 local tests passed, including curriculum/design consistency, evidence rubric totals and exclusion of authoring solutions from public build.
+
+## Persisted data-skills drafts in KFO administration — 2026-10-15
+- Preflight confirmed excel-basics and power-bi-basics absent. Imported both atomically through existing SA metadata/design functions under authenticated SQL identity saud@hirely.sa. No new schema or migration.
+- prepare-data-skills-import.mjs generates reviewable SQL only, with native validators and create-only revision-zero guard. It cannot overwrite an existing course; a conflicting import aborts both. Exact activity/design JSON and returned revision checked inside transaction before commit.
+- Independent response: Excel24 activities/8 skills and PowerBI25/8, version1, metadata/lesson revisions1, published=false, runtime_ready=false. These rows now persist as actual administration drafts; not learner-ready releases.
+- Rolled-back SQL verification passed: duplicate creation rejected; unready publish rejected; learner cannot read either draft; anonymous cannot read editor; both rows remain unpublished/unready at revisions1.
+- Build and286 local tests passed. No actual browser administration test, Excel/PBIX execution or frontend deployment. Attachments remain authoring assets and are not delivered from learner runtime yet. Next: reviewed attachment delivery and learner runtime/release integration; application QA remains open.
