@@ -1,0 +1,12 @@
+{
+ "checked_on":"2026-10-15",
+ "purpose":"Technical editorial references; course prose is newly authored. Actual Excel and Power BI application QA remains pending.",
+ "sources":[
+  {"topic":"XLOOKUP compatibility","url":"https://support.microsoft.com/en-us/excel/functions/xlookup-function"},
+  {"topic":"PivotTable refresh","url":"https://support.microsoft.com/en-us/excel/refresh-pivottable-data"},
+  {"topic":"Power BI star schema","url":"https://learn.microsoft.com/en-us/power-bi/guidance/star-schema"},
+  {"topic":"Power BI model relationships","url":"https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-create-and-manage-relationships"},
+  {"topic":"COUNTROWS and row granularity","url":"https://learn.microsoft.com/en-us/dax/best-practices/dax-countrows"},
+  {"topic":"DIVIDE zero denominator","url":"https://learn.microsoft.com/en-us/dax/divide-function-dax"}
+ ]
+}

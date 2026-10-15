@@ -133,3 +133,11 @@
 - Extracted five attachments byte-for-byte (two XLSX, three CSV), recorded source and attachment SHA-256. Confirmed XLSX ZIP/XML integrity (not Excel recalculation or visual QA), sales24/branches3/products4, total29828/Riyadh9028.
 - Numeric response questions adapted to multiple choice for current authoring contract. Assessment review/randomization, skills/rubrics, remaining unit authoring, simulations, attachment delivery, database import/activation, progress/certificates and real application/browser QA remain open.
 - Files are authoring-only: build does not ship this directory, solution files or answer keys. No database write or frontend deployment this round.
+
+## Eight-unit Excel and Power BI curriculum drafts — 2026-10-15
+- Authored all 8 roadmap units per course as editorial drafts: learning outcome, explanation, worked example, exercise and unit multiple-choice review. Added original sample steps as guided labs and one final evidence-review project each: Excel24 and PowerBI25 activities.
+- Eight skills per course, every activity mapped; practical review rubrics total100 (Excel40/30/20/10, PowerBI30/30/25/15). Review answers vary across all three positions; fixed first-answer sample questions are not included in expanded curriculum.
+- Kept original sample extraction immutable. Separate build-data-skills-drafts.mjs generates expanded curriculum from unit-authoring.json; validation uses existing native activity/design contracts.
+- Checked Microsoft sources for XLOOKUP compatibility, PivotTable refresh, star schema/relationships, COUNTROWS granularity and DIVIDE. references.json records official URLs/check date. Training data claims remain verified by local CSV checks.
+- No claim of final 6–9-hour duration, Excel recalculation, PBIX execution, visual QA, database import, deployment, learner progress or certificate activation. These are unpublished local authoring drafts; application and pedagogical review remain required.
+- Validation result: build and286 local tests passed, including curriculum/design consistency, evidence rubric totals and exclusion of authoring solutions from public build.

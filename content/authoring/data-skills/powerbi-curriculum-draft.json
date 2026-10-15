@@ -1,0 +1,513 @@
+{
+  "course_slug": "power-bi-basics",
+  "course_version": 1,
+  "revision": 0,
+  "title": "أساسيات Power BI: من البيانات إلى التقرير",
+  "status": "draft",
+  "published": false,
+  "runtime_ready": false,
+  "source_sha256": "cdaea374ccd3d5f3d533e2f6aa641ea0e78e51615e21a595310e875f9c606c2a",
+  "scope": "Eight newly authored curriculum units plus original guided sample; editorial and application QA pending.",
+  "activities": [
+    {
+      "key": "powerbi-unit-1-lesson",
+      "type": "content",
+      "title": "1. تعرّف على رحلة البيانات",
+      "body": "الهدف: يميز التحويل والنموذج والتقرير ويستورد ملفات التدريب محليًا.\n\nابدأ بسؤال العمل ثم حدد المصدر والتحويلات والعلاقات والمقاييس والعرض. Power Query يجهز البيانات، والنموذج يحدد كيف ترتبط الجداول، وصفحة التقرير تعرض النتائج. استخدم Power BI Desktop على Windows للتطبيق. العمل المحلي لا يتطلب نشر التقرير أو رفع بيانات التدريب إلى الخدمة. اختلاف مكان أمر في إصدارك لا يغير هدف الخطوة؛ تحقق من أسماء الجداول والنتيجة.\n\nمثال تطبيقي:\nضع Sales.csv وBranches.csv وProducts.csv في مجلد تدريب ثابت. استوردها عبر Text/CSV، واختر التحويل لمراجعة البيانات قبل التحميل. المتوقع 24 صفًا للمبيعات و3 للفروع و4 للمنتجات. سمِّ الجداول Sales وBranches وProducts لتتطابق مع المقاييس القادمة.\n\nتدريبك:\nحدد أين تراجع نوع عمود، وأين تنشئ علاقة، وأين تضيف بطاقة إلى التقرير. سجل عدد صفوف كل جدول بعد الاستيراد."
+    },
+    {
+      "key": "powerbi-unit-1-review",
+      "type": "scenario",
+      "title": "مراجعة الوحدة 1",
+      "prompt": "أين تجهز أنواع البيانات قبل تحميل النموذج؟",
+      "options": [
+        "عنوان صفحة التقرير",
+        "نافذة ألوان الرسم",
+        "Power Query"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "key": "powerbi-unit-2-lesson",
+      "type": "content",
+      "title": "2. نظّف في Power Query",
+      "body": "الهدف: يضبط الأنواع والمنطقة ويحقق القيم دون إخفاء أخطاء المصدر.\n\nافحص الترميز UTF-8 والفاصل عند استيراد CSV العربي. اجعل OrderID وBranchID وProductID نصوصًا؛ Quantity عددًا صحيحًا؛ والمبالغ والخصم أعدادًا عشرية. OrderDate تاريخ، وعند الالتباس استخدم تحويل النوع بالمنطقة المناسبة لصيغة المصدر. النسبة العشرية 0.1 تعني 10%. لا تستبدل الأخطاء بصفر قبل فهمها؛ قد يؤدي ذلك إلى تقرير يبدو سليمًا ويقلل المبيعات.\n\nمثال تطبيقي:\nافتح أول صف وتأكد أن Quantity=3 وUnitPriceSAR=250 وDiscountRate=0.1 وNetSalesSAR=675. راجع خطوات التحويل بالترتيب، وتأكد أن تحويل النوع لم ينتج أخطاء أو قيمًا فارغة جديدة. استخدم نسخة تجريبية عند اختبار تاريخ غير صالح بدل إفساد ملفات التدريب الأصلية.\n\nتدريبك:\nراجع أنواع الأعمدة الثمانية وسجل أي خطوة أصلحتها. قارن عدد الصفوف قبل وبعد التحويل، ثم نفذ Close & Apply."
+    },
+    {
+      "key": "powerbi-unit-2-review",
+      "type": "scenario",
+      "title": "مراجعة الوحدة 2",
+      "prompt": "قرئ تاريخ كنص وظهر خطأ عند التحويل؛ ما التصرف الصحيح؟",
+      "options": [
+        "فحص صيغة المصدر والمنطقة قبل اعتماد التحويل",
+        "استبدال كل التواريخ بتاريخ اليوم",
+        "حذف العمود دون مراجعة"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "key": "powerbi-unit-3-lesson",
+      "type": "content",
+      "title": "3. صمّم العلاقات",
+      "body": "الهدف: ينشئ علاقتين نشطتين من أبعاد فريدة إلى المبيعات.\n\nSales جدول وقائع يمثل صفه طلبًا واحدًا. Branches وProducts جدولان مرجعيان؛ يجب أن يكون مفتاح كل منهما فريدًا وغير فارغ. اربط Branches[BranchID] بعمود Sales[BranchID]، والمنتجات بالطريقة نفسها. اختر علاقة 1 إلى * نشطة واتجاه تصفية Single من الجدول المرجعي إلى المبيعات. لا تجعل العلاقة متعددة إلى متعددة لمجرد تجاوز خطأ في تفرد المفاتيح.\n\nمثال تطبيقي:\nاعرض النموذج وافحص علامتي 1 و* لكل علاقة. إذا تكرر B01 في Branches، راجع سبب التكرار قبل الحذف؛ قد يكون الجدول غير مصمم على مستوى فرع واحد. تحقق أن كل معرف فرع ومنتج في Sales موجود في المرجع، ثم اختبر مرشحًا من Branches.\n\nتدريبك:\nأنشئ العلاقتين والتقط صورة للنموذج موضحًا المفاتيح والاتجاه. اشرح لماذا تكرار BranchID في Sales طبيعي وتكراره في Branches يحتاج فحصًا."
+    },
+    {
+      "key": "powerbi-unit-3-review",
+      "type": "scenario",
+      "title": "مراجعة الوحدة 3",
+      "prompt": "أي ترتيب صحيح لعلاقة الفروع؟",
+      "options": [
+        "Sales جهة 1 رغم تكرار الفرع",
+        "Branches جهة 1 وSales جهة *",
+        "لا نحتاج علاقة إذا تشابه اسم العمود"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "key": "powerbi-unit-4-lesson",
+      "type": "content",
+      "title": "4. ابدأ مقاييس DAX",
+      "body": "الهدف: ينشئ مقاييس المبيعات والعدد والمتوسط ويفسر معنى الصف.\n\nالمقياس يحسب نتيجة بحسب سياق التصفية في التقرير. أنشئ كل مقياس على حدة بأسماء واضحة. SUM يجمع عمود الصافي، وCOUNTROWS يعد الصفوف، وDIVIDE يقسم مع معالجة المقام الصفري بإرجاع فارغ افتراضيًا. COUNTROWS يعني عدد الطلبات هنا لأن كل صف طلب فريد؛ إذا أصبح الصف بندًا داخل الطلب فلا تعمم التسمية، وقد تحتاج DISTINCTCOUNT لمعرف الطلب.\n\nمثال تطبيقي:\nأنشئ: Total Sales = SUM(Sales[NetSalesSAR]) ثم Order Count = COUNTROWS(Sales) ثم Average Order = DIVIDE([Total Sales], [Order Count]). اعرضها في بطاقات: 29828 و24 ومتوسط 1242.83 بعد التنسيق. لا تجمع عمود متوسطات ثابتة بدل قسمة الإجمالي على العدد في السياق الحالي.\n\nتدريبك:\nاكتب المقاييس الثلاثة وتأكد أنها مقاييس لا أعمدة محسوبة. اشرح ماذا يحدث للمتوسط إذا تغير الفرع المحدد، ولماذا لا يجوز افتراض أن كل صف طلب في أي مصدر آخر."
+    },
+    {
+      "key": "powerbi-unit-4-review",
+      "type": "scenario",
+      "title": "مراجعة الوحدة 4",
+      "prompt": "إذا صار لكل طلب عدة صفوف، هل COUNTROWS يساوي عدد الطلبات دائمًا؟",
+      "options": [
+        "نعم لأنه يزيل التكرار تلقائيًا",
+        "نعم لأنه يجمع Quantity",
+        "لا؛ يجب مراجعة مستوى الصف وطريقة العد"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "key": "powerbi-unit-5-lesson",
+      "type": "content",
+      "title": "5. ابنِ صفحة مفهومة",
+      "body": "الهدف: يصمم صفحة تقرير بمؤشرات ومقارنة وعناوين دقيقة.\n\nصمم الصفحة حول قرار، لا حول عدد الرسوم. ابدأ بثلاث بطاقات للمبيعات والعدد والمتوسط، ثم رسم يقارن الفروع. استخدم BranchName من الجدول المرجعي وTotal Sales من المقاييس. اظهر وحدة SAR والفترة الفعلية لملفات التدريب. التحقق من طريقة التجميع يسبق اختيار الألوان؛ عرض Count لمبالغ المبيعات لن يصبح صحيحًا مهما تحسن تصميمه.\n\nمثال تطبيقي:\nضع بطاقات المقاييس أعلى الصفحة ورسم أعمدة حسب الفرع أسفلها. اجعل الأرقام بمنزلتين للمبالغ، والعدد دون منازل. افحص عنوان الرسم والتسميات وأن الإجمالي لا يظهر مختصرًا دون تفسير. حافظ على نص قابل للقراءة وتجنب خلفية تقلل التباين.\n\nتدريبك:\nابنِ صفحة واحدة وأجب منها عن الإجمالي وعدد الطلبات ومقارنة الفروع. اذكر مصدر البيانات المصطنع ولا تكتب أي ادعاء عن منشأة حقيقية."
+    },
+    {
+      "key": "powerbi-unit-5-review",
+      "type": "scenario",
+      "title": "مراجعة الوحدة 5",
+      "prompt": "ما الحقل المناسب لفئة الفروع في الرسم؟",
+      "options": [
+        "Branches[BranchName] مع مقياس Total Sales",
+        "رقم عشوائي لكل شريط",
+        "متوسط ثابت مكتوب يدويًا"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "key": "powerbi-unit-6-lesson",
+      "type": "content",
+      "title": "6. اجعل التقرير تفاعليًا",
+      "body": "الهدف: يختبر سياق التصفية وتفاعل العناصر ويشخص بقاء الإجمالي.\n\nأضف Slicer من Branches[BranchName] حتى تنتقل التصفية عبر العلاقة إلى Sales. عند اختيار فرع، يجب أن تستجيب المقاييس والرسوم المرتبطة، ما لم تغيّر تفاعلات العناصر أو منطق المقياس. إذا بقي الإجمالي، راجع مصدر حقل المرشح والعلاقة النشطة واتجاهها وتفاعلات الرسم، ثم تعريف المقياس. لا تصلح المشكلة بتغيير الرقم داخل البطاقة.\n\nمثال تطبيقي:\nدون مرشح: المبيعات 29828 والعدد 24. عند اختيار الرياض: المبيعات 9028 والعدد 8 والمتوسط 1128.50. اختر فرعًا آخر ثم امسح التحديد وتأكد من عودة الإجمالي. أضف مرشح فئة من Products واختبر أن الجمع بين المرشحين يغير البيانات المتقاطعة.\n\nتدريبك:\nنفذ الاختبارات الثلاثة وسجل النتائج. في نسخة تجريبية افصل علاقة الفرع ولاحظ الأثر، ثم أعدها صحيحة؛ لا تسلّم النموذج بعلاقة معطلة."
+    },
+    {
+      "key": "powerbi-unit-6-review",
+      "type": "scenario",
+      "title": "مراجعة الوحدة 6",
+      "prompt": "اختيار الرياض لم يغير البطاقة؛ ما أول مسار تشخيص مناسب؟",
+      "options": [
+        "تغيير لون البطاقة",
+        "فحص حقل المرشح والعلاقة والتفاعلات والمقياس",
+        "كتابة 9028 داخل عنوان البطاقة"
+      ],
+      "correctIndex": 1
+    },
+    {
+      "key": "powerbi-unit-7-lesson",
+      "type": "content",
+      "title": "7. حدّث وراجع وشارك بأمان",
+      "body": "الهدف: يتحقق من التحديث والمطابقة ويفرق بين الحفظ المحلي والمشاركة.\n\nملف PBIX يحتفظ بإعدادات المصدر والنموذج والتقرير؛ نقل ملفات CSV قد يكسر مسار التحديث. احتفظ بمجلد تدريب واضح وراجع إعدادات المصدر إذا تغير مكانه. التحديث يعيد جلب البيانات ويطبق التحويلات؛ نجاحه وحده لا يثبت صحة الأرقام. مشاركة التقرير عبر الخدمة لها متطلبات وصول وترخيص تختلف عن إنشائه محليًا. لا تستخدم Publish to web لبيانات العمل الحساسة.\n\nمثال تطبيقي:\nفي نسخة من المصادر غيّر صافي أول طلب من 675 إلى 900 مع كمية 4، ثم حدّث التقرير وتحقق من زيادة الإجمالي 225. أعد المصدر الأصلي وحدّث مرة أخرى. لا تترك كمية وصافيًا غير متسقين في نسخة التسليم، وسجل المسار وأي تغيير نفذته.\n\nتدريبك:\nاحفظ PBIX محليًا، ونفذ التحديث والمطابقة ثم أعد البيانات الأصلية. اكتب من المفترض أن يرى التقرير وكيف ستتحقق من وصوله قبل أي مشاركة فعلية."
+    },
+    {
+      "key": "powerbi-unit-7-review",
+      "type": "scenario",
+      "title": "مراجعة الوحدة 7",
+      "prompt": "هل حفظ PBIX محليًا يعني أن زملاءك حصلوا على صلاحية مشاهدته في الخدمة؟",
+      "options": [
+        "نعم تلقائيًا لكل الموظفين",
+        "نعم إذا كان اسمه واضحًا",
+        "لا؛ المشاركة والوصول والترخيص تحتاج تحققًا منفصلًا"
+      ],
+      "correctIndex": 2
+    },
+    {
+      "key": "powerbi-unit-8-lesson",
+      "type": "content",
+      "title": "8. مشروع التقرير النهائي",
+      "body": "الهدف: يسلم نموذجًا وتقريرًا واختبارات توضح صحة النتائج وحدود الاستنتاج.\n\nابدأ بثلاثة أسئلة: ما إجمالي الصافي؟ كيف تختلف الفروع؟ وكيف يتغير متوسط الطلب عند اختيار فرع؟ جهز الجداول الثلاثة والعلاقتين والمقاييس والصفحة التفاعلية. اكتب خطوات تحقق قابلة للتكرار، وميّز بين ملاحظة رقمية وتفسير يحتاج بيانات إضافية. ارتفاع المبيعات وحده لا يثبت ارتفاع الربحية، لأن بياناتنا لا تتضمن التكاليف.\n\nمثال تطبيقي:\nقبل التسليم افحص 24 طلبًا و3 فروع و4 منتجات، والمبيعات 29828، والرياض 9028 عبر 8 طلبات. تأكد أن مسح المرشحات يعيد الإجمالي وأن التحديث يعمل. افحص الأسماء والأنواع والمفاتيح والتجميع، ولا ترفق بيانات حقيقية أو معلومات دخول ضمن ملف التدريب.\n\nتدريبك:\nسلّم PBIX وصورة للنموذج وصورة للتقرير وسجل اختبار المرشحات والتحديث و3 استنتاجات مع حدودها. الملف يُراجع فعليًا؛ الاختبار النظري والإقرار الذاتي لا يثبتان جودة النموذج."
+    },
+    {
+      "key": "powerbi-unit-8-review",
+      "type": "scenario",
+      "title": "مراجعة الوحدة 8",
+      "prompt": "أي استنتاج تدعمه البيانات المتاحة مباشرة؟",
+      "options": [
+        "صافي مبيعات الرياض في البيانات 9028 ريالًا",
+        "الرياض أعلى ربحية دون بيانات تكاليف",
+        "سبب الفرق بين الفروع هو مهارة الموظفين حتمًا"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "key": "powerbi-step-1",
+      "type": "content",
+      "title": "مختبر موجه: جهّز الملفات والبرنامج",
+      "body": "نزّل Sales.csv وBranches.csv وProducts.csv في مجلد واحد. استخدم أحدث Power BI Desktop على Windows متوافق. إنشاء التقرير محلياً مجاني؛ المشاركة عبر الخدمة لها متطلبات ترخيص منفصلة.\n\nتأكد: هذا النموذج لا يتطلب حساب خدمة أو رفع بيانات. لا يوجد ملف PBIX جاهز ضمن الحزمة."
+    },
+    {
+      "key": "powerbi-step-2",
+      "type": "content",
+      "title": "مختبر موجه: استورد أول جدول",
+      "body": "من Home > Get data > Text/CSV اختر Sales.csv. راجع File Origin: UTF-8 وترميز 65001 عند ظهوره، والفاصل Comma، ثم اختر Transform Data. كرر للفروع والمنتجات داخل محرر Power Query بواسطة New Source > Text/CSV.\n\nتأكد: أسماء الجداول المطلوبة بالضبط: Sales وBranches وProducts. تظهر 24 و3 و4 صفوف بيانات على الترتيب."
+    },
+    {
+      "key": "powerbi-step-3",
+      "type": "content",
+      "title": "مختبر موجه: تحقق من أنواع الأعمدة",
+      "body": "في Sales: OrderID وBranchID وProductID نصوص؛ OrderDate تاريخ؛ Quantity عدد صحيح؛ UnitPriceSAR وDiscountRate وNetSalesSAR أعداد عشرية. اجعل مفاتيح الجداول المرجعية نصوصاً أيضاً. إذا قُرئ التاريخ خطأ استخدم Change Type > Using Locale بما يطابق صيغة المصدر yyyy-mm-dd.\n\nتأكد: الطلب الأول يساوي 675. الخصم 0.1 يعني 10%. اختر Close & Apply بعد التحقق."
+    },
+    {
+      "key": "powerbi-step-4",
+      "type": "content",
+      "title": "مختبر موجه: أنشئ العلاقات",
+      "body": "في Model view افتح Manage relationships. تحقق أولاً مما اكتُشف تلقائياً، ثم أنشئ فقط ما ينقص: Branches[BranchID] جهة 1 إلى Sales[BranchID] جهة *، وProducts[ProductID] جهة 1 إلى Sales[ProductID] جهة *. اجعل كل علاقة Active واتجاهها Single من الجدول المرجعي إلى Sales.\n\nتأكد: لا تربط Branches بـ Products. جهة 1 لا تحتوي مفاتيح مكررة أو فارغة. جميع مفاتيح Sales لها تطابق."
+    },
+    {
+      "key": "powerbi-step-5",
+      "type": "content",
+      "title": "مختبر موجه: أنشئ ثلاثة مقاييس",
+      "body": "حدد جدول Sales واختر New measure لكل صيغة على حدة. Total Sales = SUM(Sales[NetSalesSAR]) ثم Order Count = COUNTROWS(Sales) ثم Average Order = DIVIDE([Total Sales], [Order Count]). صافي المبيعات محفوظ في CSV بعد الخصم؛ لا تخصم مرة ثانية.\n\nتأكد: COUNTROWS يمثل الطلبات هنا فقط لأن الصف الواحد طلب واحد. DIVIDE يعيد فراغاً عندما يكون المقسوم عليه صفراً افتراضياً."
+    },
+    {
+      "key": "powerbi-step-6",
+      "type": "content",
+      "title": "مختبر موجه: صمم صفحة التقرير",
+      "body": "في Report view أضف ثلاث بطاقات للمقاييس. أضف Clustered column chart: المحور Branches[BranchName] والقيم [Total Sales]. أضف Slicer باستخدام Branches[BranchName]. سمِّ الصفحة مبيعات الفروع. نسّق المبيعات والمتوسط إلى منزلتين، والعدد إلى عدد صحيح، وأوقف اختصار الوحدات إن أخفى القيمة.\n\nتأكد: بدون مرشحات: Total Sales = 29,828؛ Order Count = 24؛ Average Order = 1,242.83 ريالاً. قد تختلف تسميات لوحات البناء بين إصدارات Power BI."
+    },
+    {
+      "key": "powerbi-step-7",
+      "type": "content",
+      "title": "مختبر موجه: اختبر التفاعل وشخّص الأخطاء",
+      "body": "اختر الرياض في Slicer. يجب أن تتغير البطاقات إلى 9,028 و8 و1,128.50. إذا لم تتغير، افحص العلاقة النشطة واتجاه التصفية، ثم Edit interactions إذا عُدلت سابقاً. امسح المرشح وأعد فحص الإجمالي.\n\nتأكد: إذا تكرر الإجمالي نفسه لكل فرع في المخطط، فغالباً العلاقة غير موجودة أو غير نشطة أو حقل الفرع من جدول غير مرتبط."
+    },
+    {
+      "key": "powerbi-step-8",
+      "type": "content",
+      "title": "مختبر موجه: احفظ وسلّم نتيجة قابلة للمراجعة",
+      "body": "احفظ باسم KFO_Sales_Practice.pbix على جهاز Windows. احتفظ بملفات CSV في المسار نفسه المستخدم للمصدر حتى يسهل التحديث. سلّم محلياً عند الحاجة مع لقطة للتقرير وشرح لماذا يتغير المتوسط عند اختيار فرع.\n\nتأكد: الفحص هنا يشمل المبيعات والعدد والمتوسط، ثم كل فرع. لا تنشر التقرير علنياً باستخدام Publish to web لبيانات العمل."
+    },
+    {
+      "key": "powerbi-final-project",
+      "type": "practical_task",
+      "title": "تسليم المشروع العملي للمراجعة",
+      "prompt": "سلّم PBIX وصورة للنموذج وصورة للتقرير وسجل اختبار المرشحات والتحديث و3 استنتاجات مع حدودها. الملف يُراجع فعليًا؛ الاختبار النظري والإقرار الذاتي لا يثبتان جودة النموذج.\nالقبول يتطلب مراجعة فعلية للملف وفق المعايير، مع تصحيح الأخطاء الأساسية. لا يوجد تقييم آلي لملفات Excel أو PBIX في هذه المسودة."
+    }
+  ],
+  "learning_design": {
+    "skills": [
+      {
+        "code": "powerbi-unit-1",
+        "title": "تعرّف على رحلة البيانات",
+        "outcome": "يميز التحويل والنموذج والتقرير ويستورد ملفات التدريب محليًا."
+      },
+      {
+        "code": "powerbi-unit-2",
+        "title": "نظّف في Power Query",
+        "outcome": "يضبط الأنواع والمنطقة ويحقق القيم دون إخفاء أخطاء المصدر."
+      },
+      {
+        "code": "powerbi-unit-3",
+        "title": "صمّم العلاقات",
+        "outcome": "ينشئ علاقتين نشطتين من أبعاد فريدة إلى المبيعات."
+      },
+      {
+        "code": "powerbi-unit-4",
+        "title": "ابدأ مقاييس DAX",
+        "outcome": "ينشئ مقاييس المبيعات والعدد والمتوسط ويفسر معنى الصف."
+      },
+      {
+        "code": "powerbi-unit-5",
+        "title": "ابنِ صفحة مفهومة",
+        "outcome": "يصمم صفحة تقرير بمؤشرات ومقارنة وعناوين دقيقة."
+      },
+      {
+        "code": "powerbi-unit-6",
+        "title": "اجعل التقرير تفاعليًا",
+        "outcome": "يختبر سياق التصفية وتفاعل العناصر ويشخص بقاء الإجمالي."
+      },
+      {
+        "code": "powerbi-unit-7",
+        "title": "حدّث وراجع وشارك بأمان",
+        "outcome": "يتحقق من التحديث والمطابقة ويفرق بين الحفظ المحلي والمشاركة."
+      },
+      {
+        "code": "powerbi-unit-8",
+        "title": "مشروع التقرير النهائي",
+        "outcome": "يسلم نموذجًا وتقريرًا واختبارات توضح صحة النتائج وحدود الاستنتاج."
+      }
+    ],
+    "activitySkills": {
+      "powerbi-unit-1-lesson": [
+        "powerbi-unit-1"
+      ],
+      "powerbi-unit-1-review": [
+        "powerbi-unit-1"
+      ],
+      "powerbi-unit-2-lesson": [
+        "powerbi-unit-2"
+      ],
+      "powerbi-unit-2-review": [
+        "powerbi-unit-2"
+      ],
+      "powerbi-unit-3-lesson": [
+        "powerbi-unit-3"
+      ],
+      "powerbi-unit-3-review": [
+        "powerbi-unit-3"
+      ],
+      "powerbi-unit-4-lesson": [
+        "powerbi-unit-4"
+      ],
+      "powerbi-unit-4-review": [
+        "powerbi-unit-4"
+      ],
+      "powerbi-unit-5-lesson": [
+        "powerbi-unit-5"
+      ],
+      "powerbi-unit-5-review": [
+        "powerbi-unit-5"
+      ],
+      "powerbi-unit-6-lesson": [
+        "powerbi-unit-6"
+      ],
+      "powerbi-unit-6-review": [
+        "powerbi-unit-6"
+      ],
+      "powerbi-unit-7-lesson": [
+        "powerbi-unit-7"
+      ],
+      "powerbi-unit-7-review": [
+        "powerbi-unit-7"
+      ],
+      "powerbi-unit-8-lesson": [
+        "powerbi-unit-8"
+      ],
+      "powerbi-unit-8-review": [
+        "powerbi-unit-8"
+      ],
+      "powerbi-step-1": [
+        "powerbi-unit-1",
+        "powerbi-unit-2",
+        "powerbi-unit-3",
+        "powerbi-unit-4",
+        "powerbi-unit-5",
+        "powerbi-unit-6",
+        "powerbi-unit-7",
+        "powerbi-unit-8"
+      ],
+      "powerbi-step-2": [
+        "powerbi-unit-1",
+        "powerbi-unit-2",
+        "powerbi-unit-3",
+        "powerbi-unit-4",
+        "powerbi-unit-5",
+        "powerbi-unit-6",
+        "powerbi-unit-7",
+        "powerbi-unit-8"
+      ],
+      "powerbi-step-3": [
+        "powerbi-unit-1",
+        "powerbi-unit-2",
+        "powerbi-unit-3",
+        "powerbi-unit-4",
+        "powerbi-unit-5",
+        "powerbi-unit-6",
+        "powerbi-unit-7",
+        "powerbi-unit-8"
+      ],
+      "powerbi-step-4": [
+        "powerbi-unit-1",
+        "powerbi-unit-2",
+        "powerbi-unit-3",
+        "powerbi-unit-4",
+        "powerbi-unit-5",
+        "powerbi-unit-6",
+        "powerbi-unit-7",
+        "powerbi-unit-8"
+      ],
+      "powerbi-step-5": [
+        "powerbi-unit-1",
+        "powerbi-unit-2",
+        "powerbi-unit-3",
+        "powerbi-unit-4",
+        "powerbi-unit-5",
+        "powerbi-unit-6",
+        "powerbi-unit-7",
+        "powerbi-unit-8"
+      ],
+      "powerbi-step-6": [
+        "powerbi-unit-1",
+        "powerbi-unit-2",
+        "powerbi-unit-3",
+        "powerbi-unit-4",
+        "powerbi-unit-5",
+        "powerbi-unit-6",
+        "powerbi-unit-7",
+        "powerbi-unit-8"
+      ],
+      "powerbi-step-7": [
+        "powerbi-unit-1",
+        "powerbi-unit-2",
+        "powerbi-unit-3",
+        "powerbi-unit-4",
+        "powerbi-unit-5",
+        "powerbi-unit-6",
+        "powerbi-unit-7",
+        "powerbi-unit-8"
+      ],
+      "powerbi-step-8": [
+        "powerbi-unit-1",
+        "powerbi-unit-2",
+        "powerbi-unit-3",
+        "powerbi-unit-4",
+        "powerbi-unit-5",
+        "powerbi-unit-6",
+        "powerbi-unit-7",
+        "powerbi-unit-8"
+      ],
+      "powerbi-final-project": [
+        "powerbi-unit-1",
+        "powerbi-unit-2",
+        "powerbi-unit-3",
+        "powerbi-unit-4",
+        "powerbi-unit-5",
+        "powerbi-unit-6",
+        "powerbi-unit-7",
+        "powerbi-unit-8"
+      ]
+    },
+    "rubrics": {
+      "powerbi-final-project": {
+        "title": "مراجعة المشروع العملي",
+        "criteria": [
+          {
+            "title": "الاستيراد والعلاقات",
+            "description": "الجداول 24/3/4 صفًا، والأنواع صحيحة، ومفاتيح الأبعاد فريدة؛ علاقتان نشطتان 1:* باتجاه Single من الأبعاد إلى المبيعات.",
+            "weight": 30
+          },
+          {
+            "title": "صحة المقاييس",
+            "description": "المبيعات 29828 والعدد24، والرياض9028 والعدد8 والمتوسط1128.50. تعمل المقاييس في السياقين وتعود بعد مسح المرشح.",
+            "weight": 30
+          },
+          {
+            "title": "وضوح التقرير",
+            "description": "صفحة واحدة بمؤشرات ومقارنة ومرشح، ووحدة SAR وعناوين دقيقة وتباين واضح دون ادعاء اعتماد أو ربحية غير مثبتة.",
+            "weight": 25
+          },
+          {
+            "title": "التشخيص والتحقق",
+            "description": "يشرح أثر العلاقة أو المرشح، ويثبت نجاح اختبار التحديث وإعادة المصدر الأصلي، ويوثق ثلاثة استنتاجات وحدودها.",
+            "weight": 15
+          }
+        ]
+      }
+    }
+  },
+  "planned_units": [
+    {
+      "number": 1,
+      "title": "تعرف على رحلة البيانات",
+      "description": "الفرق بين Power Query والنموذج والتقرير وDesktop والخدمة.",
+      "exercise": "تطبيق: استورد CSV وتعرف على كل منطقة عمل.",
+      "status": "authored_draft",
+      "activity_key": "powerbi-unit-1-lesson"
+    },
+    {
+      "number": 2,
+      "title": "نظّف في Power Query",
+      "description": "الأنواع والقيم الفارغة وأخطاء الاستيراد وتوحيد التسميات.",
+      "exercise": "تطبيق: أصلح تاريخاً أو مبلغاً قُرئ كنص مع الحفاظ على المصدر.",
+      "status": "authored_draft",
+      "activity_key": "powerbi-unit-2-lesson"
+    },
+    {
+      "number": 3,
+      "title": "صمم العلاقات",
+      "description": "المفتاح الفريد وعلاقة واحد إلى متعدد واتجاه التصفية.",
+      "exercise": "تطبيق: اربط الفروع والمنتجات بالمبيعات وتحقق من النتائج.",
+      "status": "authored_draft",
+      "activity_key": "powerbi-unit-3-lesson"
+    },
+    {
+      "number": 4,
+      "title": "ابدأ مقاييس DAX",
+      "description": "الفرق بين العمود والمقياس وSUM وCOUNTROWS وDIVIDE.",
+      "exercise": "تطبيق: أنشئ المبيعات وعدد الطلبات ومتوسط الطلب.",
+      "status": "authored_draft",
+      "activity_key": "powerbi-unit-4-lesson"
+    },
+    {
+      "number": 5,
+      "title": "ابنِ صفحة مفهومة",
+      "description": "البطاقات والمخططات والألوان والعناوين ووحدات القياس.",
+      "exercise": "تطبيق: اعرض مقارنة الفروع ومؤشرات الإجمالي.",
+      "status": "authored_draft",
+      "activity_key": "powerbi-unit-5-lesson"
+    },
+    {
+      "number": 6,
+      "title": "اجعل التقرير تفاعلياً",
+      "description": "Slicer وسياق التصفية وتفاعلات العناصر.",
+      "exercise": "تطبيق: اختبر فرعاً وفئة منتج ثم امسح المرشحات.",
+      "status": "authored_draft",
+      "activity_key": "powerbi-unit-6-lesson"
+    },
+    {
+      "number": 7,
+      "title": "حدّث وراجع وشارك بأمان",
+      "description": "التحديث ومسار المصدر ومطابقة الأرقام وحدود الترخيص.",
+      "exercise": "تطبيق: أعد التحديث بعد تعديل نسخة تجريبية وتحقق من الوصول قبل المشاركة.",
+      "status": "authored_draft",
+      "activity_key": "powerbi-unit-7-lesson"
+    },
+    {
+      "number": 8,
+      "title": "مشروع التقرير النهائي",
+      "description": "سؤال العمل ثم نموذج صغير ومقاييس وصفحة تقرير.",
+      "exercise": "تطبيق: سلّم PBIX محلياً مع قائمة مراجعة وشرح 3 استنتاجات.",
+      "status": "authored_draft",
+      "activity_key": "powerbi-unit-8-lesson"
+    }
+  ],
+  "attachments": [
+    {
+      "name": "Sales.csv",
+      "size": 1088,
+      "sha256": "44a86a7095aef27c2be21a55e37bbd7540fc32f03333bb847e31600d0989feb6"
+    },
+    {
+      "name": "Branches.csv",
+      "size": 72,
+      "sha256": "ad287ff82d1d9b466db4f58877160e9b3515e0bd822d6e8837438ace9bb4389e"
+    },
+    {
+      "name": "Products.csv",
+      "size": 163,
+      "sha256": "99d8c39412974807d1ec02f7a6cd352c93c88c1fde2cbaaa694722ba0a72cd4f"
+    }
+  ],
+  "review_notes": [
+    "All eight units have draft explanation, worked example, exercise and review; this is not a claim of final course completeness.",
+    "Original numeric sample questions replaced by unit-specific multiple-choice review with varied correct-answer positions.",
+    "No interactive simulation, account progress, database import, course activation or certification linkage this round.",
+    "Practical projects require human file review. No PBIX is supplied or tested.",
+    "Eight-unit structure does not substantiate original 6–9-hour duration estimates; learner timing remains to be measured.",
+    "References checked against Microsoft documentation on 2026-10-15; actual Excel and Power BI execution remains pending."
+  ]
+}
