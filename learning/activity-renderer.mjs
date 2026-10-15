@@ -1,6 +1,7 @@
+import {renderLessonContent} from './lesson-layout.mjs';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function renderActivity(a){const title='<div class="activity-head"><span class="activity-type">'+esc(label(a.type))+'</span><h2>'+esc(a.title)+'</h2></div>';switch(a.type){
-case'content':return title+(a.content||[]).map(p=>'<p>'+esc(p)+'</p>').join('');
+case'content':return title+renderLessonContent(a.content||[]);
 case'quick_check':case'scenario':case'error_spotting':return title+'<p>'+esc(a.prompt)+'</p>'+options(a);
 case'ordering':return title+'<p>'+esc(a.prompt)+'</p><ol class="ordering">'+(a.items||[]).map(i=>'<li>'+esc(i)+'</li>').join('')+'</ol>';
 case'reflection':return title+'<p>'+esc(a.prompt)+'</p><textarea data-evidence="text" rows="6"></textarea>';

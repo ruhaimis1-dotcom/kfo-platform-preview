@@ -155,3 +155,9 @@
 - Fixed download labels/paths rendered via DOM/textContent. Unknown courses, inherited object keys, foreign versions and string versions return no files. Original metadata and data rows unchanged.
 - Initial controller tests required injecting the new real renderer dependency into their VM fixtures; corrected fixtures. Final build and289 local tests pass, including asset byte fidelity, solution exclusion and assessment rendering isolation.
 - Not deployed or tested in an actual browser. Links become accessible on a built preview; courses remain unpublished/unready. Learner dynamic runtime/release activation, actual Office/PBIX QA and final gate remain open.
+
+## Public course benchmark and KFO lesson pattern — 2026-10-15
+- Paused release work per user request to review local/global free/open courses. Public-page research across Doroob, Edraak, Microsoft Learn, OpenLearn, MIT OCW and Saylor. No signed-in course completion or full media audit claimed.
+- Saved evidence, reuse distinctions and design decisions in docs/KFO-course-benchmark-20261015.md. Free access is not treated as permission to copy/rebrand; no third-party course content/media imported.
+- Implemented first KFO lesson layout: exact authored grammar becomes objective/explanation/example/practice sections. All text escaped, legacy/incomplete labels fall back to paragraphs, linebreaks/formulas retained. Existing brand colors; no logo/font changes or scoring mutations.
+- Build +291 tests pass. No browser visual verification, database changes or deployment. Full instructional interaction/feedback, program screenshots and real application QA remain open.
