@@ -1,4 +1,6 @@
-import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {coursePracticeFiles} from '../learning/practice-files.mjs';
+import { cp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { build } from 'esbuild';
@@ -130,3 +132,16 @@ await build({
 await cp(join(root,'commerce','personal-orders.html'),join(out,'orders.html'));
 await cp(join(root,'commerce','orders.css'),join(out,'assets','orders.css'));
 await build({entryPoints:[join(root,'commerce','personal-orders.js')],bundle:true,minify:true,format:'esm',target:['es2020'],outfile:join(out,'assets','personal-orders.js')});
+
+// Explicit practice-only allowlist; fail build if imported file bytes changed.
+const practiceRoot=join(root,'content','authoring','data-skills');
+const practiceManifest=JSON.parse(await readFile(join(practiceRoot,'source-manifest.json'),'utf8'));
+const practiceOut=join(out,'assets','practice','data-skills-v1');
+await rm(practiceOut,{recursive:true,force:true});
+await mkdir(practiceOut,{recursive:true});
+for(const file of [...coursePracticeFiles('excel-basics',1),...coursePracticeFiles('power-bi-basics',1)]){
+ const record=practiceManifest.files.find(r=>r.name===file.name);
+ const bytes=await readFile(join(practiceRoot,'files',file.name));
+ if(!record||record.size!==bytes.length||createHash('sha256').update(bytes).digest('hex')!==record.sha256)throw Error('Practice attachment integrity failed: '+file.name);
+ await writeFile(join(practiceOut,file.name),bytes);
+}

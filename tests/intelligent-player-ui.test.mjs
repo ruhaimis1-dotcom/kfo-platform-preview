@@ -1,3 +1,4 @@
+import {mountPracticeFiles} from '../learning/practice-files.mjs';
 import test from'node:test';import assert from'node:assert/strict';import{readFile}from'node:fs/promises';
 import {browserFixture,runController} from './helpers/browser-script.mjs';
 import {runtimeState,recommendNext} from '../learning/activity-runtime.mjs';
@@ -14,7 +15,7 @@ async function playerFixture(submit,{kind='enrolled',type='reflection',records=[
   createClient:()=>({rpc:async()=>({data:feedback})}),fetch:async()=>({ok:true,json:async()=>course}),
   resolveEnrollment:async()=>({kind,userId:'u',enrollment:{id:'e'}}),
   loadActivityRecords:async()=>records,loadSkillMeasurements:async()=>[],summarizeSkills:()=>[],
-  runtimeState,recommendNext,renderActivity,attachMyReviewFeedback,courseSource,submitEvidence:submit,uploadFileEvidence:submit,
+  runtimeState,recommendNext,renderActivity,mountPracticeFiles,attachMyReviewFeedback,courseSource,submitEvidence:submit,uploadFileEvidence:submit,
   saveLessonCompletion:async()=>{throw new Error('evidence must not complete lesson')}
  },'main');
  return ui;

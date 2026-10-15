@@ -148,3 +148,10 @@
 - Independent response: Excel24 activities/8 skills and PowerBI25/8, version1, metadata/lesson revisions1, published=false, runtime_ready=false. These rows now persist as actual administration drafts; not learner-ready releases.
 - Rolled-back SQL verification passed: duplicate creation rejected; unready publish rejected; learner cannot read either draft; anonymous cannot read editor; both rows remain unpublished/unready at revisions1.
 - Build and286 local tests passed. No actual browser administration test, Excel/PBIX execution or frontend deployment. Attachments remain authoring assets and are not delivered from learner runtime yet. Next: reviewed attachment delivery and learner runtime/release integration; application QA remains open.
+
+## Data-skills practice attachments in player — 2026-10-15
+- Added explicit course/version allowlist to player: Excel practice XLSX only, PowerBI Sales/Branches/Products CSV. Files shown only on content/practical_task activities; no change to assessment or completion/evidence mutations.
+- Build ships exactly four synthetic practice assets under /assets/practice/data-skills-v1, verifies byte size/SHA-256 against original extraction manifest and recreates that output directory to avoid stale assets. Answer XLSX and authoring JSON remain excluded.
+- Fixed download labels/paths rendered via DOM/textContent. Unknown courses, inherited object keys, foreign versions and string versions return no files. Original metadata and data rows unchanged.
+- Initial controller tests required injecting the new real renderer dependency into their VM fixtures; corrected fixtures. Final build and289 local tests pass, including asset byte fidelity, solution exclusion and assessment rendering isolation.
+- Not deployed or tested in an actual browser. Links become accessible on a built preview; courses remain unpublished/unready. Learner dynamic runtime/release activation, actual Office/PBIX QA and final gate remain open.
