@@ -117,3 +117,12 @@
 - UI explicitly says selection is local and not uploaded/saved. No storage endpoint, storage policy or database mutation introduced. Client validation is not a substitute for server validation.
 - Build and 277 local tests pass, including rejection and selection-race tests. No browser/mobile visual QA and no deployment.
 - Remaining: authorized storage upload/save with server enforcement, branding application, then actual browser/mobile gate.
+
+## Company brand image upload/save — 2026-10-15
+- Applied migrations 20261015102142 and 20261015102329: private image bucket (5 MiB PNG/JPEG), scoped storage INSERT/SELECT, no authenticated UPDATE/DELETE; authenticated owner/SA save/load RPCs with disabled-tenant guard, path/kind/MIME/size checks and compare-and-swap against original key. Existing private asset/evidence buckets unchanged.
+- Initial SQL test caught missing helper EXECUTE in storage policies; fixed via narrow private access helper in second migration and reran successfully. No broad grant to course-order helper.
+- UI now uploads unique object paths, verifies upload receipt, rechecks identity before linking and after save, and previews saved objects using five-minute signed URLs. Explicit save required. Applying these assets across portals remains pending.
+- Build + 281 local tests passed. Rolled-back SQL checks: owner insert/save, stale writes, oversized/missing/wrong-slot images, foreign insert/read/save and anonymous rejection, immutable object update. Cleanup: zero test organizations and zero brand objects.
+- SQL storage objects were metadata fixtures only, not actual binary uploads. Real browser/Storage HTTP upload and mobile QA remain open; no frontend deployment.
+- Server enforces permission/path/MIME metadata/size, not image decoding/signatures/dimensions; those checks currently run in browser only. A trusted binary validation pipeline remains a security hardening gate before general availability. Old/unlinked image retention has no automatic cleanup yet; do not claim full image lifecycle complete.
+- Security advisors: no ERROR; existing INFO no-policy and WARN authenticated-definer/leaked-password-protection groups remain.
