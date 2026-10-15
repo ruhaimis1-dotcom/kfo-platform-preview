@@ -1,0 +1,7 @@
+const pages={overview:'الرئيسية',courses:'دوراتي',notifications:'الإشعارات',certificates:'شهاداتي',profile:'ملفي الشخصي'};
+export function mountLearnerNavigation({document,window}){
+ const title=document.getElementById('learner-page-title');
+ function render(){const raw=(window.location.hash||'').slice(1),key=Object.hasOwn(pages,raw)?raw:'overview';for(const name of Object.keys(pages)){const panel=document.getElementById('learner-page-'+name),link=document.getElementById('learner-nav-'+name);if(panel)panel.hidden=name!==key;if(link){if(name===key)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current')}}if(title)title.textContent=pages[key];return key}
+ window.addEventListener('hashchange',render);render();return{render};
+}
+export function enrollmentPresentation(item){const titles={'customer-service-reference':'خدمة العملاء: من الفهم إلى الأثر','work-priorities':'تنظيم العمل والأولويات','professional-communication':'التواصل المهني الواضح','customer-service':'أساسيات خدمة العملاء'};const states={active:'قيد التعلم',completed:'مكتملة',expired:'انتهت مدة الالتحاق',suspended:'موقوفة'};return{title:Object.hasOwn(titles,item.course_slug)?titles[item.course_slug]:item.course_slug,status:Object.hasOwn(states,item.status)?states[item.status]:'حالة الالتحاق غير متاحة',href:item.status==='active'&&item.course_slug==='customer-service-reference'&&item.course_version===1&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(item.id||'')?'/learn?enrollment='+encodeURIComponent(item.id):null}}

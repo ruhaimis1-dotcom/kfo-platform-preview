@@ -1,3 +1,4 @@
+import {mountLearnerNavigation,enrollmentPresentation} from './workspace-navigation.mjs';
 import { createClient } from '@supabase/supabase-js';
 import { loadWorkspace } from './workspace-data.mjs';
 import { loadAccessContext, attachAccessContext } from './access-context.mjs';
@@ -18,6 +19,7 @@ const companies=document.getElementById('companies');
 const assignments=document.getElementById('assignments');
 const stats=document.getElementById('stats'), profile=document.getElementById('profile'), notifications=document.getElementById('notifications'), certificates=document.getElementById('certificates');
 const profileForm=document.getElementById('profile-form'), profileName=document.getElementById('profile-name'), profileHeadline=document.getElementById('profile-headline'), profileStatus=document.getElementById('profile-status');
+const learnerNavigation=mountLearnerNavigation({document,window});
 let generation = 0;
 async function render() {
   const attempt = ++generation;
@@ -44,6 +46,7 @@ async function render() {
     document.getElementById('identity').textContent = data.email || '';
     const home = await loadLearnerHome(client, data.userId);
     if (attempt !== generation) return;
+    if(home.kind==='signed-out')return window.location.replace('/login');
 
     const companyAdminMemberships=memberships.filter((m)=>m.accessible&&m.roles.some((r)=>['CO','BM','SA'].includes(r.code)));
     if(companyAdminMemberships.length){
@@ -100,12 +103,12 @@ async function render() {
       return;
     }
     if (hasLearning) {
-      learner.classList.remove('hidden');
+      learner.classList.remove('hidden');learnerNavigation.render();
       const metricLabels={total:'إجمالي الدورات',personal:'دوراتي الشخصية',organization:'دورات جهة العمل',active:'قيد التعلم',completed:'مكتملة',certificates:'الشهادات',unread_notifications:'إشعارات جديدة'};
       for(const key of Object.keys(metricLabels)){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=String(home.dashboard[key]??0);const p=document.createElement('p');p.textContent=metricLabels[key];card.append(h,p);stats.append(card)}
       {const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=home.profile?.display_name||data.email||'متدرب كفو';const p=document.createElement('p');p.textContent=home.profile?.headline||'ملف التعلم الخاص بك';card.append(h,p);profile.append(card);profileName.value=home.profile?.display_name||'';profileHeadline.value=home.profile?.headline||'';profileForm.classList.remove('hidden')}
       if(!home.notifications.length){const card=document.createElement('article');card.className='portal-card';card.textContent='لا توجد إشعارات جديدة.';notifications.append(card)}
-      for(const n of home.notifications){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=n.title;const p=document.createElement('p');p.textContent=n.body;card.append(h,p);if(!n.read_at){const b=document.createElement('button');b.type='button';b.textContent='تحديد كمقروء';b.addEventListener('click',async()=>{b.disabled=true;try{await markNotificationRead(client,n.id);b.remove()}catch{b.disabled=false}});card.append(b)}notifications.append(card)}
+      for(const n of home.notifications){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=n.title;const p=document.createElement('p');p.textContent=n.body;card.append(h,p);if(!n.read_at){const b=document.createElement('button');b.type='button';b.textContent='تحديد كمقروء';b.addEventListener('click',async()=>{b.disabled=true;try{await markNotificationRead(client,n.id);b.remove()}catch{b.disabled=false;document.getElementById('notification-status').textContent='تعذر تحديث الإشعار. حاول مجددًا.'}});card.append(b)}notifications.append(card)}
       if(!home.certificates.length){const card=document.createElement('article');card.className='portal-card';card.textContent='ستظهر شهاداتك هنا بعد إكمال متطلبات الدورات.';certificates.append(card)}
       for(const c of home.certificates){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=c.certificate_code;const p=document.createElement('p');p.textContent='صدرت '+new Intl.DateTimeFormat('ar-SA',{dateStyle:'medium'}).format(new Date(c.issued_at));card.append(h,p);certificates.append(card)}
       const organizationEnrollments = home.enrollments.filter((e) => e.context_type === 'organization');
@@ -116,18 +119,19 @@ async function render() {
         const p=document.createElement('p'); p.className='state'; p.textContent='عضوية جهة نشطة';
         card.append(h,p); companies.append(card);
       }
+      if(!companies.children.length){const empty=document.createElement('article');empty.className='portal-card';empty.textContent='لا توجد جهة عمل نشطة مرتبطة بملفك. يمكنك التعلم بحسابك الشخصي.';companies.append(empty)}
       const all=[...organizationEnrollments,...personalEnrollments];
       if (!all.length) {
         const card=document.createElement('article'); card.className='portal-card';
-        const h=document.createElement('h3'); h.textContent='لا توجد دورات نشطة حاليًا';
+        const h=document.createElement('h3'); h.textContent='لم تسجل في دورة بعد';
         const p=document.createElement('p'); p.textContent='يمكنك البدء بدورة مجانية، أو ستظهر هنا أي دورة تكلفك بها جهة عملك.'; card.append(h,p); assignments.append(card);
       }
       for (const item of all) {
         const card=document.createElement('article'); card.className='portal-card';
-        const h=document.createElement('h3'); h.textContent=item.course_slug;
+        const h=document.createElement('h3'); const info=enrollmentPresentation(item);h.textContent=info.title;
         const p=document.createElement('p'); p.className='state'; p.textContent=item.context_type === 'personal' ? 'دورة شخصية' : 'دورة جهة العمل';
         const due=document.createElement('p'); due.textContent=item.due_at ? 'الموعد: '+new Intl.DateTimeFormat('ar-SA',{dateStyle:'medium'}).format(new Date(item.due_at)) : (item.context_type==='organization'?'بدون موعد نهائي':'تعلم بالوتيرة التي تناسبك');
-        card.append(h,p,due); assignments.append(card);
+        const state=document.createElement('p');state.textContent=info.status;card.append(h,p,state,due);if(info.href){const a=document.createElement('a');a.href=info.href;a.className='catalog-link';a.textContent='متابعة التعلم';card.append(a)}else if(item.status==='active'){const note=document.createElement('p');note.textContent='هذه النسخة غير متاحة في مشغّل التعلم حاليًا. راجع مسؤول التدريب.';card.append(note)}assignments.append(card);
       }
     }
     message.dataset.kind = data.memberships.length ? 'success' : 'info';
@@ -177,7 +181,7 @@ async function render() {
   } catch {
     if (attempt !== generation) return;
     message.dataset.kind = 'error';
-    message.textContent = 'تعذر تحميل عضوياتك الآن. حاول مجددًا.';
+    message.textContent = 'تعذر تحميل مساحة حسابك الآن. حاول مجددًا.';
     retry.classList.remove('hidden');
   }
 }
