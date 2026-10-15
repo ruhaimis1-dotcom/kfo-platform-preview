@@ -1,3 +1,4 @@
+import {mountBrandImagePreview} from './brand-image-preview.mjs';
 import {savePortalColors,previewPortalColors} from './portal-colors.mjs';
 import {trackUnsavedSettings} from './unsaved-settings.mjs';
 const uuid=v=>typeof v==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
@@ -41,5 +42,5 @@ export async function mountCompanySettings({document,client,context}){
  structure.elements.kind.addEventListener('change',kind);structure.addEventListener('submit',event=>{event.preventDefault();const input={kind:structure.elements.kind.value,name:structure.elements.unitName.value,branchId:structure.elements.kind.value==='department'?structure.elements.branch.value||null:null};mutate(async()=>{await addStructure(client,context.organizationId,input);structure.elements.unitName.value='';dirty.clear('structure')})});
  roleForm.elements.member.addEventListener('change',selectMember);roleForm.elements.role.addEventListener('change',scope);roleForm.elements.branch.addEventListener('change',scope);roleForm.addEventListener('submit',event=>{event.preventDefault();const m=eligible().find(m=>m.membership_id===roleForm.elements.member.value);if(!m){status.textContent='اختر عضوية نشطة قابلة للتعديل.';return}const input={memberId:m.membership_id,expectedRole:roleBaseline,role:roleForm.elements.role.value,branchId:roleForm.elements.branch.value||null,departmentId:roleForm.elements.department.value||null};mutate(async()=>{state.access=await saveRole(client,context.organizationId,input);draw({resetMembers:true});dirty.clear('role')})});
  notice.addEventListener('submit',event=>{event.preventDefault();const input={assignment:notice.elements.assignment.checked,certificate:notice.elements.certificate.checked};mutate(async()=>{state.access=await saveNotifications(client,context.organizationId,input);draw({resetNotices:true});dirty.clear('notifications')})});
- draw({resetBrand:true,resetNotices:true,resetMembers:true,resetColors:true});kind();owner.hidden=false;
+ draw({resetBrand:true,resetNotices:true,resetMembers:true,resetColors:true});kind();mountBrandImagePreview({document,window:globalThis.window});owner.hidden=false;
 }

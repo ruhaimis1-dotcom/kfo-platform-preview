@@ -110,3 +110,10 @@
 - واجهة اختيار لونين ومعاينة نصية آمنة واستعادة القيم المحفوظة. توضح الواجهة أن تطبيق الألوان على جميع واجهات الحساب ما زال قيد الاستكمال؛ ليست ادعاء اكتمال هوية الشركة. رفع الشعار والغلاف وسياسة التدريب باقية.
 - migration المسجلة: 20261015082231_company_portal_colors. اختبار SQL تراجعي أكد حفظ مالك الشركة، الحفاظ على النصوص، رفض مراجعة قديمة ولون ضعيف التباين وCSS غير صالح وnull، وعدم تعديل اللون عند فشل الطلب، ومنع مدير شركة أخرى وanon. التحقق المستقل بعد ROLLBACK: شركة الاختبار صفر.
 - البناء و274 اختبارًا محليًا ناجحة، تشمل التباين وعقد الحفظ والتعارض والاستجابة والمعاينة. فحص الأمان بلا ERROR، مع استمرار مجموعات WARN السابقة الخاصة بالدوال المصرح بها وحماية كلمات المرور المسربة وINFO الخاصة بالجداول المغلقة. لا Browser QA لهذه الواجهة ولا نشر.
+
+## Company brand image local preparation — 2026-10-15
+- Recovered latest GitHub recovery branch after scratch maintenance; base commit 77069b0513910d5492e48304497804cadda2789f, tree deef85f4ea9ee98e35956e2a1fedffb97f13c3a2.
+- Added owner-settings local logo/cover selectors and previews. PNG/JPEG allowlist, byte signatures, 2/5 MiB limits, decoded dimensions/pixel limits, decoder cleanup, stale-selection guard and object URL revocation.
+- UI explicitly says selection is local and not uploaded/saved. No storage endpoint, storage policy or database mutation introduced. Client validation is not a substitute for server validation.
+- Build and 277 local tests pass, including rejection and selection-race tests. No browser/mobile visual QA and no deployment.
+- Remaining: authorized storage upload/save with server enforcement, branding application, then actual browser/mobile gate.
