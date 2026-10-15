@@ -126,3 +126,10 @@
 - SQL storage objects were metadata fixtures only, not actual binary uploads. Real browser/Storage HTTP upload and mobile QA remain open; no frontend deployment.
 - Server enforces permission/path/MIME metadata/size, not image decoding/signatures/dimensions; those checks currently run in browser only. A trusted binary validation pipeline remains a security hardening gate before general availability. Old/unlinked image retention has no automatic cleanup yet; do not claim full image lifecycle complete.
 - Security advisors: no ERROR; existing INFO no-policy and WARN authenticated-definer/leaked-password-protection groups remain.
+
+## Excel and Power BI source import — 2026-10-15
+- User supplied KFO_Excel_PowerBI_Interactive (1).html; extracted without running uploaded JavaScript via scripts/import-data-skills.py.
+- Native authoring drafts: excel-basics (7 explanation steps + 3 review questions + practical task), power-bi-basics (8 steps + 3 questions + task). Both unpublished, runtime_ready false; eight roadmap units each remain explicitly outline_only.
+- Extracted five attachments byte-for-byte (two XLSX, three CSV), recorded source and attachment SHA-256. Confirmed XLSX ZIP/XML integrity (not Excel recalculation or visual QA), sales24/branches3/products4, total29828/Riyadh9028.
+- Numeric response questions adapted to multiple choice for current authoring contract. Assessment review/randomization, skills/rubrics, remaining unit authoring, simulations, attachment delivery, database import/activation, progress/certificates and real application/browser QA remain open.
+- Files are authoring-only: build does not ship this directory, solution files or answer keys. No database write or frontend deployment this round.

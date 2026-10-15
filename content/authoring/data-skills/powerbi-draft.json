@@ -1,0 +1,189 @@
+{
+  "course_slug": "power-bi-basics",
+  "course_version": 1,
+  "revision": 0,
+  "title": "أساسيات Power BI: من البيانات إلى التقرير",
+  "status": "draft",
+  "published": false,
+  "runtime_ready": false,
+  "source_sha256": "cdaea374ccd3d5f3d533e2f6aa641ea0e78e51615e21a595310e875f9c606c2a",
+  "scope": "Imported sample lesson only; roadmap units are not complete.",
+  "activities": [
+    {
+      "key": "powerbi-step-1",
+      "type": "content",
+      "title": "جهّز الملفات والبرنامج",
+      "body": "نزّل Sales.csv وBranches.csv وProducts.csv في مجلد واحد. استخدم أحدث Power BI Desktop على Windows متوافق. إنشاء التقرير محلياً مجاني؛ المشاركة عبر الخدمة لها متطلبات ترخيص منفصلة.\n\nتأكد: هذا النموذج لا يتطلب حساب خدمة أو رفع بيانات. لا يوجد ملف PBIX جاهز ضمن الحزمة."
+    },
+    {
+      "key": "powerbi-step-2",
+      "type": "content",
+      "title": "استورد أول جدول",
+      "body": "من Home > Get data > Text/CSV اختر Sales.csv. راجع File Origin: UTF-8 وترميز 65001 عند ظهوره، والفاصل Comma، ثم اختر Transform Data. كرر للفروع والمنتجات داخل محرر Power Query بواسطة New Source > Text/CSV.\n\nتأكد: أسماء الجداول المطلوبة بالضبط: Sales وBranches وProducts. تظهر 24 و3 و4 صفوف بيانات على الترتيب."
+    },
+    {
+      "key": "powerbi-step-3",
+      "type": "content",
+      "title": "تحقق من أنواع الأعمدة",
+      "body": "في Sales: OrderID وBranchID وProductID نصوص؛ OrderDate تاريخ؛ Quantity عدد صحيح؛ UnitPriceSAR وDiscountRate وNetSalesSAR أعداد عشرية. اجعل مفاتيح الجداول المرجعية نصوصاً أيضاً. إذا قُرئ التاريخ خطأ استخدم Change Type > Using Locale بما يطابق صيغة المصدر yyyy-mm-dd.\n\nتأكد: الطلب الأول يساوي 675. الخصم 0.1 يعني 10%. اختر Close & Apply بعد التحقق."
+    },
+    {
+      "key": "powerbi-step-4",
+      "type": "content",
+      "title": "أنشئ العلاقات",
+      "body": "في Model view افتح Manage relationships. تحقق أولاً مما اكتُشف تلقائياً، ثم أنشئ فقط ما ينقص: Branches[BranchID] جهة 1 إلى Sales[BranchID] جهة *، وProducts[ProductID] جهة 1 إلى Sales[ProductID] جهة *. اجعل كل علاقة Active واتجاهها Single من الجدول المرجعي إلى Sales.\n\nتأكد: لا تربط Branches بـ Products. جهة 1 لا تحتوي مفاتيح مكررة أو فارغة. جميع مفاتيح Sales لها تطابق."
+    },
+    {
+      "key": "powerbi-step-5",
+      "type": "content",
+      "title": "أنشئ ثلاثة مقاييس",
+      "body": "حدد جدول Sales واختر New measure لكل صيغة على حدة. Total Sales = SUM(Sales[NetSalesSAR]) ثم Order Count = COUNTROWS(Sales) ثم Average Order = DIVIDE([Total Sales], [Order Count]). صافي المبيعات محفوظ في CSV بعد الخصم؛ لا تخصم مرة ثانية.\n\nتأكد: COUNTROWS يمثل الطلبات هنا فقط لأن الصف الواحد طلب واحد. DIVIDE يعيد فراغاً عندما يكون المقسوم عليه صفراً افتراضياً."
+    },
+    {
+      "key": "powerbi-step-6",
+      "type": "content",
+      "title": "صمم صفحة التقرير",
+      "body": "في Report view أضف ثلاث بطاقات للمقاييس. أضف Clustered column chart: المحور Branches[BranchName] والقيم [Total Sales]. أضف Slicer باستخدام Branches[BranchName]. سمِّ الصفحة مبيعات الفروع. نسّق المبيعات والمتوسط إلى منزلتين، والعدد إلى عدد صحيح، وأوقف اختصار الوحدات إن أخفى القيمة.\n\nتأكد: بدون مرشحات: Total Sales = 29,828؛ Order Count = 24؛ Average Order = 1,242.83 ريالاً. قد تختلف تسميات لوحات البناء بين إصدارات Power BI."
+    },
+    {
+      "key": "powerbi-step-7",
+      "type": "content",
+      "title": "اختبر التفاعل وشخّص الأخطاء",
+      "body": "اختر الرياض في Slicer. يجب أن تتغير البطاقات إلى 9,028 و8 و1,128.50. إذا لم تتغير، افحص العلاقة النشطة واتجاه التصفية، ثم Edit interactions إذا عُدلت سابقاً. امسح المرشح وأعد فحص الإجمالي.\n\nتأكد: إذا تكرر الإجمالي نفسه لكل فرع في المخطط، فغالباً العلاقة غير موجودة أو غير نشطة أو حقل الفرع من جدول غير مرتبط."
+    },
+    {
+      "key": "powerbi-step-8",
+      "type": "content",
+      "title": "احفظ وسلّم نتيجة قابلة للمراجعة",
+      "body": "احفظ باسم KFO_Sales_Practice.pbix على جهاز Windows. احتفظ بملفات CSV في المسار نفسه المستخدم للمصدر حتى يسهل التحديث. سلّم محلياً عند الحاجة مع لقطة للتقرير وشرح لماذا يتغير المتوسط عند اختيار فرع.\n\nتأكد: الفحص هنا يشمل المبيعات والعدد والمتوسط، ثم كل فرع. لا تنشر التقرير علنياً باستخدام Publish to web لبيانات العمل."
+    },
+    {
+      "key": "powerbi-check-1",
+      "type": "scenario",
+      "title": "مراجعة تطبيقية 1",
+      "prompt": "4. أي علاقة صحيحة لربط الفروع بالمبيعات؟",
+      "options": [
+        "Branches[BranchID] جهة 1 إلى Sales[BranchID] جهة *؛ اتجاه Single إلى Sales.",
+        "Sales[BranchID] جهة 1 إلى Branches[BranchID] جهة *، رغم تكرار الفرع في المبيعات.",
+        "لا نحتاج علاقة؛ تشابه اسم العمود يكفي دائماً."
+      ],
+      "correctIndex": 0
+    },
+    {
+      "key": "powerbi-check-2",
+      "type": "scenario",
+      "title": "مراجعة تطبيقية 2",
+      "prompt": "5. بعد اختيار الرياض فقط: ما صافي المبيعات؟",
+      "options": [
+        "9,028",
+        "29,828",
+        "1,242.83"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "key": "powerbi-check-3",
+      "type": "scenario",
+      "title": "مراجعة تطبيقية 3",
+      "prompt": "6. لماذا يمكن تسمية COUNTROWS(Sales) «عدد الطلبات» في هذا المثال؟",
+      "options": [
+        "لأن كل صف هنا يمثل طلباً واحداً فريداً.",
+        "لأن COUNTROWS يتجاهل تلقائياً تكرار معرف الطلب.",
+        "لأنه يجمع الكميات في كل الصفوف."
+      ],
+      "correctIndex": 0
+    },
+    {
+      "key": "powerbi-practice",
+      "type": "practical_task",
+      "title": "التطبيق في البرنامج الفعلي",
+      "prompt": "أنشأت العلاقتين والمقاييس الثلاثة في Power BI Desktop.\nاختبرت جميع الفروع والرياض، وحفظت ملف PBIX محلياً.\nسلّم ملف التطبيق وشرحًا موجزًا للنتائج للمراجعة. الإقرار الذاتي أو أسئلة المراجعة لا يكفيان لإثبات التطبيق."
+    }
+  ],
+  "learning_design": {
+    "skills": [],
+    "activitySkills": {},
+    "rubrics": {}
+  },
+  "planned_units": [
+    {
+      "number": 1,
+      "title": "تعرف على رحلة البيانات",
+      "description": "الفرق بين Power Query والنموذج والتقرير وDesktop والخدمة.",
+      "exercise": "تطبيق: استورد CSV وتعرف على كل منطقة عمل.",
+      "status": "outline_only"
+    },
+    {
+      "number": 2,
+      "title": "نظّف في Power Query",
+      "description": "الأنواع والقيم الفارغة وأخطاء الاستيراد وتوحيد التسميات.",
+      "exercise": "تطبيق: أصلح تاريخاً أو مبلغاً قُرئ كنص مع الحفاظ على المصدر.",
+      "status": "outline_only"
+    },
+    {
+      "number": 3,
+      "title": "صمم العلاقات",
+      "description": "المفتاح الفريد وعلاقة واحد إلى متعدد واتجاه التصفية.",
+      "exercise": "تطبيق: اربط الفروع والمنتجات بالمبيعات وتحقق من النتائج.",
+      "status": "outline_only"
+    },
+    {
+      "number": 4,
+      "title": "ابدأ مقاييس DAX",
+      "description": "الفرق بين العمود والمقياس وSUM وCOUNTROWS وDIVIDE.",
+      "exercise": "تطبيق: أنشئ المبيعات وعدد الطلبات ومتوسط الطلب.",
+      "status": "outline_only"
+    },
+    {
+      "number": 5,
+      "title": "ابنِ صفحة مفهومة",
+      "description": "البطاقات والمخططات والألوان والعناوين ووحدات القياس.",
+      "exercise": "تطبيق: اعرض مقارنة الفروع ومؤشرات الإجمالي.",
+      "status": "outline_only"
+    },
+    {
+      "number": 6,
+      "title": "اجعل التقرير تفاعلياً",
+      "description": "Slicer وسياق التصفية وتفاعلات العناصر.",
+      "exercise": "تطبيق: اختبر فرعاً وفئة منتج ثم امسح المرشحات.",
+      "status": "outline_only"
+    },
+    {
+      "number": 7,
+      "title": "حدّث وراجع وشارك بأمان",
+      "description": "التحديث ومسار المصدر ومطابقة الأرقام وحدود الترخيص.",
+      "exercise": "تطبيق: أعد التحديث بعد تعديل نسخة تجريبية وتحقق من الوصول قبل المشاركة.",
+      "status": "outline_only"
+    },
+    {
+      "number": 8,
+      "title": "مشروع التقرير النهائي",
+      "description": "سؤال العمل ثم نموذج صغير ومقاييس وصفحة تقرير.",
+      "exercise": "تطبيق: سلّم PBIX محلياً مع قائمة مراجعة وشرح 3 استنتاجات.",
+      "status": "outline_only"
+    }
+  ],
+  "attachments": [
+    {
+      "name": "Sales.csv",
+      "size": 1088,
+      "sha256": "44a86a7095aef27c2be21a55e37bbd7540fc32f03333bb847e31600d0989feb6"
+    },
+    {
+      "name": "Branches.csv",
+      "size": 72,
+      "sha256": "ad287ff82d1d9b466db4f58877160e9b3515e0bd822d6e8837438ace9bb4389e"
+    },
+    {
+      "name": "Products.csv",
+      "size": 163,
+      "sha256": "99d8c39412974807d1ec02f7a6cd352c93c88c1fde2cbaaa694722ba0a72cd4f"
+    }
+  ],
+  "review_notes": [
+    "Numeric input questions converted to multiple choice; correct option remains first pending assessment review.",
+    "Interactive arithmetic/report simulations are not ported in this draft.",
+    "No account progress, certificate entitlement, upload or publication has occurred.",
+    "Practice evidence requires actual file review; no PBIX is included."
+  ]
+}

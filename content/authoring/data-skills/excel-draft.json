@@ -1,0 +1,178 @@
+{
+  "course_slug": "excel-basics",
+  "course_version": 1,
+  "revision": 0,
+  "title": "أساسيات Excel للموظف العملي",
+  "status": "draft",
+  "published": false,
+  "runtime_ready": false,
+  "source_sha256": "cdaea374ccd3d5f3d533e2f6aa641ea0e78e51615e21a595310e875f9c606c2a",
+  "scope": "Imported sample lesson only; roadmap units are not complete.",
+  "activities": [
+    {
+      "key": "excel-step-1",
+      "type": "content",
+      "title": "افتح ملف التمرين",
+      "body": "نزّل KFO_Excel_Practice.xlsx ثم افتحه في Excel. ابدأ بورقة Start، ثم Sales. لدينا 24 طلباً مصطنعاً، وكل صف يمثل طلباً واحداً. الأعمدة A إلى H: المعرف، التاريخ، الفرع، المنتج، الكمية، السعر، الخصم، الصافي.\n\nتأكد: تأكد أن الطلب الأول KFO-001، وأن E2 = 3 وF2 = 250 وG2 = 10%."
+    },
+    {
+      "key": "excel-step-2",
+      "type": "content",
+      "title": "افهم المثال قبل نسخه",
+      "body": "قيمة الطلب قبل الخصم = 3 × 250 = 750 ريالاً. الخصم = 750 × 10% = 75 ريالاً. الصافي = 750 − 75 = 675 ريالاً. الصيغة المختصرة تضرب في النسبة المتبقية (1 − 10%).\n\nتأكد: الخلية H2 تحتوي =E2*F2*(1-G2). النتيجة 675.00."
+    },
+    {
+      "key": "excel-step-3",
+      "type": "content",
+      "title": "طبّق على باقي الصفوف",
+      "body": "اكتب =E3*F3*(1-G3) في H3. انسخها أو اسحب مقبض التعبئة إلى H25. قد يملأ Excel العمود تلقائياً لأنه جدول. افحص H3 وH25 للتأكد من تغير أرقام الصفوف، ولا تثبّت E2 لأن كل طلب له كميته.\n\nتأكد: H3 يجب أن يساوي 228.00. لا تكتب 10 بدل 10% في عمود الخصم."
+    },
+    {
+      "key": "excel-step-4",
+      "type": "content",
+      "title": "ابنِ الإجمالي والعدد",
+      "body": "في Summary اكتب في B5: =SUM('Sales'!H2:H25). وفي B7: =COUNTA('Sales'!A2:A25). COUNTA مناسب هنا لأن كل طلب يملك معرفاً غير فارغ. في B8 اكتب =B5/B7.\n\nتأكد: عدد الطلبات 24. تنسيق منزلتين عشريتين يعرض المتوسط مقرباً دون تغيير قيمته الأصلية."
+    },
+    {
+      "key": "excel-step-5",
+      "type": "content",
+      "title": "اجمع مبيعات الرياض فقط",
+      "body": "في Summary!B6 اكتب =SUMIFS('Sales'!H2:H25,'Sales'!C2:C25,\"الرياض\"). أول نطاق هو المبلغ الذي نجمعه، ثم نطاق الفرع، ثم اسم الفرع المطلوب. حافظ على تساوي أطوال النطاقات.\n\nتأكد: إذا رفض Excel الفواصل، استبدل , بـ ; بين معاملات الدالة وفق إعدادات منطقتك."
+    },
+    {
+      "key": "excel-step-6",
+      "type": "content",
+      "title": "تحقق وجرب تغييراً",
+      "body": "صفِّ BranchName في Sales على الرياض: ستظهر 8 طلبات. صيغة SUM تجمع النطاق بما فيه الصفوف المخفية بالتصفية؛ لذلك لا تتوقع أن يتحول الإجمالي تلقائياً إلى الرياض. استخدم SUMIFS للسؤال الشرطي. غيّر E2 من 3 إلى 4 ثم أعدها إلى 3.\n\nتأكد: في تجربة التغيير يصبح H2 = 900 ويزيد الإجمالي 225. أعد القيمة الأصلية قبل مقارنة الحل."
+    },
+    {
+      "key": "excel-step-7",
+      "type": "content",
+      "title": "احفظ وفسّر",
+      "body": "احفظ نسخة باسمك على جهازك. بعد المحاولة افتح KFO_Excel_Answers.xlsx وافحص الصيغ، لا الأرقام فقط. اسأل نفسك: هل يتغير الملخص إذا تغيرت كمية طلب؟\n\nتأكد: المراجعة العددية: الإجمالي 29,828.00؛ الرياض 9,028.00؛ العدد 24؛ المتوسط 1,242.83 ريالاً."
+    },
+    {
+      "key": "excel-check-1",
+      "type": "scenario",
+      "title": "مراجعة تطبيقية 1",
+      "prompt": "1. كمية 3 × سعر 250 مع خصم 10%: ما الصافي؟",
+      "options": [
+        "675",
+        "750",
+        "75"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "key": "excel-check-2",
+      "type": "scenario",
+      "title": "مراجعة تطبيقية 2",
+      "prompt": "2. ما الصيغة التي تنتج تلقائياً عند نسخ صيغة H2 إلى H3؟",
+      "options": [
+        "=E3*F3*(1-G3)",
+        "=$E$2*$F$2*(1-$G$2)",
+        "=E2+F2-G2"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "key": "excel-check-3",
+      "type": "scenario",
+      "title": "مراجعة تطبيقية 3",
+      "prompt": "3. بعد إكمال جميع الصفوف: ما إجمالي صافي المبيعات؟",
+      "options": [
+        "29,828",
+        "9,028",
+        "24"
+      ],
+      "correctIndex": 0
+    },
+    {
+      "key": "excel-practice",
+      "type": "practical_task",
+      "title": "التطبيق في البرنامج الفعلي",
+      "prompt": "أكملت الصيغ في ملف Excel وفحصت أول صف وآخر صف.\nغيّرت الكمية ثم أعدتها، وتأكدت أن الملخص يتحدث.\nسلّم ملف التطبيق وشرحًا موجزًا للنتائج للمراجعة. الإقرار الذاتي أو أسئلة المراجعة لا يكفيان لإثبات التطبيق."
+    }
+  ],
+  "learning_design": {
+    "skills": [],
+    "activitySkills": {},
+    "rubrics": {}
+  },
+  "planned_units": [
+    {
+      "number": 1,
+      "title": "ابدأ بملف منظم",
+      "description": "الخلايا والصفوف وأنواع البيانات وحفظ نسخة عمل.",
+      "exercise": "تطبيق: أنشئ جدول طلبات، وصحح رقماً مخزناً كنص.",
+      "status": "outline_only"
+    },
+    {
+      "number": 2,
+      "title": "الحسابات التي تتكرر",
+      "description": "الضرب والنسب والمراجع النسبية والثابتة وSUM.",
+      "exercise": "تطبيق: احسب صافي كل طلب بعد الخصم، واختبر تغيير الكمية.",
+      "status": "outline_only"
+    },
+    {
+      "number": 3,
+      "title": "رتب ونظّف البيانات",
+      "description": "الجداول والفرز والتصفية وإزالة التكرار بعد التحقق.",
+      "exercise": "تطبيق: حدد الطلبات المكررة دون حذف طلبين مختلفين.",
+      "status": "outline_only"
+    },
+    {
+      "number": 4,
+      "title": "اجمع بشرط",
+      "description": "IF وSUMIFS وCOUNTIFS ومعنى الشرط.",
+      "exercise": "تطبيق: استخرج مبيعات وعدد طلبات كل فرع.",
+      "status": "outline_only"
+    },
+    {
+      "number": 5,
+      "title": "اربط جداولك",
+      "description": "XLOOKUP عند توفره، وبديل INDEX/MATCH.",
+      "exercise": "تطبيق: اجلب فئة المنتج باستخدام معرف فريد، وتعامل مع معرف مفقود.",
+      "status": "outline_only"
+    },
+    {
+      "number": 6,
+      "title": "لخّص بـ PivotTable",
+      "description": "اختيار الصفوف والقيم والتجميع والتحديث.",
+      "exercise": "تطبيق: ابنِ ملخص فرع × شهر وتأكد أنه يطابق الإجمالي.",
+      "status": "outline_only"
+    },
+    {
+      "number": 7,
+      "title": "اعرض النتيجة",
+      "description": "مخطط مناسب وتنسيق شرطي وعناوين ووحدات واضحة.",
+      "exercise": "تطبيق: حوّل الملخص إلى صفحة تقرير واحدة.",
+      "status": "outline_only"
+    },
+    {
+      "number": 8,
+      "title": "مشروع عمل كامل",
+      "description": "استيراد البيانات ثم تنظيفها وحسابها ومراجعتها.",
+      "exercise": "تطبيق: سلّم ملفاً قابلاً للتحديث يجيب عن 3 أسئلة عمل.",
+      "status": "outline_only"
+    }
+  ],
+  "attachments": [
+    {
+      "name": "KFO_Excel_Practice.xlsx",
+      "size": 10356,
+      "sha256": "bde5d360ffb0dfff9e63eb3695412ba1a8f9631813dc1db1ae7f409f8c2ad091"
+    },
+    {
+      "name": "KFO_Excel_Answers.xlsx",
+      "size": 10714,
+      "sha256": "861eeb84c2f4165cc96a0971e943e7e2298ec830dad12bb008ba7f25c5596344"
+    }
+  ],
+  "review_notes": [
+    "Numeric input questions converted to multiple choice; correct option remains first pending assessment review.",
+    "Interactive arithmetic/report simulations are not ported in this draft.",
+    "No account progress, certificate entitlement, upload or publication has occurred.",
+    "Practice evidence requires actual file review; no PBIX is included."
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "source_filename": "KFO_Excel_PowerBI_Interactive (1).html",
+  "source_sha256": "cdaea374ccd3d5f3d533e2f6aa641ea0e78e51615e21a595310e875f9c606c2a",
+  "files": [
+    {
+      "name": "Sales.csv",
+      "size": 1088,
+      "sha256": "44a86a7095aef27c2be21a55e37bbd7540fc32f03333bb847e31600d0989feb6"
+    },
+    {
+      "name": "Branches.csv",
+      "size": 72,
+      "sha256": "ad287ff82d1d9b466db4f58877160e9b3515e0bd822d6e8837438ace9bb4389e"
+    },
+    {
+      "name": "Products.csv",
+      "size": 163,
+      "sha256": "99d8c39412974807d1ec02f7a6cd352c93c88c1fde2cbaaa694722ba0a72cd4f"
+    },
+    {
+      "name": "KFO_Excel_Practice.xlsx",
+      "size": 10356,
+      "sha256": "bde5d360ffb0dfff9e63eb3695412ba1a8f9631813dc1db1ae7f409f8c2ad091"
+    },
+    {
+      "name": "KFO_Excel_Answers.xlsx",
+      "size": 10714,
+      "sha256": "861eeb84c2f4165cc96a0971e943e7e2298ec830dad12bb008ba7f25c5596344"
+    }
+  ]
+}
