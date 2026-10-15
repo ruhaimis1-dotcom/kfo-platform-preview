@@ -1,3 +1,4 @@
+import {mountProfileEditor,markWorkspaceNotification} from '../../auth/workspace-mutations.mjs';
 import {loadCertificateDetails,renderCertificateDetails} from '../../auth/certificate-details.mjs';
 import {mountLearnerNavigation,enrollmentPresentation} from '../../auth/workspace-navigation.mjs';
 import {readFile} from 'node:fs/promises';
@@ -45,7 +46,7 @@ export async function adminFixture(memberships,{signedOut=false,accessError=fals
 
 export async function workspaceFixture(memberships,{profile=null,enrollments=[],signedOut=false}={}){
   const ui=browserFixture();
-  await runController('auth/workspace.js',{...ui,mountLearnerNavigation,enrollmentPresentation,loadCertificateDetails,renderCertificateDetails,
+  await runController('auth/workspace.js',{...ui,mountLearnerNavigation,enrollmentPresentation,loadCertificateDetails,renderCertificateDetails,mountProfileEditor,markWorkspaceNotification,
     createClient:()=>({auth:{onAuthStateChange(){}}}),
     loadWorkspace:async()=>({kind:signedOut?'signed-out':'ready',memberships,userId:'u',email:'u@example.test'}),
     loadAccessContext:async()=>({kind:'ready'}),attachAccessContext:()=>memberships,

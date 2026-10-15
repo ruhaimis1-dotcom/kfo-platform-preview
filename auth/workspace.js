@@ -1,3 +1,4 @@
+import {mountProfileEditor,markWorkspaceNotification} from './workspace-mutations.mjs';
 import {loadCertificateDetails,renderCertificateDetails} from './certificate-details.mjs';
 import {mountLearnerNavigation,enrollmentPresentation} from './workspace-navigation.mjs';
 import { createClient } from '@supabase/supabase-js';
@@ -24,7 +25,7 @@ const learnerNavigation=mountLearnerNavigation({document,window});
 let generation = 0,certificateRequest=0;
 async function render() {
   const attempt = ++generation;
-  retry.classList.add('hidden');
+  retry.classList.add('hidden');profileStatus.textContent='';document.getElementById('notification-status').textContent='';
   list.replaceChildren();
   learner.classList.add('hidden');
   document.getElementById('certificate-details').replaceChildren();document.getElementById('certificate-details').hidden=true;
@@ -107,10 +108,10 @@ async function render() {
     if (hasLearning) {
       learner.classList.remove('hidden');learnerNavigation.render();
       const metricLabels={total:'إجمالي الدورات',personal:'دوراتي الشخصية',organization:'دورات جهة العمل',active:'قيد التعلم',completed:'مكتملة',certificates:'الشهادات',unread_notifications:'إشعارات جديدة'};
-      for(const key of Object.keys(metricLabels)){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=String(home.dashboard[key]??0);const p=document.createElement('p');p.textContent=metricLabels[key];card.append(h,p);stats.append(card)}
+      for(const key of Object.keys(metricLabels)){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=String(home.dashboard[key]??0);h.id='learner-metric-'+key;const p=document.createElement('p');p.textContent=metricLabels[key];card.append(h,p);stats.append(card)}
       {const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=home.profile?.display_name||data.email||'متدرب كفو';const p=document.createElement('p');p.textContent=home.profile?.headline||'ملف التعلم الخاص بك';card.append(h,p);profile.append(card);profileName.value=home.profile?.display_name||'';profileHeadline.value=home.profile?.headline||'';profileForm.classList.remove('hidden')}
       if(!home.notifications.length){const card=document.createElement('article');card.className='portal-card';card.textContent='لا توجد إشعارات جديدة.';notifications.append(card)}
-      for(const n of home.notifications){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=n.title;const p=document.createElement('p');p.textContent=n.body;card.append(h,p);if(!n.read_at){const b=document.createElement('button');b.type='button';b.textContent='تحديد كمقروء';b.addEventListener('click',async()=>{b.disabled=true;try{await markNotificationRead(client,n.id);b.remove()}catch{b.disabled=false;document.getElementById('notification-status').textContent='تعذر تحديث الإشعار. حاول مجددًا.'}});card.append(b)}notifications.append(card)}
+      for(const n of home.notifications){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=n.title;const p=document.createElement('p');p.textContent=n.body;card.append(h,p);if(!n.read_at){const b=document.createElement('button');b.type='button';b.textContent='تحديد كمقروء';b.addEventListener('click',()=>markWorkspaceNotification({button:b,status:document.getElementById('notification-status'),counter:document.getElementById('learner-metric-unread_notifications'),read:()=>markNotificationRead(client,n.id),currentGeneration:()=>generation}));card.append(b)}notifications.append(card)}
       if(!home.certificates.length){const card=document.createElement('article');card.className='portal-card';card.textContent='ستظهر شهاداتك هنا بعد إكمال متطلبات الدورات.';certificates.append(card)}
       for(const c of home.certificates){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=c.certificate_code;const p=document.createElement('p');p.textContent='صدرت '+new Intl.DateTimeFormat('ar-SA',{dateStyle:'medium'}).format(new Date(c.issued_at));const button=document.createElement('button');button.type='button';button.textContent='عرض تفاصيل الشهادة';button.addEventListener('click',async()=>{const host=document.getElementById('certificate-details');host.replaceChildren();host.hidden=false;host.textContent='جارٍ التحقق من الشهادة…';button.disabled=true;const certificateGeneration=generation,request=++certificateRequest;try{const record=await loadCertificateDetails(client,c.id);if(certificateGeneration!==generation||request!==certificateRequest)return;host.textContent='';renderCertificateDetails({document,host,record})}catch(error){if(certificateGeneration===generation&&request===certificateRequest){host.replaceChildren();host.textContent=error.message}}finally{button.disabled=false}});card.append(h,p,button);certificates.append(card)}
       const organizationEnrollments = home.enrollments.filter((e) => e.context_type === 'organization');
@@ -187,7 +188,7 @@ async function render() {
     retry.classList.remove('hidden');
   }
 }
-profileForm.addEventListener('submit',async(event)=>{event.preventDefault();const button=profileForm.querySelector('button[type="submit"]');button.disabled=true;profileStatus.textContent='جارٍ الحفظ…';try{await updateMyProfile(client,{displayName:profileName.value,headline:profileHeadline.value});profileStatus.textContent='تم حفظ الملف.'}catch(error){profileStatus.textContent=error.message||'تعذر حفظ الملف.'}finally{button.disabled=false}});
+mountProfileEditor({form:profileForm,name:profileName,headline:profileHeadline,status:profileStatus,profile,save:input=>updateMyProfile(client,input),currentGeneration:()=>generation});
 retry.addEventListener('click', render);
 signout.addEventListener('click', async () => {
   generation++;
