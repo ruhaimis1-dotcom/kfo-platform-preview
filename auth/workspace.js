@@ -1,3 +1,4 @@
+import {loadCertificateDetails,renderCertificateDetails} from './certificate-details.mjs';
 import {mountLearnerNavigation,enrollmentPresentation} from './workspace-navigation.mjs';
 import { createClient } from '@supabase/supabase-js';
 import { loadWorkspace } from './workspace-data.mjs';
@@ -20,12 +21,13 @@ const assignments=document.getElementById('assignments');
 const stats=document.getElementById('stats'), profile=document.getElementById('profile'), notifications=document.getElementById('notifications'), certificates=document.getElementById('certificates');
 const profileForm=document.getElementById('profile-form'), profileName=document.getElementById('profile-name'), profileHeadline=document.getElementById('profile-headline'), profileStatus=document.getElementById('profile-status');
 const learnerNavigation=mountLearnerNavigation({document,window});
-let generation = 0;
+let generation = 0,certificateRequest=0;
 async function render() {
   const attempt = ++generation;
   retry.classList.add('hidden');
   list.replaceChildren();
   learner.classList.add('hidden');
+  document.getElementById('certificate-details').replaceChildren();document.getElementById('certificate-details').hidden=true;
   companyWorkspace.classList.add('hidden');
   companyAdmins.replaceChildren();
   companies.replaceChildren(); assignments.replaceChildren(); stats.replaceChildren(); profile.replaceChildren(); notifications.replaceChildren(); certificates.replaceChildren(); profileForm.classList.add('hidden');
@@ -110,7 +112,7 @@ async function render() {
       if(!home.notifications.length){const card=document.createElement('article');card.className='portal-card';card.textContent='لا توجد إشعارات جديدة.';notifications.append(card)}
       for(const n of home.notifications){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=n.title;const p=document.createElement('p');p.textContent=n.body;card.append(h,p);if(!n.read_at){const b=document.createElement('button');b.type='button';b.textContent='تحديد كمقروء';b.addEventListener('click',async()=>{b.disabled=true;try{await markNotificationRead(client,n.id);b.remove()}catch{b.disabled=false;document.getElementById('notification-status').textContent='تعذر تحديث الإشعار. حاول مجددًا.'}});card.append(b)}notifications.append(card)}
       if(!home.certificates.length){const card=document.createElement('article');card.className='portal-card';card.textContent='ستظهر شهاداتك هنا بعد إكمال متطلبات الدورات.';certificates.append(card)}
-      for(const c of home.certificates){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=c.certificate_code;const p=document.createElement('p');p.textContent='صدرت '+new Intl.DateTimeFormat('ar-SA',{dateStyle:'medium'}).format(new Date(c.issued_at));card.append(h,p);certificates.append(card)}
+      for(const c of home.certificates){const card=document.createElement('article');card.className='portal-card';const h=document.createElement('h3');h.textContent=c.certificate_code;const p=document.createElement('p');p.textContent='صدرت '+new Intl.DateTimeFormat('ar-SA',{dateStyle:'medium'}).format(new Date(c.issued_at));const button=document.createElement('button');button.type='button';button.textContent='عرض تفاصيل الشهادة';button.addEventListener('click',async()=>{const host=document.getElementById('certificate-details');host.replaceChildren();host.hidden=false;host.textContent='جارٍ التحقق من الشهادة…';button.disabled=true;const certificateGeneration=generation,request=++certificateRequest;try{const record=await loadCertificateDetails(client,c.id);if(certificateGeneration!==generation||request!==certificateRequest)return;host.textContent='';renderCertificateDetails({document,host,record})}catch(error){if(certificateGeneration===generation&&request===certificateRequest){host.replaceChildren();host.textContent=error.message}}finally{button.disabled=false}});card.append(h,p,button);certificates.append(card)}
       const organizationEnrollments = home.enrollments.filter((e) => e.context_type === 'organization');
       const personalEnrollments = home.enrollments.filter((e) => e.context_type === 'personal');
       for (const membership of memberships.filter((m) => m.accessible && m.roles.some((r) => r.code === 'EM'))) {

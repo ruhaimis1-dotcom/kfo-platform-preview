@@ -1,0 +1,21 @@
+import {enrollmentPresentation} from './workspace-navigation.mjs';
+const uuid=v=>typeof v==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
+const fail=()=>{throw Error('تعذر التحقق من الشهادة أو أنها لم تعد متاحة لحسابك.');};
+async function ownRow(client,table,columns,id,userId){const {data,error}=await client.from(table).select(columns).eq('id',id).eq('user_id',userId).maybeSingle();if(error||!data||data.id!==id||data.user_id!==userId)fail();return data}
+export async function loadCertificateDetails(client,id){
+ if(!uuid(id))fail();const {data:identity,error}=await client.auth.getUser();if(error||!identity?.user?.id)fail();const userId=identity.user.id;
+ const cert=await ownRow(client,'learner_certificates','id,user_id,completion_id,certificate_code,issued_at,revoked_at',id,userId);
+ if(cert.revoked_at!==null||!/^KFO-[A-F0-9]{16}$/.test(cert.certificate_code||'')||!Number.isFinite(Date.parse(cert.issued_at))||!uuid(cert.completion_id))fail();
+ const completion=await ownRow(client,'enrollment_completions','id,user_id,enrollment_id,passing_attempt_id,completed_at',cert.completion_id,userId);
+ if(!uuid(completion.enrollment_id)||!uuid(completion.passing_attempt_id)||!Number.isFinite(Date.parse(completion.completed_at)))fail();
+ const [enrollment,attempt]=await Promise.all([
+  ownRow(client,'learning_enrollments','id,user_id,course_slug,course_version,context_type,status',completion.enrollment_id,userId),
+  ownRow(client,'enrollment_assessment_attempts','id,user_id,enrollment_id,score_percent,passed',completion.passing_attempt_id,userId)
+ ]);
+ if(enrollment.status!=='completed'||!['personal','organization'].includes(enrollment.context_type)||typeof enrollment.course_slug!=='string'||!enrollment.course_slug||!Number.isInteger(enrollment.course_version)||enrollment.course_version<1||attempt.enrollment_id!==enrollment.id||attempt.passed!==true||typeof attempt.score_percent!=='number'||!Number.isFinite(attempt.score_percent)||attempt.score_percent<0||attempt.score_percent>100)fail();
+ const {data:latestIdentity,error:identityError}=await client.auth.getUser();if(identityError||latestIdentity?.user?.id!==userId)fail();
+ const current=await ownRow(client,'learner_certificates','id,user_id,completion_id,certificate_code,issued_at,revoked_at',id,userId);
+ if(current.revoked_at!==null||current.completion_id!==cert.completion_id||current.certificate_code!==cert.certificate_code||current.issued_at!==cert.issued_at)fail();
+ return {id:cert.id,code:cert.certificate_code,issuedAt:cert.issued_at,completedAt:completion.completed_at,courseTitle:enrollmentPresentation(enrollment).title,courseVersion:enrollment.course_version,context:enrollment.context_type,score:attempt.score_percent};
+}
+export function renderCertificateDetails({document,host,record}){host.replaceChildren();host.hidden=false;const h=document.createElement('h3');h.textContent='سجل شهادة الإتمام';host.append(h);const date=v=>new Intl.DateTimeFormat('ar-SA-u-ca-gregory',{dateStyle:'long',timeZone:'Asia/Riyadh'}).format(new Date(v));for(const [label,value] of [['الدورة',record.courseTitle],['الإصدار',record.courseVersion],['رمز الشهادة',record.code],['تاريخ الإكمال',date(record.completedAt)],['تاريخ الإصدار',date(record.issuedAt)],['نتيجة التقييم',record.score+'%'],['نوع الالتحاق',record.context==='personal'?'شخصي':'جهة العمل']]){const p=document.createElement('p'),strong=document.createElement('strong'),span=document.createElement('span');strong.textContent=label+': ';span.textContent=String(value);p.append(strong,span);host.append(p)}const note=document.createElement('p');note.className='muted';note.textContent='تمت قراءة هذا السجل من حسابك. لا يتضمن رابط تحقق عام أو اعتمادًا مهنيًا خارجيًا.';host.append(note)}
