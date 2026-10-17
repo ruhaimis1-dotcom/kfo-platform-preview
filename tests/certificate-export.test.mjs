@@ -1,0 +1,16 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {certificateDocument,mountCertificateExport} from '../auth/certificate-export.mjs';
+const record={code:'KFO-0123456789ABCDEF',courseTitle:'<img src=x onerror=alert(1)>',courseVersion:1,completedAt:'2026-10-17',issuedAt:'2026-10-17',score:90};
+test('portable certificate record escapes text and blocks scripts/network without pretending to be named or publicly verified',()=>{const html=certificateDocument(record);assert.ok(html.includes('&lt;img'));assert.ok(!html.includes('<img'));assert.ok(!html.includes('<script'));assert.ok(html.includes("default-src 'none'"));assert.ok(html.includes('@media print'));assert.ok(html.includes('لا تتضمن اسم حامل ثابتًا أو رابط تحقق عام'));assert.ok(html.includes('قد تُلغى الشهادة'));});
+test('export rejects invalid record fields',()=>{for(const patch of [{code:'<svg>'},{score:NaN},{score:null},{courseVersion:0},{issuedAt:'bad'},{courseTitle:''}])assert.throws(()=>certificateDocument({...record,...patch}));});
+test('export never creates a download when identity verification fails',async()=>{const nodes=[];const document={createElement(tag){const n={tag,disabled:false,setAttribute(){},addEventListener(_,fn){this.run=fn}};nodes.push(n);return n}};let blobs=0;const host={append(){}};const {button,status}=mountCertificateExport({document,host,client:{auth:{getUser:async()=>({data:{user:null}})}},id:'00000000-0000-0000-0000-000000000001',urlApi:{createObjectURL(){blobs++}}});await button.run();assert.equal(blobs,0);assert.match(status.textContent,/تعذر التحقق/);assert.equal(button.disabled,false)});
+test('verified download creates a portable file, releases its URL, and suppresses stale page downloads',async()=>{
+ const ids=['00000000-0000-0000-0000-000000000001','00000000-0000-0000-0000-000000000002','00000000-0000-0000-0000-000000000003','00000000-0000-0000-0000-000000000004'];
+ const rows={learner_certificates:{id:ids[0],user_id:'u',completion_id:ids[1],certificate_code:record.code,issued_at:record.issuedAt,revoked_at:null},enrollment_completions:{id:ids[1],user_id:'u',enrollment_id:ids[2],passing_attempt_id:ids[3],completed_at:record.completedAt},learning_enrollments:{id:ids[2],user_id:'u',course_slug:'customer-service-reference',course_version:1,context_type:'personal',status:'completed'},enrollment_assessment_attempts:{id:ids[3],user_id:'u',enrollment_id:ids[2],score_percent:90,passed:true}};
+ for(const stale of [false,true]){let clicks=0,revoked=0,created=0,current=true;
+ const client={auth:{getUser:async()=>({data:{user:{id:'u'}}})},from(table){const chain={select(){return chain},eq(){return chain},async maybeSingle(){if(stale)current=false;return{data:rows[table]}}};return chain}};
+ const document={createElement(){return{disabled:false,setAttribute(){},addEventListener(_,fn){this.run=fn},click(){clicks++},remove(){}}}};
+ const {button}=mountCertificateExport({document,host:{append(){}},client,id:ids[0],isCurrent:()=>current,urlApi:{createObjectURL(blob){created++;assert.ok(blob.size>1000);return'blob:verified'},revokeObjectURL(url){assert.equal(url,'blob:verified');revoked++}},schedule:fn=>fn()});
+ await button.run();assert.equal(clicks,stale?0:1);assert.equal(created,stale?0:1);assert.equal(revoked,stale?0:1);
+ }
+});

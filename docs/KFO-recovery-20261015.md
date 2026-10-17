@@ -194,3 +194,9 @@
 - Actual SQL tests activated Excel and Power BI inside BEGIN/ROLLBACK only. Verified runtime activity counts, eight skills/question mappings per course, rubric, private keys, no orphan activities, stale/repeat/non-admin/client/anon rejection, learner runtime loading, content progress and practical-task self-completion rejection.
 - Separate cleanup query confirms zero bindings and fixture enrollments; both courses remain unpublished/unready. No real course activation or frontend deployment. Human MVP/release approval is still required before operator invocation outside test rollback.
 - This closes implementation of first activation; UI/browser QA, content approval and certificate work remain. Actual Excel/Power BI application testing remains open.
+
+## 2026-10-17 — printable completion record export
+- Added an owned-certificate export action that re-runs certificate/completion/enrollment/passing-attempt and late-revocation checks at click time. Stale workspace requests cannot download.
+- Generates a standalone Arabic RTL HTML record for browser printing/Save as PDF, escaping all record text, with restrictive CSP and no scripts/network dependencies. Object URLs are released.
+- Deliberately labelled a completion record: no immutable holder-name snapshot, public verification, digital signature or direct PDF generation is claimed. Those remain open. No final visual approval or browser download QA yet.
+- Local build and 304 tests pass, including valid export, unsafe text, invalid fields, failed identity and stale-page suppression. No deployment.
