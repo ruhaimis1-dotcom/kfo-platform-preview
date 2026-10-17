@@ -180,3 +180,10 @@
 - Supabase apply_migration returned ProtocolError -32600: "You do not have permission to perform this action". No migration version was assigned and no schema change was applied. Did not retry DDL through execute_sql. Proposal is unexecuted/unverified SQL and requires restored authorization before actual database QA.
 - Build and300 local tests passed, including controller loading server course without reference fetch or legacy resolver; ownership/status/version/answer-leak/identity-race denial cases. Tests use mocks, not Browser QA.
 - Current operational limit: deployed frontend unchanged, new backend loader unavailable, both data-skills courses remain unpublished/unready. No course completion/certification readiness claim. Backend activation/evidence integration and real browser/mobile/Office/PBIX QA remain open.
+
+## 2026-10-17 — runtime binding applied after reconnection
+- Supabase migration `20261017075351_enrolled_course_runtime_binding` applied successfully to KFO project.
+- Real transactional SQL checks passed: exact Excel release and owner; unpublished release denied; foreign owner denied; cancelled enrollment denied; anon denied. All fixture enrollment/binding/publication/readiness changes rolled back.
+- Binding table remains empty; Excel and Power BI remain unpublished and runtime_ready=false. No frontend deployment or course activation.
+- Local frontend build and 300 tests passed before this DDL; SQL checks add separate database evidence, not browser evidence.
+- Remaining launch blockers: reviewed activation transaction promoting activities/skills/rubrics/private assessment keys; course/catalog consolidation and content review; certificate download/verification; latest-source browser QA of learner/company/admin and payment boundary; MVP Gate and explicit publication approval.
