@@ -168,3 +168,8 @@
 - Public synthetic branch aggregates derived from reviewed CSV and checked against it (all29828/24; Riyadh9028/8/1128.50). Fixed course/version/activity allowlist; safe DOM labels and feedback.
 - Build and295 local tests passed. Visual token check caught a disallowed green; changed to existing approved #205E1E. No browser visual QA, database change or deployment.
 - Catalog clarification to user: five main courses (three original public self-study + two unpublished data-skills drafts), plus separate reference customer-service runtime course used for engine QA. Do not count the reference as an additional launch product without catalog review.
+
+## Review release preparation — 2026-10-17
+- Prepared real database review snapshots for both data-skills drafts at revisions1/1. Source text/design unchanged; one snapshot per course. See docs/qa/KFO-data-skills-release-review-20261017.md.
+- Actual returned bundles validated against native contract and exact local source; all titles/text/options/skills/rubrics match, answer keys absent, every activity mapped.
+- SA/learner/anonymous SQL preview boundary tests passed with rollback. Final read confirms both courses unpublished and runtime_ready=false. No deployment, learner activation or browser/Office/PBIX testing claimed.
