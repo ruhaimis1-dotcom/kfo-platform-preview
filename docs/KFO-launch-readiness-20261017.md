@@ -36,7 +36,7 @@ Approximately **65% overall completion** (weighted source-readiness assessment 6
 | `/business/assignments` | Live member assignment and server-supplied free/active release selector | Browser acceptance; team grouping currently disabled |
 | `/business/reports` | Live scoped progress/certificates and refreshed CSV export | Actual download/Excel opening and browser acceptance |
 | `/business/orders` | Company order/free/paid boundary | Browser acceptance; no purchased-seat ledger or tax invoicing |
-| `/business/settings` | Text/colors/images/structure/roles/notifications/audit | Portal name/welcome/accent colors applied to company pages in code; image/global learner branding, training policy, real storage upload/browser QA remain |
+| `/business/settings` | Text/colors/images/structure/roles/notifications/audit | Portal name/welcome/accent colors applied to company pages in code; company logo/cover rendering added in code; learner-context branding, training policy, real storage upload/browser QA remain |
 | `/company/settings` | Company name change | Browser acceptance |
 | `/admin/dashboard` | Live overview | Cross-role browser QA |
 | `/admin/organizations` | Directory/create company with existing confirmed owner | Onboarding new owner and tenant hosting/domain activation |

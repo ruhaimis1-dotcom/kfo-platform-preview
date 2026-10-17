@@ -1,7 +1,7 @@
 import {whiteContrast} from './portal-colors.mjs';
 export async function loadPortalBranding(client,organizationId){
  const {data:identity,error}=await client.auth.getUser();if(error||!identity?.user?.id)throw Error('branding unavailable');
- const {data,error:readError}=await client.from('tenant_branding').select('organization_id,portal_name,welcome_copy,primary_color,secondary_color').eq('organization_id',organizationId).maybeSingle();
+ const {data,error:readError}=await client.from('tenant_branding').select('organization_id,portal_name,welcome_copy,primary_color,secondary_color,logo_object_key,cover_object_key').eq('organization_id',organizationId).maybeSingle();
  const {data:latest,error:authError}=await client.auth.getUser();if(readError||authError||latest?.user?.id!==identity.user.id||!data||data.organization_id!==organizationId)throw Error('branding unavailable');
  return data;
 }

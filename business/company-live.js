@@ -1,3 +1,4 @@
+import {loadPortalImageUrls,applyPortalImages} from '../company/portal-brand-images.mjs';
 import {loadPortalBranding,applyPortalBranding} from '../company/portal-branding.mjs';
 import {inviteEmployee} from '../company/employee-invitation.mjs';
 import {mountReportExport} from './report-export.mjs';
@@ -45,7 +46,8 @@ async function start(context){
   startedFor=context.organizationId;
   setLiveState('loading');
   try{
-    try{const branding=await loadPortalBranding(client,context.organizationId);applyPortalBranding({document,organizationId:context.organizationId,branding})}catch{/* Keep the approved KFO defaults if branding cannot be verified. */}
+    try{const branding=await loadPortalBranding(client,context.organizationId);applyPortalBranding({document,organizationId:context.organizationId,branding});
+      try{const urls=await loadPortalImageUrls(client,context.organizationId,branding);applyPortalImages({document,organizationId:context.organizationId,urls})}catch{/* Keep text fallback if an image cannot be verified. */}}catch{/* Keep the approved KFO defaults if branding cannot be verified. */}
     const page=document.querySelector('main')?.dataset?.page||location.pathname.split('/').pop();
     if(page==='dashboard'||location.pathname.endsWith('/dashboard')){
       emit('kfo:company-dashboard',{data:await loadCompanyDashboard(client,context.organizationId),context});

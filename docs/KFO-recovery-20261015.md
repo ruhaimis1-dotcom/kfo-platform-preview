@@ -244,3 +244,8 @@
 - Company pages now load tenant branding through RLS and an exact organization filter, rechecking identity, then apply portal label/welcome text via textContent and validated accent colors to --green/--deep.
 - White-text contrast >=4.5 required. Foreign tenant/stale context rejected; unavailable branding keeps approved KFO defaults. Ink/background semantics remain unchanged. Images/global learner branding not included in this round.
 - Authenticated company branding SELECT checked against real database without mutation. Build and 317 local tests pass. Browser appearance and saved-color propagation remain unverified; no deployment.
+
+## 2026-10-17 — company portal logo/cover rendering
+- Extended exact-tenant branding read with saved object keys. Company pages request 300-second signed URLs from the private company-brand bucket, validate exact HTTPS host/path/key, recheck user identity and current tenant, and render separate company logo/cover images.
+- KFO mark is retained. Image errors hide the failed image and preserve existing company text/avatar. No public bucket, caching of signed URLs, uploads, or cross-project assets added.
+- Build and 319 local tests pass: foreign key/host/path and identity changes denied, stale tenant suppressed, image failure fallback verified. No actual image download/browser layout QA or deployment. Learner portal context branding still separate work.
