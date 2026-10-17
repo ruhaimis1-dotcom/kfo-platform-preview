@@ -239,3 +239,8 @@
 - SQL fixture tests validate immutable snapshots after profile/title edits, anonymous minimal response, unknown code, revocation. First run found missing anonymous schema USAGE; resolved with dedicated capability schema and reran successfully. Fixtures and test certificate fully rolled back; independent cleanup count=0.
 - Updated owned certificate view/export with snapshot names and verification page link. Added `/verify` form with no persistent auth session and no-referrer. No final visual/browser QA or deployment. HTML export remains browser-printable, not a directly generated PDF or signed credential.
 - Build and 315 local tests pass. Missing-name issuance/legacy unnamed records intentionally remain visibly unnamed; final certificate design/human approval still open.
+
+## 2026-10-17 — company portal text/accent colors
+- Company pages now load tenant branding through RLS and an exact organization filter, rechecking identity, then apply portal label/welcome text via textContent and validated accent colors to --green/--deep.
+- White-text contrast >=4.5 required. Foreign tenant/stale context rejected; unavailable branding keeps approved KFO defaults. Ink/background semantics remain unchanged. Images/global learner branding not included in this round.
+- Authenticated company branding SELECT checked against real database without mutation. Build and 317 local tests pass. Browser appearance and saved-color propagation remain unverified; no deployment.
