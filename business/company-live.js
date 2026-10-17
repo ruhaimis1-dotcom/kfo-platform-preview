@@ -1,3 +1,4 @@
+import {mountReportExport} from './report-export.mjs';
 import {mountCompanySettings} from '../company/settings-live.mjs';
 import {mountCourseOrders} from '../commerce/course-orders.mjs';
 import {createClient} from '@supabase/supabase-js';
@@ -56,6 +57,7 @@ async function start(context){
         loadCompanyCertificates(client,context.organizationId)
       ]);
       emit('kfo:company-report',{report,certificates,context});
+      mountReportExport({document,client,organizationId:context.organizationId});
     }
     if(page==='courses'){
       const [report,courses]=await Promise.all([loadCompanyTrainingReport(client,context.organizationId),loadAssignableCourses(client,context.organizationId)]);

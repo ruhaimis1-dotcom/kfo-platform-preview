@@ -219,3 +219,9 @@
 - Member-directory loading does not fetch the course list unnecessarily outside assignment page. Team grouping remains unavailable.
 - SQL rollback tests: reference visible, Excel/Power BI drafts hidden, priced offer hidden, invalid organization/anon denied. Build and 307 local tests pass. Browser/current-source visual acceptance remains open.
 - No course activation or frontend deployment. Existing security advisories remain.
+
+## 2026-10-17 — company report CSV export
+- Replaced preview-only report export with a real CSV download for the full scoped company training report (independent of visible search filter).
+- Re-fetches the existing scoped report RPC at click time and checks user identity/current organization before and after retrieval. No personal learner record export.
+- Arabic UTF-8 BOM, quoted cells, exact course/version, safe integer/count consistency validation, duplicate rejection and object URL cleanup. Remainder labelled other statuses, not assumed unstarted.
+- Build and 310 local tests pass, including successful export, denied RPC and identity change. Actual browser download/Excel opening and visual acceptance remain open. No DB change or deployment.

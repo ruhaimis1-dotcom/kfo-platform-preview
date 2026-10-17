@@ -34,7 +34,7 @@ Approximately **65% overall completion** (weighted source-readiness assessment 6
 | `/business/employees` | Scoped member list | Invite dialog currently preview; actual invite/accept journey |
 | `/business/courses` | Live published/free multi-course library and exact-version links | Current-source browser acceptance |
 | `/business/assignments` | Live member assignment and server-supplied free/active release selector | Browser acceptance; team grouping currently disabled |
-| `/business/reports` | Live scoped progress/certificates | Report export and browser acceptance |
+| `/business/reports` | Live scoped progress/certificates and refreshed CSV export | Actual download/Excel opening and browser acceptance |
 | `/business/orders` | Company order/free/paid boundary | Browser acceptance; no purchased-seat ledger or tax invoicing |
 | `/business/settings` | Text/colors/images/structure/roles/notifications/audit | Apply branding globally, training policy, real storage upload QA |
 | `/company/settings` | Company name change | Browser acceptance |
