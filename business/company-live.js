@@ -1,7 +1,7 @@
 import {mountCompanySettings} from '../company/settings-live.mjs';
 import {mountCourseOrders} from '../commerce/course-orders.mjs';
 import {createClient} from '@supabase/supabase-js';
-import {referenceCourseSummary} from './course-library-data.mjs';
+import {loadAssignableCourses,renderAssignableLibrary} from './course-library-data.mjs';
 import {
   loadCompanyDashboard,loadCompanyMembers,loadCompanyTrainingReport,
   loadCompanyCertificates,assignCompanyCourse
@@ -47,7 +47,8 @@ async function start(context){
       emit('kfo:company-dashboard',{data:await loadCompanyDashboard(client,context.organizationId),context});
     }
     if(page==='employees'||location.pathname.endsWith('/employees')||page==='assignments'||location.pathname.endsWith('/assignments')){
-      emit('kfo:company-members',{data:await loadCompanyMembers(client,context.organizationId),context});
+      const [members,courses]=await Promise.all([loadCompanyMembers(client,context.organizationId),page==='assignments'?loadAssignableCourses(client,context.organizationId):Promise.resolve([])]);
+      emit('kfo:company-members',{data:members,courses,context});
     }
     if(page==='reports'||location.pathname.endsWith('/reports')){
       const [report,certificates]=await Promise.all([
@@ -57,7 +58,10 @@ async function start(context){
       emit('kfo:company-report',{report,certificates,context});
     }
     if(page==='courses'){
-      const summary=referenceCourseSummary(await loadCompanyTrainingReport(client,context.organizationId));
+      const [report,courses]=await Promise.all([loadCompanyTrainingReport(client,context.organizationId),loadAssignableCourses(client,context.organizationId)]);
+      renderAssignableLibrary(document,courses);
+      const totals=report.reduce((t,r)=>({total:t.total+Number(r.total_assignments||0),active:t.active+Number(r.active_assignments||0),completed:t.completed+Number(r.completed_assignments||0)}),{total:0,active:0,completed:0});
+      const summary=totals;
       for(const key of ['total','active','completed']){
         const metric=document.querySelector('[data-course-count="'+key+'"]');
         if(metric)metric.textContent=summary[key].toLocaleString('ar-SA');

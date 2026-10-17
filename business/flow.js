@@ -27,12 +27,12 @@ document.querySelectorAll('[data-preview]').forEach(button => button.addEventLis
 if (document.querySelector('[data-page=courses]')) {
   const search = document.querySelector('#course-search');
   const kind = document.querySelector('#course-kind');
-  const cards = [...document.querySelectorAll('.flow-course')];
+  const cards = () => [...document.querySelectorAll('.flow-course')];
   const empty = document.querySelector('#course-empty');
   function filterCourses() {
     const query = search.value.trim().toLocaleLowerCase('ar');
     let visible = 0;
-    cards.forEach(card => {
+    cards().forEach(card => {
       card.hidden = (kind.value !== 'all' && card.dataset.kind !== kind.value)
         || Boolean(query && !card.dataset.title.toLocaleLowerCase('ar').includes(query));
       if (!card.hidden) visible += 1;
@@ -115,12 +115,11 @@ if (document.querySelector('[data-page=assignments]')) {
     const members=payload?.data;
     if(!Array.isArray(members))return;
     liveMode=true;
-    courses={
-      'customer-service-reference':{
-        name:'خدمة العملاء: من الفهم إلى الأثر',seats:null,slug:'customer-service-reference',version:1
-      }
-    };
-    select.replaceChildren(new Option('خدمة العملاء: من الفهم إلى الأثر','customer-service-reference'));
+    courses=Object.create(null);
+    select.replaceChildren();
+    for(const row of payload.courses||[]){const key=row.course_slug+':'+row.course_version;courses[key]={name:row.title,seats:null,slug:row.course_slug,version:row.course_version};select.append(new Option(row.title+' · إصدار '+row.course_version,key))}
+    const query=new URLSearchParams(location.search),requested=query.get('course')+':'+(query.get('version')||'1');
+    if(Object.hasOwn(courses,requested))select.value=requested;
     people.replaceChildren();
     for(const member of members){
       const label=document.createElement('label');

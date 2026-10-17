@@ -32,8 +32,8 @@ Approximately **65% overall completion** (weighted source-readiness assessment 6
 | `/orders` | Personal free enrollment and paid-awaiting-payment boundary | Real browser free/paid retry checks; Neoleap intentionally pending |
 | `/business/dashboard` | Live scoped aggregates | Remaining placeholder sections and latest-browser acceptance |
 | `/business/employees` | Scoped member list | Invite dialog currently preview; actual invite/accept journey |
-| `/business/courses` | Reference-course summary | Published multi-course library |
-| `/business/assignments` | Live member assignment to reference course | Course selection across activated releases; team grouping currently disabled |
+| `/business/courses` | Live published/free multi-course library and exact-version links | Current-source browser acceptance |
+| `/business/assignments` | Live member assignment and server-supplied free/active release selector | Browser acceptance; team grouping currently disabled |
 | `/business/reports` | Live scoped progress/certificates | Report export and browser acceptance |
 | `/business/orders` | Company order/free/paid boundary | Browser acceptance; no purchased-seat ledger or tax invoicing |
 | `/business/settings` | Text/colors/images/structure/roles/notifications/audit | Apply branding globally, training policy, real storage upload QA |

@@ -212,3 +212,10 @@
 - Applied `20261017083951_company_assignment_release_gate`. Existing member scope checks remain.
 - Real SQL rollback tests pass: authorized free reference assignment, draft denial, priced-offer denial, unpublished denial. Reference price/publication restored by rollback; no test assignment persisted.
 - Multi-course library/assignment selector expansion remains open; this round implements its prerequisite guard, not the complete library UI. No deployment or course activation.
+
+## 2026-10-17 — live multi-course company library and assignment selector
+- Applied `20261017084137_company_assignable_courses`: scoped authenticated RPC returns only published, zero-price, runtime-ready offers with runtime binding (exact legacy reference excepted). Requires active tenant and reviewer access to at least one active member. No assessment keys or personal learning data returned.
+- Company library now renders server-supplied titles and exact version links safely through text nodes; assignment selector uses the same live list and preserves requested version. Drafts/paid offers are not included. Report aggregate metrics span company assignments, not only reference.
+- Member-directory loading does not fetch the course list unnecessarily outside assignment page. Team grouping remains unavailable.
+- SQL rollback tests: reference visible, Excel/Power BI drafts hidden, priced offer hidden, invalid organization/anon denied. Build and 307 local tests pass. Browser/current-source visual acceptance remains open.
+- No course activation or frontend deployment. Existing security advisories remain.

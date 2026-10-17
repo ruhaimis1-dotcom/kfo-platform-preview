@@ -29,8 +29,9 @@ test('employee live mode uses membership ids and removes fake contact dependency
   assert.match(employees,/قائمة الأعضاء محدثة حسب نطاق إدارتك/);
 });
 
-test('assignment live mode uses membership ids and only approved reference course',()=>{
-  assert.match(assignment,/customer-service-reference/);
+test('assignment live mode uses membership ids and server supplied course versions',()=>{
+  assert.match(assignment,/payload\.courses/);
+  assert.match(assignment,/version:row\.course_version/);
   assert.match(assignment,/membershipIds:selected/);
   assert.match(assignment,/window\.kfoAssignCompanyCourse/);
   assert.match(assignment,/تكليف فريق كامل ينتظر ربط دليل الفرق/);
