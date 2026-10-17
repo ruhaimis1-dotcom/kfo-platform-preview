@@ -187,3 +187,10 @@
 - Binding table remains empty; Excel and Power BI remain unpublished and runtime_ready=false. No frontend deployment or course activation.
 - Local frontend build and 300 tests passed before this DDL; SQL checks add separate database evidence, not browser evidence.
 - Remaining launch blockers: reviewed activation transaction promoting activities/skills/rubrics/private assessment keys; course/catalog consolidation and content review; certificate download/verification; latest-source browser QA of learner/company/admin and payment boundary; MVP Gate and explicit publication approval.
+
+## 2026-10-17 — operator activation implementation and database QA
+- Applied migration `20261017080146_operator_course_release_activation` installs a private SECURITY INVOKER operator function, without API wrapper or anon/authenticated EXECUTE. Invocation also checks platform-admin identity.
+- Activation locks the authoring/offer state, requires exact reviewed metadata/lesson revisions, refuses replacing any used course version, and atomically promotes skills, activities, activity-skill links, rubrics, question-skill links, private assessment keys, binding, readiness, publication and audit event.
+- Actual SQL tests activated Excel and Power BI inside BEGIN/ROLLBACK only. Verified runtime activity counts, eight skills/question mappings per course, rubric, private keys, no orphan activities, stale/repeat/non-admin/client/anon rejection, learner runtime loading, content progress and practical-task self-completion rejection.
+- Separate cleanup query confirms zero bindings and fixture enrollments; both courses remain unpublished/unready. No real course activation or frontend deployment. Human MVP/release approval is still required before operator invocation outside test rollback.
+- This closes implementation of first activation; UI/browser QA, content approval and certificate work remain. Actual Excel/Power BI application testing remains open.
