@@ -225,3 +225,9 @@
 - Re-fetches the existing scoped report RPC at click time and checks user identity/current organization before and after retrieval. No personal learner record export.
 - Arabic UTF-8 BOM, quoted cells, exact course/version, safe integer/count consistency validation, duplicate rejection and object URL cleanup. Remainder labelled other statuses, not assumed unstarted.
 - Build and 310 local tests pass, including successful export, denied RPC and identity change. Actual browser download/Excel opening and visual acceptance remain open. No DB change or deployment.
+
+## 2026-10-17 — existing-account in-app employee invitations
+- Added permission-checked email-to-existing-confirmed-account invitation RPC, delegating the original atomic EM invitation function. Enabled tenant locked; retry of the same pending EM invitation returns the same membership. Active/existing unsupported memberships and absent accounts return generic denial.
+- Replaced preview-only employee dialog with live in-app invitation. Removed name/team inputs that were not persisted. UI explicitly says no email delivery, prevents duplicate submission and closing while busy, and refreshes the member directory.
+- Actual SQL rollback tests passed: owner creates pending EM invite, retry retains ID, nonexistent account denied, employee/anon invitation denied, recipient accepts through existing `accept_invitation` RPC. Initial test used an incorrect public acceptance RPC name; corrected to existing wrapper and reran successfully. Cleanup query confirms zero fixture organizations.
+- Client identity/current-company checks and generic error handling tested. Build and 312 local tests pass. Actual two-account browser journey remains open. No outbound email, deployment, or real employee invitation sent in tests.

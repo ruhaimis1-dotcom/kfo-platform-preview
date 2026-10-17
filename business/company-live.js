@@ -1,3 +1,4 @@
+import {inviteEmployee} from '../company/employee-invitation.mjs';
 import {mountReportExport} from './report-export.mjs';
 import {mountCompanySettings} from '../company/settings-live.mjs';
 import {mountCourseOrders} from '../commerce/course-orders.mjs';
@@ -101,4 +102,12 @@ window.kfoAssignCompanyCourse=async function(payload){
   const organizationId=document.body.dataset.organizationId;
   if(!organizationId)throw new Error('تعذر تحديد الشركة الحالية.');
   return assignCompanyCourse(client,{...payload,organizationId});
+};
+
+window.kfoInviteEmployee=async function(email){
+ const organizationId=document.body.dataset.organizationId;
+ if(!organizationId)throw Error('تعذر تحديد الشركة الحالية.');
+ const id=await inviteEmployee(client,{organizationId,email,isCurrent:()=>document.body.dataset.organizationId===organizationId});
+ try{emit('kfo:company-members',{data:await loadCompanyMembers(client,organizationId),courses:[],context:{organizationId}})}catch{throw Error('تم إنشاء الدعوة، وتعذر تحديث القائمة. أعد تحميل الصفحة؛ لا يلزم إنشاء دعوة أخرى.');}
+ return id;
 };

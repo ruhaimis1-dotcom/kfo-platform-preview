@@ -83,11 +83,19 @@ menu.addEventListener('click',()=>{const open=!sidebar.classList.contains('open'
 document.addEventListener('click',event=>{if(sidebar.classList.contains('open')&&!sidebar.contains(event.target)&&!menu.contains(event.target))closeMenu()});
 const dialog=document.querySelector('#invite-dialog'),open=document.querySelector('#invite-open'),close=document.querySelector('#invite-close'),cancel=document.querySelector('#invite-cancel'),done=document.querySelector('#invite-done'),form=document.querySelector('#invite-form'),confirmation=document.querySelector('#invite-confirm');
 let returnFocus;
-function showDialog(){returnFocus=document.activeElement;form.reset();form.hidden=false;confirmation.hidden=true;dialog.hidden=false;document.body.style.overflow='hidden';form.elements.name.focus()}
-function hideDialog(){dialog.hidden=true;document.body.style.overflow='';returnFocus?.focus()}
+function showDialog(){document.querySelector('#invite-status').textContent='';returnFocus=document.activeElement;form.reset();form.hidden=false;confirmation.hidden=true;dialog.hidden=false;document.body.style.overflow='hidden';form.elements.email.focus()}
+function hideDialog(){if(inviteBusy)return;dialog.hidden=true;document.body.style.overflow='';returnFocus?.focus()}
 open.addEventListener('click',showDialog);[close,cancel,done].forEach(button=>button.addEventListener('click',hideDialog));dialog.addEventListener('click',event=>{if(event.target===dialog)hideDialog()});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'){if(!dialog.hidden)hideDialog();else closeMenu()}});
-form.addEventListener('submit',event=>{event.preventDefault();if(!form.reportValidity())return;document.querySelector('#invite-summary').textContent=`${form.elements.name.value.trim()} — ${form.elements.email.value.trim()} — ${form.elements.team.value}. إرسال الدعوة سيتم تفعيله عند اكتمال ربط الدعوات.`;form.hidden=true;confirmation.hidden=false;done.focus()});
+let inviteBusy=false;
+form.addEventListener('submit',async event=>{
+ event.preventDefault();if(inviteBusy||!form.reportValidity())return;
+ const status=document.querySelector('#invite-status'),submit=form.querySelector('[type=submit]');
+ if(typeof window.kfoInviteEmployee!=='function'){status.textContent='لم يكتمل تحميل حساب الشركة. أعد تحميل الصفحة.';return}
+ inviteBusy=true;submit.disabled=true;form.elements.email.disabled=true;status.textContent='جارٍ إنشاء الدعوة…';
+ try{await window.kfoInviteEmployee(form.elements.email.value);document.querySelector('#invite-summary').textContent='تم إنشاء دعوة داخل كفو لحساب الموظف. تظهر بعد دخوله ويمكنه قبولها. لم نرسل بريدًا إلكترونيًا.';form.hidden=true;confirmation.hidden=false;done.focus()}
+ catch(error){status.textContent=error.message}finally{inviteBusy=false;submit.disabled=false;form.elements.email.disabled=false}
+});
 window.addEventListener('kfo:company-members',event=>hydrateMembers(event.detail));
 if(window.kfoCompanyLive?.['kfo:company-members'])hydrateMembers(window.kfoCompanyLive['kfo:company-members']);
 renderPeople();
