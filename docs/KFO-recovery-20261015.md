@@ -173,3 +173,10 @@
 - Prepared real database review snapshots for both data-skills drafts at revisions1/1. Source text/design unchanged; one snapshot per course. See docs/qa/KFO-data-skills-release-review-20261017.md.
 - Actual returned bundles validated against native contract and exact local source; all titles/text/options/skills/rubrics match, answer keys absent, every activity mapped.
 - SA/learner/anonymous SQL preview boundary tests passed with rollback. Final read confirms both courses unpublished and runtime_ready=false. No deployment, learner activation or browser/Office/PBIX testing claimed.
+
+## Enrollment-specific runtime loader — 2026-10-17
+- Added loadEnrolledRelease and player integration: own active enrollment query scoped by ID+user, server bundle identity/course/version contract, answer-key rejection and final identity recheck. Exact reference course/version retains legacy path; unknown/inactive releases fail closed without falling back to another course.
+- Proposed private runtime binding table and narrow my_course_release RPC prepared in supabase/proposals/enrolled_course_runtime_binding.sql. No binding rows, activation endpoint or publication included. Proposed server check includes live owner/enrollment, organization membership+enabled tenant, explicit release binding and published/runtime_ready guards.
+- Supabase apply_migration returned ProtocolError -32600: "You do not have permission to perform this action". No migration version was assigned and no schema change was applied. Did not retry DDL through execute_sql. Proposal is unexecuted/unverified SQL and requires restored authorization before actual database QA.
+- Build and300 local tests passed, including controller loading server course without reference fetch or legacy resolver; ownership/status/version/answer-leak/identity-race denial cases. Tests use mocks, not Browser QA.
+- Current operational limit: deployed frontend unchanged, new backend loader unavailable, both data-skills courses remain unpublished/unready. No course completion/certification readiness claim. Backend activation/evidence integration and real browser/mobile/Office/PBIX QA remain open.

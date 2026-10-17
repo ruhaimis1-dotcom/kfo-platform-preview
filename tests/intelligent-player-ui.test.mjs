@@ -16,7 +16,7 @@ async function playerFixture(submit,{kind='enrolled',type='reflection',records=[
   createClient:()=>({rpc:async()=>({data:feedback})}),fetch:async()=>({ok:true,json:async()=>course}),
   resolveEnrollment:async()=>({kind,userId:'u',enrollment:{id:'e'}}),
   loadActivityRecords:async()=>records,loadSkillMeasurements:async()=>[],summarizeSkills:()=>[],
-  runtimeState,recommendNext,renderActivity,mountPracticeFiles,mountDataSkillsLab,attachMyReviewFeedback,courseSource,submitEvidence:submit,uploadFileEvidence:submit,
+  loadEnrolledRelease:async()=>null,runtimeState,recommendNext,renderActivity,mountPracticeFiles,mountDataSkillsLab,attachMyReviewFeedback,courseSource,submitEvidence:submit,uploadFileEvidence:submit,
   saveLessonCompletion:async()=>{throw new Error('evidence must not complete lesson')}
  },'main');
  return ui;

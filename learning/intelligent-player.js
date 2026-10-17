@@ -1,3 +1,4 @@
+import {loadEnrolledRelease} from './enrolled-release.mjs';
 import {mountDataSkillsLab} from './data-skills-labs.mjs';
 import {mountPracticeFiles} from './practice-files.mjs';
 import {loadReleasePreview} from './release-preview.mjs';
@@ -17,7 +18,8 @@ async function main(){
 const client=createClient('https://ktkdcfxeaicbykdurlfg.supabase.co','sb_publishable_P6NrKFErT6ntjXg2UMWbPw_OtRapbiF');
 const qs=new URLSearchParams(location.search),enrollmentId=qs.get('enrollment');
 if(qs.has('release')&&enrollmentId)throw new Error('لا يمكن الجمع بين معاينة إصدار والتحاق متدرب.');
-const bundle=qs.has('release')?await loadReleasePreview(client,qs.get('release')):null;
+const bundle=qs.has('release')?await loadReleasePreview(client,qs.get('release')):await loadEnrolledRelease(client,enrollmentId);
+if(bundle?.session.kind==='signed-out'){location.href='/login';return}
 const course=bundle?.course||await fetch(courseSource(location.pathname)).then(r=>{if(!r.ok)throw new Error('تعذر تحميل الدورة');return r.json()});
 const assessmentBank=bundle?.assessmentBank||await fetch('/assets/reference/customer-service-assessment.json').then(r=>{if(!r.ok)throw new Error('تعذر تحميل التقييم');return r.json()});
 let records=[],current=0;
