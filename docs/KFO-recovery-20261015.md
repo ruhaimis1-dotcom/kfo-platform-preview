@@ -255,3 +255,10 @@
 - Assignment due dates now submit end-of-day Asia/Riyadh (+03:00), instead of UTC (three hours late).
 - Build and 320 local tests pass. HTML link/asset target audit of dist found zero missing local targets; this is not browser navigation or visual QA.
 - No deployment or activation.
+
+## 2026-10-17 — full database learning integration checks
+- Executed `supabase/tests/data_skills_learning_integration.sql` for Excel and Power BI in one rollback-only transaction.
+- Operator activates prepared release; learner creates free order/enrollment via RPC, loads own runtime, completes content, submits structured synthetic project evidence; assessment is rejected while evidence pending; SA reads through review-detail RPC and approves; learner passes official assessment; eight post skill measurements, issue-time name/title certificate and anonymous verification are asserted.
+- Initial test attempted admin direct evidence SELECT; RLS correctly hid learner evidence. Updated test to use the actual admin detail RPC, then full test passed. No table grants or production code changed.
+- Independent cleanup: zero runtime bindings and data-skills enrollments; both draft offers published=false/runtime_ready=false. All test orders/evidence/reviews/assessments/certificates/profile edits rolled back.
+- This is database integration evidence with synthetic structured evidence, not actual Excel/Power BI file checking, browser uploads, layout acceptance or launch approval. Frontend baseline remains build +320 passing local tests.
