@@ -206,3 +206,9 @@
 - Planning readiness estimate ~65% (64/100 weighted source assessment), explicitly distinct from production or browser acceptance.
 - Corrected learner presentation for Excel/Power BI and exact version-1 active enrollment links; unsupported versions/statuses stay closed. Backend remains responsible for ownership/publication/runtime binding.
 - Build and 305 local tests pass. No publication or activation.
+
+## 2026-10-17 — company assignment release/payment guard
+- Before expanding the company library, reviewed assignment RPC and added server-side eligibility guard: published zero-price offer, runtime_ready, and release binding (exact legacy reference version permitted). Offer/authoring shared locks retain eligibility through the assignment transaction.
+- Applied `20261017083951_company_assignment_release_gate`. Existing member scope checks remain.
+- Real SQL rollback tests pass: authorized free reference assignment, draft denial, priced-offer denial, unpublished denial. Reference price/publication restored by rollback; no test assignment persisted.
+- Multi-course library/assignment selector expansion remains open; this round implements its prerequisite guard, not the complete library UI. No deployment or course activation.

@@ -1,0 +1,20 @@
+begin;
+select set_config('request.jwt.claim.sub',(select id::text from auth.users where email='saud@hirely.sa'),true);
+select set_config('kfo.test_member',(select id::text from public.organization_memberships where status='active' and private.company_member_in_reviewer_scope(organization_id,id) limit 1),true);
+select set_config('kfo.test_org',(select organization_id::text from public.organization_memberships where id=current_setting('kfo.test_member')::uuid),true);
+set local role authenticated;
+do $$declare n integer;begin
+ if nullif(current_setting('kfo.test_member'),'') is null then raise exception 'fixture member missing';end if;
+ select count(*) into n from public.assign_company_course(current_setting('kfo.test_org')::uuid,array[current_setting('kfo.test_member')::uuid],'customer-service-reference',1,null);
+ if n<>1 then raise exception 'free reference assignment failed';end if;
+ begin perform public.assign_company_course(current_setting('kfo.test_org')::uuid,array[current_setting('kfo.test_member')::uuid],'excel-basics',1,null);raise exception 'draft accepted';exception when invalid_parameter_value then null;end;
+end$$;
+reset role;
+update private.course_offers set unit_amount_minor=100 where course_slug='customer-service-reference' and course_version=1;
+set local role authenticated;
+do $$begin begin perform public.assign_company_course(current_setting('kfo.test_org')::uuid,array[current_setting('kfo.test_member')::uuid],'customer-service-reference',1,null);raise exception 'priced assignment accepted';exception when invalid_parameter_value then null;end;end$$;
+reset role;
+update private.course_offers set unit_amount_minor=0,published=false where course_slug='customer-service-reference' and course_version=1;
+set local role authenticated;
+do $$begin begin perform public.assign_company_course(current_setting('kfo.test_org')::uuid,array[current_setting('kfo.test_member')::uuid],'customer-service-reference',1,null);raise exception 'unpublished assignment accepted';exception when invalid_parameter_value then null;end;end$$;
+rollback;
