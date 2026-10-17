@@ -200,3 +200,9 @@
 - Generates a standalone Arabic RTL HTML record for browser printing/Save as PDF, escaping all record text, with restrictive CSP and no scripts/network dependencies. Object URLs are released.
 - Deliberately labelled a completion record: no immutable holder-name snapshot, public verification, digital signature or direct PDF generation is claimed. Those remain open. No final visual approval or browser download QA yet.
 - Local build and 304 tests pass, including valid export, unsafe text, invalid fields, failed identity and stale-page suppression. No deployment.
+
+## 2026-10-17 — page audit and data-skills course links
+- Audited product routes/sections and documented current implementation gaps in `docs/KFO-launch-readiness-20261017.md`.
+- Planning readiness estimate ~65% (64/100 weighted source assessment), explicitly distinct from production or browser acceptance.
+- Corrected learner presentation for Excel/Power BI and exact version-1 active enrollment links; unsupported versions/statuses stay closed. Backend remains responsible for ownership/publication/runtime binding.
+- Build and 305 local tests pass. No publication or activation.
