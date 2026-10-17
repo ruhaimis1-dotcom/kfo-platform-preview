@@ -27,7 +27,7 @@ Approximately **65% overall completion** (weighted source-readiness assessment 6
 | `/workspace#courses` | Personal/org enrollment cards and exact-version links | End-to-end activation/enrollment/player acceptance |
 | `/workspace#notifications` | Own notifications and mark-read | Browser action/error/race acceptance |
 | `/workspace#profile` | Edit learner name/headline | Browser save/restore acceptance |
-| `/workspace#certificates` | Owned-chain validation and printable HTML completion record | Immutable holder identity, public verification, final visual/print QA |
+| `/workspace#certificates` | Owned-chain validation and printable HTML completion record | New issue-time profile-name/title snapshots and public status verification implemented; final visual/print/browser QA and handling unnamed legacy records remain |
 | `/learn` | Activities/evidence/assessment, release preview and enrollment runtime loader | Review/activate launch releases; actual file/evidence/review/assessment journey |
 | `/orders` | Personal free enrollment and paid-awaiting-payment boundary | Real browser free/paid retry checks; Neoleap intentionally pending |
 | `/business/dashboard` | Live scoped aggregates | Remaining placeholder sections and latest-browser acceptance |
@@ -45,7 +45,7 @@ Approximately **65% overall completion** (weighted source-readiness assessment 6
 | `/admin/reviews` | Evidence inspection/file access/human review | Actual upload-to-review-to-completion browser journey |
 | `/admin/certificates` | Admin certificate directory | Certificate finalization/verification workflow |
 | `/admin/activity` | Audit directory | Browser acceptance |
-| Public certificate verification | No current enrolled-certificate public route | Build minimal-status lookup without exposing personal data by default |
+| `/verify` | Minimal public status/course lookup without personal identity | Browser/visual acceptance and release approval |
 
 Learner hash sections are five sections of a single workspace route, not five independent backend pages. QA/review-only pages are excluded from the pilot product inventory.
 

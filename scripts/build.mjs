@@ -145,3 +145,6 @@ for(const file of [...coursePracticeFiles('excel-basics',1),...coursePracticeFil
  if(!record||record.size!==bytes.length||createHash('sha256').update(bytes).digest('hex')!==record.sha256)throw Error('Practice attachment integrity failed: '+file.name);
  await writeFile(join(practiceOut,file.name),bytes);
 }
+
+await cp(join(root,'auth','verify.html'),join(out,'verify.html'));
+await build({entryPoints:[join(root,'auth','verify.js')],bundle:true,minify:true,format:'esm',target:['es2020'],outfile:join(out,'assets','verify.js')});

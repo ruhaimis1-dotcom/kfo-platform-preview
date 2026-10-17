@@ -12,7 +12,9 @@ test('learner migrations stay within the recorded integration gate scope',async(
   '20261007165652_reference_course_seed.sql',
   '20261007165825_learner_company_security_hardening.sql',
   '20261010110658_private_evidence_storage_gate.sql',
-  '20261014223935_course_learning_design_drafts.sql'
+  '20261014223935_course_learning_design_drafts.sql',
+  '20261017093650_certificate_issue_snapshot.sql',
+  '20261017093754_certificate_verification_capability_schema.sql'
  ]);
  for(const name of names){
   const sql=await readFile(new URL('../supabase/migrations/'+name,import.meta.url),'utf8');
