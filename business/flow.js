@@ -157,7 +157,7 @@ if (document.querySelector('[data-page=assignments]')) {
           membershipIds:selected,
           courseSlug:chosen.slug,
           courseVersion:chosen.version,
-          dueAt:deadline.value?`${deadline.value}T23:59:59Z`:null
+          dueAt:deadline.value?`${deadline.value}T23:59:59+03:00`:null
         });
         document.querySelector('#confirm-title').textContent='تم إنشاء التكليف';
         document.querySelector('#confirm-copy').textContent=`تم إنشاء ${rows.length.toLocaleString('ar-SA')} تكليفًا مؤسسيًا. سيظهر للموظفين في تعلمهم الوظيفي.`;

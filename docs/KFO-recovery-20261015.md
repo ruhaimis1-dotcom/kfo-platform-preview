@@ -249,3 +249,9 @@
 - Extended exact-tenant branding read with saved object keys. Company pages request 300-second signed URLs from the private company-brand bucket, validate exact HTTPS host/path/key, recheck user identity and current tenant, and render separate company logo/cover images.
 - KFO mark is retained. Image errors hide the failed image and preserve existing company text/avatar. No public bucket, caching of signed URLs, uploads, or cross-project assets added.
 - Build and 319 local tests pass: foreign key/host/path and identity changes denied, stale tenant suppressed, image failure fallback verified. No actual image download/browser layout QA or deployment. Learner portal context branding still separate work.
+
+## 2026-10-17 — company navigation and assignment deadline audit
+- Fixed dynamic library assignment links to carry exact organization ID, course slug and version. Rendering fails closed without a UUID company context. This avoids another tab's last-selected company in session storage redirecting a new assignment to a different authorized company.
+- Assignment due dates now submit end-of-day Asia/Riyadh (+03:00), instead of UTC (three hours late).
+- Build and 320 local tests pass. HTML link/asset target audit of dist found zero missing local targets; this is not browser navigation or visual QA.
+- No deployment or activation.
