@@ -10,6 +10,8 @@ import { validateContent } from '../learning/content-contract.mjs';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const out = join(root, 'dist');
 await mkdir(join(out, 'assets'), { recursive: true });
+for (const name of ['r07.css','hero-motion.js','kfo-hero-r07.webp']) await cp(join(root,'assets',name),join(out,'assets',name));
+await build({entryPoints:[join(root,'auth','account-controls.js')],bundle:true,minify:true,format:'esm',target:['es2020'],outfile:join(out,'assets','account-controls.js')});
 const courses = validateContent(JSON.parse(await readFile(join(root, 'content', 'free-courses.json'), 'utf8')));
 await mkdir(join(out, 'catalog'), { recursive: true });
 await writeFile(join(out, 'catalog.html'), renderCatalogue(courses));

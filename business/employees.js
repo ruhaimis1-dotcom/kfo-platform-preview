@@ -49,9 +49,9 @@ function hydrateMembers(payload){
   const foot=document.querySelector('.d1-footnote');
   if(foot)foot.textContent='تعرض القائمة عضويات الشركة ضمن نطاق إدارتك.';
   const teamCount=document.querySelector('#teams-panel .d1-count');
-  if(teamCount)teamCount.textContent='دليل الفرق قيد التجهيز';
+  if(teamCount)teamCount.textContent='الأقسام والصلاحيات';
   const teamCopy=document.querySelector('#teams-panel .d1-panel-head p');
-  if(teamCopy)teamCopy.textContent='سيظهر هيكل الفرق عند اكتمال ربط الفروع والأقسام.';
+  if(teamCopy)teamCopy.textContent='أدر الهيكل والمسؤوليات من إعدادات الشركة.';
   people=members.map(member=>{
     const name=(member.display_name||'عضو الشركة').trim();
     return {
@@ -67,7 +67,8 @@ function hydrateMembers(payload){
   });
   const labels=['بدون قسم محدد','قسم محدد'].filter(label=>people.some(p=>p.team===label));
   team.replaceChildren(new Option('كل الأقسام','all'),...labels.map(label=>new Option(label,label)));
-  document.querySelector('#team-grid').innerHTML='<article class="team-card"><div class="team-icon" aria-hidden="true"><svg class="icon"><use href="#i-users"/></svg></div><h3>هيكلة الفرق</h3><p>سيظهر توزيع الفروع والأقسام هنا عند اكتمال ربط الهيكل التنظيمي.</p><strong>'+people.length.toLocaleString('ar-SA')+' عضوًا</strong></article>';
+  document.querySelector('#team-grid').innerHTML='<article class="team-card"><div class="team-icon" aria-hidden="true"><svg class="icon"><use href="#i-users"/></svg></div><h3>هيكلة الفرق</h3><p>أضف الأقسام وحدد مسؤوليها وصلاحياتهم من إعدادات الشركة.</p><strong>'+people.length.toLocaleString('ar-SA')+' عضوًا</strong><a class="d1-primary structure-settings-link" href="/business/settings#structure">إدارة الأقسام والصلاحيات</a></article>';
+  const structureLink=document.querySelector('.structure-settings-link');if(structureLink){const org=document.body.dataset.organizationId;if(org){const url=new URL(structureLink.getAttribute('href'),location.origin);url.searchParams.set('org',org);structureLink.setAttribute('href',url.pathname+url.search+url.hash)}}
   document.querySelectorAll('.preview-note').forEach(note=>note.textContent='قائمة الأعضاء محدثة حسب نطاق إدارتك.');
   renderPeople();
 }

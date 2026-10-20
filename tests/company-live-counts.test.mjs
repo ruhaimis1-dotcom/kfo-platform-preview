@@ -14,7 +14,7 @@ test('live employee hydration replaces preview metrics and clears unsupported co
  assert.equal(metrics[1].querySelector('strong').textContent,'—');
  assert.equal(metrics[2].querySelector('strong').textContent,'—');
  assert.equal(ui.get('.d1-footnote').textContent,'تعرض القائمة عضويات الشركة ضمن نطاق إدارتك.');
- assert.equal(ui.get('#teams-panel .d1-count').textContent,'دليل الفرق قيد التجهيز');
+ assert.equal(ui.get('#teams-panel .d1-count').textContent,'الأقسام والصلاحيات');
 });
 
 test('live dashboard assignment count follows server data instead of sample rows',async()=>{

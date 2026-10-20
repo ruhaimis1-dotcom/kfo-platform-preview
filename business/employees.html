@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="/assets/fonts.css">
   <link rel="stylesheet" href="/assets/business.css">
   <link rel="stylesheet" href="/assets/employees.css">
-</head>
+<link rel="stylesheet" href="/assets/r07.css"></head>
 <body class="company-guard-pending">
   <svg class="svg-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
     <symbol id="i-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
@@ -38,7 +38,7 @@
       <div class="sidebar-bottom"><span class="help-mark" aria-hidden="true">؟</span><div><strong>تحتاج مساعدة؟</strong><small>فريق كفو هنا لدعمك</small></div></div>
     </aside>
     <div class="main-wrap">
-      <header class="topbar"><div class="topbar-start"><button class="menu-button" type="button" aria-label="فتح القائمة" aria-controls="sidebar" aria-expanded="false">☰</button><span class="breadcrumb">مساحة الشركة <span aria-hidden="true">/</span> <strong>الموظفون والفرق</strong></span></div><span class="d1-account">مسؤول الشركة</span></header>
+      <header class="topbar"><div class="topbar-start"><button class="menu-button" type="button" aria-label="فتح القائمة" aria-controls="sidebar" aria-expanded="false">☰</button><span class="breadcrumb">مساحة الشركة <span aria-hidden="true">/</span> <strong>الموظفون والفرق</strong></span></div><span class="d1-account">مسؤول الشركة</span><nav class="account-controls" aria-label="الحساب والتنقل"><a href="/">الصفحة الرئيسية</a><a href="/workspace">مساحتي</a><button type="button" data-account-exit="switch">تبديل الحساب</button><button type="button" data-account-exit="logout">تسجيل الخروج</button><span id="account-action-status" role="status" aria-live="polite"></span></nav></header>
       <main>
         <div class="page-heading"><div><span class="eyebrow">الفريق</span><h1>أعضاء الشركة</h1><p>أدر العضويات ونظّم الموظفين والفرق من مكان واحد.</p></div></div>
         <div class="d1-overview" aria-label="ملخص العضويات التوضيحية">
@@ -64,5 +64,5 @@
   </div>
   <div class="d1-backdrop" id="invite-dialog" hidden><div class="d1-dialog" role="dialog" aria-modal="true" aria-labelledby="invite-title"><button class="d1-close" type="button" id="invite-close" aria-label="إغلاق">×</button><span class="section-kicker">إضافة عضو</span><h2 id="invite-title">دعوة موظف</h2><p>أدخل بريد حساب كفو مؤكد. تظهر الدعوة داخل حساب الموظف بعد دخوله؛ لا تُرسل رسالة بريد إلكتروني.</p><form id="invite-form"><label>البريد الإلكتروني<input type="email" name="email" placeholder="name@example.com" required></label><div class="d1-invite-note">الدعوة لا تنشئ تكليفًا تدريبيًا، ولا تعرض سجل التعلّم الشخصي للموظف.</div><div class="d1-dialog-actions"><button type="button" id="invite-cancel">إلغاء</button><button class="d1-primary" type="submit">إنشاء الدعوة</button></div><p id="invite-status" role="status" aria-live="polite"></p></form><div class="d1-confirm" id="invite-confirm" hidden role="status"><strong>دعوة الموظف</strong><p id="invite-summary"></p><button class="d1-primary" type="button" id="invite-done">تم</button></div></div></div>
   <script type="module" src="/assets/company-runtime.js"></script><script type="module" src="/assets/company-live.js"></script><script src="/assets/employees.js" defer></script>
-</body>
+<script type="module" src="/assets/account-controls.js"></script></body>
 </html>

@@ -1,0 +1,5 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {endAccountSession} from '../auth/account-actions.mjs';
+test('signout is local and tenant context clears only after a successful signout',async()=>{const calls=[];await endAccountSession({auth:{signOut:async options=>{calls.push(options);return {error:null}}}},{storage:{removeItem:key=>calls.push(key)},navigate:path=>calls.push(path)});assert.deepEqual(calls,[{scope:'local'},'kfo.company.org','/'])});
+test('switching account ends the current session before opening login',async()=>{const calls=[];await endAccountSession({auth:{signOut:async()=>{calls.push('ended');return {}}}},{switchAccount:true,navigate:path=>calls.push(path)});assert.deepEqual(calls,['ended','/login'])});
+test('failed logout preserves context and does not navigate',async()=>{const calls=[];await assert.rejects(endAccountSession({auth:{signOut:async()=>({error:new Error('offline')})}},{storage:{removeItem:key=>calls.push(key)},navigate:path=>calls.push(path)}));assert.deepEqual(calls,[])});

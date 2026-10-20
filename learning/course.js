@@ -2,17 +2,20 @@ const search = document.querySelector('#course-search');
 if (search) {
   const cards = [...document.querySelectorAll('[data-course-card]')];
   const normalize = (value) => value.normalize('NFKC').replace(/[\u064B-\u065F\u0670\u0640]/g, '').replace(/[أإآ]/g, 'ا').toLocaleLowerCase('ar');
-  search.addEventListener('input', () => {
+  const domain=document.querySelector('#course-domain');
+  const filterCourses = () => {
     const terms = normalize(search.value.trim()).split(/\s+/).filter(Boolean);
     let count = 0;
     for (const card of cards) {
       const text = normalize(card.dataset.search);
-      card.hidden = !terms.every((term) => text.includes(term));
+      card.hidden = !terms.every((term) => text.includes(term)) || Boolean(domain && domain.value !== 'all' && card.dataset.domain !== domain.value);
       if (!card.hidden) count++;
     }
     document.querySelector('#course-count').textContent = `${count} دورات`;
     document.querySelector('#search-empty').hidden = count !== 0;
-  });
+  };
+  search.addEventListener('input',filterCourses);
+  domain?.addEventListener('change',filterCourses);
 }
 
 const form = document.querySelector('#self-check');

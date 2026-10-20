@@ -6,7 +6,7 @@
   <title>لوحة تدريب الشركة — كفو</title>
   <link rel="stylesheet" href="/assets/fonts.css">
   <link rel="stylesheet" href="/assets/business.css">
-</head>
+<link rel="stylesheet" href="/assets/r07.css"></head>
 <body class="company-guard-pending">
   <svg class="svg-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
     <symbol id="i-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
@@ -40,7 +40,7 @@
     </aside>
 
     <div class="main-wrap">
-      <header class="topbar"><div class="topbar-start"><button class="menu-button" type="button" aria-label="فتح القائمة" aria-controls="sidebar" aria-expanded="false">☰</button><span class="breadcrumb">مساحة الشركة <span aria-hidden="true">/</span> <strong>لوحة التدريب</strong></span></div><div class="topbar-end"><span class="date-pill">السنة التدريبية ٢٠٢٦</span><span class="profile" aria-label="مسؤول الشركة، حساب تجريبي">م</span></div></header>
+      <header class="topbar"><div class="topbar-start"><button class="menu-button" type="button" aria-label="فتح القائمة" aria-controls="sidebar" aria-expanded="false">☰</button><span class="breadcrumb">مساحة الشركة <span aria-hidden="true">/</span> <strong>لوحة التدريب</strong></span></div><div class="topbar-end"><span class="date-pill">السنة التدريبية ٢٠٢٦</span><span class="profile" aria-label="مسؤول الشركة، حساب تجريبي">م</span></div><nav class="account-controls" aria-label="الحساب والتنقل"><a href="/">الصفحة الرئيسية</a><a href="/workspace">مساحتي</a><button type="button" data-account-exit="switch">تبديل الحساب</button><button type="button" data-account-exit="logout">تسجيل الخروج</button><span id="account-action-status" role="status" aria-live="polite"></span></nav></header>
       <main id="main-content">
         <div class="page-heading"><div><div class="eyebrow">تطوير الفريق</div><h1>لوحة التطوير والتدريب</h1><p id="heading-help">راقب التقدم، المواعيد، وما يحتاج تدخل منك اليوم.</p></div><span class="sample-tag">حالة التدريب</span></div>
         <div class="scenario"><label for="scenario">عرض حالة تجريبية</label><select id="scenario" aria-describedby="scenario-hint"><option value="active">شركة لديها موظفون ومقاعد</option><option value="new">شركة جديدة</option><option value="no-seats">نفدت المقاعد</option><option value="error">تعذر تحميل البيانات</option></select><span id="scenario-hint">للمراجعة البصرية فقط؛ لا يغير بيانات الحساب.</span></div>
@@ -70,5 +70,5 @@
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
   <script type="module" src="/assets/company-runtime.js"></script><script type="module" src="/assets/company-live.js"></script><script src="/assets/business.js" defer></script>
-</body>
+<script type="module" src="/assets/account-controls.js"></script></body>
 </html>
