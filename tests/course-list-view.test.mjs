@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {filterCourseList} from '../admin/course-list-view.mjs';
+const rows=[{title:'أساسيات إكسل',course_slug:'excel',published:false,runtime_ready:false},{title:'تواصل مهني',course_slug:'communication',published:true,runtime_ready:true}];
+test('course filtering normalizes Arabic and keeps publication separate from readiness',()=>{assert.equal(filterCourseList(rows,{search:'اساسيات اكسل'})[0],rows[0]);assert.deepEqual(filterCourseList(rows,{state:'published'}),[rows[1]]);assert.deepEqual(filterCourseList(rows,{state:'unready'}),[rows[0]]);assert.deepEqual(filterCourseList(rows,{search:'missing'}),[])});

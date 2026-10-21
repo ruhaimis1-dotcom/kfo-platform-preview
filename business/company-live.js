@@ -1,3 +1,4 @@
+import {loadEmployeeRanking,mountEmployeeRanking} from './employee-ranking.mjs';
 import {loadPortalImageUrls,applyPortalImages} from '../company/portal-brand-images.mjs';
 import {loadPortalBranding,applyPortalBranding} from '../company/portal-branding.mjs';
 import {inviteEmployee} from '../company/employee-invitation.mjs';
@@ -76,6 +77,11 @@ async function start(context){
     }
     if(page==='orders'){if(!context.canManageSettings)throw new Error('طلبات الشركة متاحة لمسؤول الشركة فقط.');const {data,error}=await client.auth.getUser();if(error||!data?.user)throw new Error('تعذر التحقق من الحساب.');await mountCourseOrders({document,client,userId:data.user.id,organizationId:context.organizationId,storage:sessionStorage,generate:()=>crypto.randomUUID()})}
     if(page==='settings')await mountCompanySettings({document,client,context});
+    const rankingHost=document.querySelector('#employee-ranking');
+    if(rankingHost){
+      try{const rows=await loadEmployeeRanking(client,context.organizationId);mountEmployeeRanking({document,host:rankingHost,rows})}
+      catch{rankingHost.textContent='تعذر تحميل ترتيب الموظفين. أعد تحميل الصفحة للمحاولة مجددًا.'}
+    }
     const supported=['settings','orders','dashboard','employees','assignments','reports','courses'];
     const normalized=location.pathname.split('/').pop()||page;
     if(supported.includes(page)||supported.includes(normalized)) setLiveState('ready');

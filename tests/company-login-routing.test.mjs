@@ -33,12 +33,12 @@ test('platform admin routing takes precedence and multiple companies use switchb
   assert.equal(multi.get('company-admins').children.length,2);
 });
 
-test('company admin switchboard exposes primary company pages',()=>{
-  for(const route of ['/business/dashboard','/business/employees','/business/assignments','/business/reports','/business/settings']){
-    assert.equal(workspace.includes(route),true,route);
-  }
-  assert.equal(page.includes('company-workspace'),true);
-  assert.equal(page.includes('مساحة الشركة'),true);
+test('company switchboard has one scoped dashboard entry',async()=>{
+  const ui=await workspaceFixture([{accessible:true,name:'Company',organizationId:'org-1',roles:[{code:'CO'}]}],{profile:{display_name:'Learner'}});
+  const card=ui.get('company-admins').children[0];
+  const actions=card.children[2];
+  assert.equal(actions.children.length,1);
+  assert.equal(actions.children[0].href,'/business/dashboard?org=org-1');
 });
 
 test('customer workspace no longer exposes QA permission check or stale linking message',()=>{

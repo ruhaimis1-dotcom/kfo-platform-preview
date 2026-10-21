@@ -84,11 +84,7 @@ async function render() {
           return a;
         };
         actions.append(
-          link('/business/dashboard','دخول مساحة الشركة',true),
-          link('/business/employees','الموظفون'),
-          link('/business/assignments','إسناد التدريب'),
-          link('/business/reports','التقارير'),
-          link('/business/settings','ملف الشركة والإعدادات')
+          link('/business/dashboard','دخول مساحة الشركة',true)
         );
         card.append(head,p,actions);
         companyAdmins.append(card);

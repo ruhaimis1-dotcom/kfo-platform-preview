@@ -48,12 +48,20 @@ if (form) {
 const lessonLinks = [...document.querySelectorAll('.course-sidebar a')];
 if (lessonLinks.length) {
   const updateCurrent = () => {
-    const current = window.location.hash || '#overview';
+    const sections = [...document.querySelectorAll('.course-reading > section')];
+    const requested = window.location.hash || '#overview';
+    const current = sections.some(section => '#'+section.id === requested) ? requested : '#overview';
+    for (const section of sections) section.hidden = '#'+section.id !== current;
+    const cover = document.querySelector('.course-reading > .course-cover');
+    if (cover) cover.hidden = current !== '#overview';
     for (const link of lessonLinks) {
       if (link.getAttribute('href') === current) link.setAttribute('aria-current', 'location');
       else link.removeAttribute('aria-current');
     }
   };
-  window.addEventListener('hashchange', updateCurrent);
+  window.addEventListener('hashchange', () => {
+    updateCurrent();
+    document.querySelector('.course-reading')?.scrollIntoView({block:'start'});
+  });
   updateCurrent();
 }
