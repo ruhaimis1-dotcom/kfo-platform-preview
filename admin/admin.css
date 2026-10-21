@@ -30,3 +30,31 @@ body.admin-guard-pending .admin-shell{visibility:hidden}
 #course-editor-root .design-card{padding:16px;margin-block:12px;border:1px solid #cbd3cc;border-radius:8px}#course-editor-root input[type=checkbox]{width:auto}#course-editor-root label:has(input[type=checkbox]){display:flex;align-items:center;gap:10px}
 
 .editor-course-filters{display:flex;align-items:end;flex-wrap:wrap;gap:16px;margin-block:20px}.editor-course-filters label{display:grid;gap:6px;flex:1}.editor-course-filters input,.editor-course-filters select{min-height:44px;width:100%;padding:10px;font:inherit}.editor-course-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.editor-course-card{border:1px solid var(--line);border-radius:12px;padding:20px;background:#fff}.editor-course-card h4{margin:0 0 12px;font-size:18px}.editor-course-card p{line-height:1.8}.editor-course-card button[aria-pressed=true]{outline:2px solid var(--green)}@media(max-width:700px){.editor-course-grid{grid-template-columns:1fr}}
+
+/* Approved course authoring direction: one mounted activity at a time. */
+#course-editor-root{font-size:15px;line-height:1.85;font-weight:400;font-synthesis:none}
+#course-editor-root :is(button,input,select,textarea,label,summary,h2,h3,h4){font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-synthesis:none}
+#course-editor-root :is(h2,h3,h4,strong){font-weight:500}
+#course-editor-root h2{font-size:24px}#course-editor-root h3{font-size:19px}
+#course-editor-root :is(input,textarea,select){font-size:16px;font-weight:400;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);padding:11px 13px;max-width:100%}
+#course-editor-root label{font-size:14px;font-weight:400;display:grid;gap:8px;margin-block:16px}
+#course-editor-root label:has(input[type=checkbox]){display:flex;align-items:center;gap:10px}
+#course-editor-root textarea{line-height:1.95;resize:vertical;width:100%;min-height:160px}
+#course-editor-root button{font-size:14px;font-weight:500;min-height:44px;border-radius:8px;padding:9px 14px}
+#course-editor-root [hidden]{display:none!important}
+.course-author-layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:22px;align-items:start;margin-block:24px}
+.course-outline-panel{padding:18px;border:1px solid var(--line);background:var(--sage);border-radius:12px;min-width:0}
+#course-activity-outline{display:grid;gap:8px}
+#course-activity-outline button{display:grid;gap:5px;text-align:right;background:#fff;color:var(--deep);border:1px solid transparent;width:100%;overflow-wrap:anywhere}
+#course-activity-outline button span{font-size:12px;color:var(--muted)}
+#course-activity-outline button[aria-pressed=true]{border-color:var(--deep);background:#fff;box-shadow:inset -3px 0 var(--deep)}
+#course-activity-fields{min-width:0}
+#course-editor-root .course-activity-editor{margin:0;padding:22px;border:1px solid var(--line);border-radius:12px;background:#fff;min-width:0}
+.course-activity-editor legend{font-size:14px;font-weight:500;color:var(--deep);padding-inline:8px}
+.course-editor-tabs{display:flex;gap:22px;border-bottom:1px solid var(--line);margin-block:18px 24px;flex-wrap:wrap}
+#course-editor-root .course-editor-tabs button{border:0;border-bottom:3px solid transparent;border-radius:0;background:transparent;color:var(--muted);padding:10px 0}
+#course-editor-root .course-editor-tabs button[aria-selected=true]{border-bottom-color:var(--deep);color:var(--deep)}
+.course-activity-editor details,.course-skills-settings{padding:16px;border:1px solid var(--line);border-radius:9px;margin-block:20px;background:#f6f8f5}
+#course-editor-preview article{max-width:760px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:24px;margin-block:18px;line-height:1.95}
+#course-editor-preview p{white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:800px){.course-author-layout{grid-template-columns:1fr}.course-outline-panel{padding:14px}#course-editor-root .course-activity-editor{padding:17px}#course-editor-root h2{font-size:21px}}
